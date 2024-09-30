@@ -1,0 +1,38 @@
+{
+  "private": true,
+  "name": "swe4103-project",
+  "version": "1.0.0",
+  "license": "ISC",
+  "workspaces": [
+    "client",
+    "api"
+  ],
+  "scripts": {
+    "client": "yarn workspace client start",
+    "api": "yarn workspace api dev",
+    "dev": "concurrently --kill-others-on-fail \"yarn api\"  \"yarn client\"",
+    "prettier": "prettier --write \"**/*.{js,jsx,json,md}\"",
+    "lint": "echo Need to set up eslint",
+    "postinstall": "husky"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
+    "prettier": "^3.3.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx}": [
+      "yarn lint",
+      "yarn prettier"
+    ],
+    "*.{json,md}": [
+      "yarn prettier"
+    ]
+  }
+}

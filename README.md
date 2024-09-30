@@ -1,9 +1,9 @@
-# <p align="center">SWE4103 Project</p>
+# <p align="center">SWE4103 Project (To Be Named)</p>
 
 <p align="center"><- We can come up with a fun product name if you guys want -></p>
 <p align="center"><- Logo when we have one -></p>
 <p align="center">A Development Team Dashboard, specifically suited for student team projects, to track team and team member productivity, and sentiment as they move through a course project. 
-**More details to be added as feature are implemented**</p>
+(More details to be added as feature are implemented)</p>
 
 ## 🧭 Table of Contents
 
@@ -89,7 +89,7 @@ This project follows a 2-tier **(this may change to 3-tier if we ever decide to 
   - CircleCI config
 - `.github/`
   - GitHub related config. For example the pull request template. If we end up using any GitHub Actions, they will also live in here.
-- `.husky'
+- `.husky`
   - Husky config for pre-commit hooks
 - `api/`
   - Backend Express.js API Server. Created following [How to structure an Express.js REST API with best practices](https://blog.treblle.com/egergr/)
@@ -195,6 +195,8 @@ git push origin feat-SCRUM-1
 ```
 
 7. After you do this, you should be able to go to our repository on GitHub, and create a new Pull Request that can be reviewed by other team members and eventually merged into the main branch
+
+8. Once you have created the Pull Request, you will notice a template is present in the description field. Please fill out this template so team members can review your PR with ease.
 
 ## 🚀 Local Run
 

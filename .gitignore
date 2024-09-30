@@ -1,0 +1,25 @@
+# Node.js
+node_modules/
+
+# Logs
+logs/
+*.log
+*.gz
+
+# OS generated files
+.DS_Store
+
+# Build output
+build/
+dist/
+
+# Testing
+coverage/
+*.lcov
+
+# Env files
+.env
+
+# Misc
+.vscode/
+.idea/
