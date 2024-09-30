@@ -5,17 +5,12 @@ orbs:
   node: circleci/node@5.0.2
 
 jobs:
-  install_dependencies:
-    executor: node/default
-    steps:
-      - checkout
-      - node/install-packages:
-          pkg-manager: yarn
-
   build_and_test_client: # this can be any name you choose
     executor: node/default # use the default executor defined within the orb
     steps:
       - checkout
+      - node/install-packages:
+          pkg-manager: yarn
       - run:
           command: cd client && yarn test
           name: Run client tests
@@ -27,6 +22,8 @@ jobs:
     executor: node/default # use the default executor defined within the orb
     steps:
       - checkout
+      - node/install-packages:
+          pkg-manager: yarn
       - run:
           command: cd api && yarn test
           name: Run backend tests
@@ -34,6 +31,5 @@ jobs:
 workflows:
   build_test_deploy:
     jobs:
-      - install_dependencies
       - build_and_test_client
       - build_and_test_api
