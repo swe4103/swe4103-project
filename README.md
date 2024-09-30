@@ -106,6 +106,9 @@ This project follows a 2-tier **(this may change to 3-tier if we ever decide to 
       - Handles business logic and interacts with data sources or external APIs (like our database)
     - `index.js`
       - Configuration and setup for server
+  - `spec/`
+    - `openapi.yaml`
+      - OpenAPI specification for API design
   - `.dockerignore`
     - Files or directories that Docker ignores
   - `app.js`
