@@ -42,6 +42,7 @@ This document outlines the technolgies used in this project, and the underlying 
 - [**CircleCI**](https://circleci.com/)
   - Continuous integration and continuous delivery platform
 - [**Amazon Web Services (AWS)**](https://aws.amazon.com/)
+  - Cloud service provider
 
 ## Architecture
 
