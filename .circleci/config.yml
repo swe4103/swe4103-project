@@ -31,7 +31,7 @@ jobs:
 workflows:
   build_test_deploy:
     jobs:
-      - build_and_test_client
+      - build_and_test_client:
         filters:
           branches:
             only:
@@ -41,7 +41,7 @@ workflows:
               - opened
               - synchronize
               - reopened
-      - build_and_test_api
+      - build_and_test_api:
         filters:
           branches:
             only:
