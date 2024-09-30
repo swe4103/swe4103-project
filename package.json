@@ -11,9 +11,13 @@
     "client": "yarn workspace client dev",
     "api": "yarn workspace api dev",
     "dev": "concurrently --kill-others-on-fail \"yarn api\"  \"yarn client\"",
-    "test": "echo setup tests",
+    "lint:client": "yarn workspace client lint",
+    "lint:api": "yarn workspace api lint",
+    "lint": "yarn lint:client && yarn lint:api",
+    "test:api": "yarn workspace api test",
+    "test:client": "yarn workspace client test",
+    "test": "yarn test:client && yarn test:api",
     "prettier": "prettier --write \"**/*.{js,jsx,json,md}\"",
-    "lint": "yarn workspace api lint && yarn workspace client lint",
     "postinstall": "husky"
   },
   "devDependencies": {
