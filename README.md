@@ -141,7 +141,7 @@ yarn install
 **Client**
 
 ```bash
-yarn client
+yarn run client
 ```
 
 Client application should be running at `http://localhost:5173`
@@ -149,7 +149,7 @@ Client application should be running at `http://localhost:5173`
 **Server (API)**
 
 ```bash
-yarn api
+yarn run api
 ```
 
 API server application should be running at `http://localhost:3000`
@@ -157,7 +157,7 @@ API server application should be running at `http://localhost:3000`
 **Both**
 
 ```bash
-yarn dev
+yarn run dev
 ```
 
 This will run both the client and the API server concurrently communicating with eachother in the foreground.
