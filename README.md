@@ -80,7 +80,7 @@
 
 ## 🛠️ Architecture
 
-This project follows a 2-tier **(this may change to 3-tier if we ever decide to migrate to a cloud hosted DB)** client-server architecture, where the React frontend handles the user interface and communicates with the Express backend API to manage data and server-side logic, ensuring a clear separation between the presentation and application layers.
+This project follows a 2-tier **(this may change to 3-tier if we ever decide to migrate to a cloud hosted DB)** client-server architecture. The React frontend handles the user interface and communicates with the Express backend API to manage data and server-side logic. This ensures a clear separation between the presentation and application layers.
 
 <p align="center"><img width="500px" src="assets/docs/client-server-diagram.png" style="background-color: #ffffff; border-radius: 8px; padding: 24px;" /></p>
 
@@ -90,7 +90,7 @@ This project follows a 2-tier **(this may change to 3-tier if we ever decide to 
   - CircleCI config
 - `.github/`
   - GitHub related config. For example the pull request template. If we end up using any GitHub Actions, they will also live in here.
-- `.husky`
+- `.husky/`
   - Husky config for pre-commit hooks
 - `api/`
   - Backend Express.js API Server. Created following [How to structure an Express.js REST API with best practices](https://blog.treblle.com/egergr/)
