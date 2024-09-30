@@ -41,10 +41,11 @@
 
 ## 📚 Technologies
 
-### Frontend
-
 - [**Node.js**](https://nodejs.org/en)
   - JavaScript runtime environment
+
+### Frontend
+
 - [**React.js**](https://react.dev/)
   - Frontend JavaScript library
 - [**Bootstrap**](https://getbootstrap.com/)
