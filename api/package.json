@@ -12,7 +12,11 @@
     "lint": "eslint . --fix"
   },
   "dependencies": {
-    "express": "^4.21.0"
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "sequelize": "^6.37.3",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "eslint": "^9.11.1",
@@ -20,6 +24,18 @@
     "eslint-plugin-import": "^2.30.0",
     "eslint-plugin-prettier": "^5.2.1",
     "nodemon": "^3.1.7",
-    "prettier": "^3.3.3"
+    "prettier": "^3.3.3",
+    "sequelize-cli": "^6.6.2",
+    "supertest": "^7.0.0"
+  },
+  "imports": {
+    "#app": "./app/index.js",
+    "#config": "./app/config/config.js",
+    "#controllers/": "./app/controllers/",
+    "#middleware/": "./app/middleware/",
+    "#models/": "./app/models/",
+    "#routes/": "./app/routes/",
+    "#services/": "./app/services/",
+    "#db": "./app/services/db.js"
   }
 }
