@@ -8,6 +8,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint . --fix",
+    "test": "echo setup tests",
     "preview": "vite preview"
   },
   "dependencies": {

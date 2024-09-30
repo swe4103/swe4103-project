@@ -8,6 +8,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
+    "test": "echo setup tests",
     "lint": "eslint . --fix"
   },
   "dependencies": {
