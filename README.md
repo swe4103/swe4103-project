@@ -8,13 +8,9 @@
 ## 🧭 Table of Contents
 
 - [SWE4103 Project](#swe4103-project)
+  - [Table of Contents](#-table-of-contents)
   - [Team](#-team)
-  - [Technologies](#-technologies)
-    - [Frontend](#frontend)
-    - [Backend](#backend)
-    - [Development & Quality Tools](#development--quality-tools)
-    - [Deployment & Operations](#deployment--operations)
-  - [Architecture](#-architecture)
+  - [Technologies & Architecture](#️-technologies--architecture)
   - [Directory Structure](#-directory-structure)
   - [Contributing](#-contributing)
   - [Local Run](#-local-run)
@@ -39,50 +35,9 @@
 | **Gopika Shrivastav** | Developer                                         | Contributing documentation, developing features, fixing bugs                                                                                  |
 | **Pierre Mebande**    | Developer                                         | Contributing documentation, developing features, fixing bugs                                                                                  |
 
-## 📚 Technologies
+## 🛠️ Technologies & Architecture
 
-- [**Node.js**](https://nodejs.org/en)
-  - JavaScript runtime environment
-
-### Frontend
-
-- [**React.js**](https://react.dev/)
-  - Frontend JavaScript library
-- [**Bootstrap**](https://getbootstrap.com/)
-  - CSS framework
-
-### Backend
-
-- [**Express.js**](https://expressjs.com/)
-  - Backend web application framework
-- [**SQLite**](https://www.sqlite.org/)
-  - Embedded on-disk SQL database engine
-
-### Development & Quality Tools
-
-- [**ESLint**](https://eslint.org/)
-  - JavaScript linting tool
-- [**Prettier**](https://prettier.io/)
-  - Opinionated code formatter
-- [**Husky**](https://typicode.github.io/husky/)
-  - Git hook manager
-- [**Yarn**](https://yarnpkg.com/)
-  - JavaScript package manager
-
-### Deployment & Operations
-
-- [**Docker**](https://www.docker.com/)
-  - Container service provider for developing, shipping, and running applications
-- [**CircleCI**](https://circleci.com/)
-  - Continuous integration and continuous delivery platform
-- [**Amazon Web Services (AWS)**](https://aws.amazon.com/)
-  - Cloud service provider
-
-## 🛠️ Architecture
-
-This project follows a 2-tier **(this may change to 3-tier if we ever decide to migrate to a cloud hosted DB)** client-server architecture. The React frontend handles the user interface and communicates with the Express backend API to manage data and server-side logic. This ensures a clear separation between the presentation and application layers.
-
-<p align="center"><img width="500px" src="assets/docs/client-server-diagram.png" style="background-color: #ffffff; border-radius: 8px; padding: 24px;" /></p>
+For details on technologies used, and architecture followed, please refer to [Technologies & Architecture](https://github.com/swe4103/swe4103-project/blob/main/docs/tech-arch.md)
 
 ## 🏗️ Directory Structure
 
@@ -94,45 +49,24 @@ This project follows a 2-tier **(this may change to 3-tier if we ever decide to 
   - Husky config for pre-commit hooks
 - `api/`
   - Backend Express.js API Server. Created following [How to structure an Express.js REST API with best practices](https://blog.treblle.com/egergr/)
-  - `app/`
-    - Application code for server
-    - `controllers/`
-      - The methods that process an endpoint and unpack web layer data to dispatch to services
-    - `middleware/`
-      - Reusable plugins to modify requests typically used for cache control, authentication, error handling, etc.
-    - `routes/`
-      - Declares the path of API endpoints and assigns to controllers
-    - `services/`
-      - Handles business logic and interacts with data sources or external APIs (like our database)
-    - `index.js`
-      - Configuration and setup for server
-  - `spec/`
-    - `openapi.yaml`
-      - OpenAPI specification for API design
-  - `.dockerignore`
-    - Files or directories that Docker ignores
-  - `app.js`
-    - Entry point of the server
-  - `Dockerfile`
-    - Build instructions for Docker image
-  - `package.json`
-    - API level package.json file
-    - Specific to the `api` component of the project
-    - Specific to Node.js and JavaScript projects, used to manage dependencies, scripts, and project metadata for `api`
+  - Refer to [`api/README.md`](https://github.com/swe4103/swe4103-project/blob/main/api/README.md)
 - `assets/`
   - Global static assets like images
-  - `docs/`
-    - Assets related to documentation
 - `client/`
-  - TODO
+  - React js framework is used to build the UI, all front end code will be stored under this directory
+  - Refer to [`client/README.md`](https://github.com/swe4103/swe4103-project/blob/main/client/README.md)
+- `docs/`
+  - Documentation related to project specification
 - `scripts/`
   - Scripts for operations related to CI/CD pipeline
-- `eslintrc.json`
-  - ESLint config
 - `.gitignore`
   - Files or directories that git ignores
 - `prettierrc.json`
   - Prettier config
+- `CONTRIBUTING.md`
+  - Document outlining contribution guidelines
+- `docker-compose.yaml`
+  - Docker compose file to define and run both containers
 - `package.json`
   - Root level package.json file
   - Specific to Node.js and JavaScript projects, used to manage dependencies, scripts, and project metadata
@@ -144,63 +78,7 @@ This project follows a 2-tier **(this may change to 3-tier if we ever decide to 
 
 ## ⛑️ Contributing
 
-When making changes in this project, whether new features or bug fixes, the workflow should resemble the following.
-
-**Note:** If you use a UI tool for git like GitHub Desktop, feel free to keep using it and loosely follow the below steps.
-
-1. Checkout the main branch
-
-```bash
-git checkout main
-```
-
-2. Pull the latest changest from the main branch
-
-```bash
-git pull origin main
-```
-
-3. Create your new branch that you will work on. Use `feat` for a new feature, or `fix` for a bug fix. `SCRUM-#` should correspond with the Jira ticket number you are working off of.
-
-```bash
-git checkout -b feat|fix-SCRUM-#
-```
-
-4. After you are satisfied with your changes, add the changes to your local staging area
-
-```bash
-git add <files-to-add>
-```
-
-5. Commit your changes with a short, informative commit message. Please prefix it with `feat` or `fix` like your branch name, and your Jira identifier in brackets
-
-```bash
-git commit -m "feat|fix(SCRUM-#): Example message"
-```
-
-6. Finally, push your changes to your remote branch
-
-```bash
-git push origin <branch-name>
-```
-
-A full example is shown below for clarity:
-
-```bash
-git checkout main
-git pull origin main
-git checkout -b feat-SCRUM-1
-
-... make changes ...
-
-git add newfile.txt
-git commit -m "feat(SCRUM-1): Add new text file"
-git push origin feat-SCRUM-1
-```
-
-7. After you do this, you should be able to go to our repository on GitHub, and create a new Pull Request that can be reviewed by other team members and eventually merged into the main branch
-
-8. Once you have created the Pull Request, you will notice a template is present in the description field. Please fill out this template so team members can review your PR with ease.
+For guidlines and instructions on contributing, please refer to [CONTRIBUTING.md](https://github.com/swe4103/swe4103-project/blob/main/CONTRIBUTING.md)
 
 ## 🚀 Local Run
 

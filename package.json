@@ -8,11 +8,11 @@
     "api"
   ],
   "scripts": {
-    "client": "yarn workspace client start",
+    "client": "yarn workspace client dev",
     "api": "yarn workspace api dev",
     "dev": "concurrently --kill-others-on-fail \"yarn api\"  \"yarn client\"",
     "prettier": "prettier --write \"**/*.{js,jsx,json,md}\"",
-    "lint": "echo Need to set up eslint",
+    "lint": "yarn workspace api lint && yarn workspace client lint",
     "postinstall": "husky"
   },
   "devDependencies": {
