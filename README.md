@@ -81,7 +81,7 @@
 
 This project follows a 2-tier **(this may change to 3-tier if we ever decide to migrate to a cloud hosted DB)** client-server architecture, where the React frontend handles the user interface and communicates with the Express backend API to manage data and server-side logic, ensuring a clear separation between the presentation and application layers.
 
-<p align="center"><img width="400px" src="assets/docs/client-server-diagram.png" style="background-color: white; border-radius: 8px; padding: 24px;" /></p>
+<p align="center"><img width="500px" src="assets/docs/client-server-diagram.png" style="background-color: #ffffff; border-radius: 8px; padding: 24px;" /></p>
 
 ## 🏗️ Directory Structure
 
@@ -100,7 +100,7 @@ This project follows a 2-tier **(this may change to 3-tier if we ever decide to 
     - `middleware/`
       - Reusable plugins to modify requests typically used for cache control, authentication, error handling, etc.
     - `routes/`
-      - Where you declare the path of API endpoints and assign to controllers
+      - Declares the path of API endpoints and assigns to controllers
     - `services/`
       - Handles business logic and interacts with data sources or external APIs (like our database)
     - `index.js`
@@ -110,7 +110,7 @@ This project follows a 2-tier **(this may change to 3-tier if we ever decide to 
   - `app.js`
     - Entry point of the server
   - `Dockerfile`
-    - Build instruction for Docker image
+    - Build instructions for Docker image
   - `package.json`
     - API level package.json file
     - Specific to the `api` component of the project
@@ -248,7 +248,7 @@ git clone https://github.com/swe4103/swe4103-project.git
 cd swe4103-project
 ```
 
-3. Install the necessary dependencies using Yarn: yarn
+3. Install the necessary dependencies
 
 ```bash
 yarn install
