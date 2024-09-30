@@ -202,6 +202,9 @@ git push origin feat-SCRUM-1
 
 8. Once you have created the Pull Request, you will notice a template is present in the description field. Please fill out this template so team members can review your PR with ease.
 
+#### 🚨 Important Note!
+Please never push code directly to the main branch, this is against our rules and is bad practice. Always create a branch and create a pull request in order to get your code merged into main. If you are confused after the explanation above, please reach out to Matthew Collett or Eric Cuenat, we'd be more than happy to explain in more detail.
+
 ## 🚀 Local Run
 
 ### Prerequisites
