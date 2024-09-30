@@ -1,0 +1,42 @@
+# reference: https://circleci.com/docs/language-javascript/
+version: 2.1
+
+orbs:
+  node: circleci/node@5.0.2
+
+jobs:
+  install_dependencies:
+    executor: node/default
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: yarn
+
+  build_and_test_client: # this can be any name you choose
+    executor: node/default # use the default executor defined within the orb
+    steps:
+      - checkout
+      - run:
+          command: cd client && yarn test
+          name: Run client tests
+      - run:
+          command: cd client && yarn build
+          name: Build frontend
+
+  build_and_test_api:
+    executor: node/default # use the default executor defined within the orb
+    steps:
+      - checkout
+      - run:
+          command: cd api && yarn test
+          name: Run backend tests
+      - run:
+          command: cd api && yarn build
+          name: Build backend
+
+workflows:
+  build_test_deploy:
+    jobs:
+      - install_dependencies
+      - build_and_test_client
+      - build_and_test_api
