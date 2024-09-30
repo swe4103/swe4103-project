@@ -30,9 +30,6 @@ jobs:
       - run:
           command: cd api && yarn test
           name: Run backend tests
-      - run:
-          command: cd api && yarn build
-          name: Build backend
 
 workflows:
   build_test_deploy:
