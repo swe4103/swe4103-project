@@ -1,16 +1,24 @@
 {
   "name": "api",
   "version": "1.0.0",
+  "private": true,
+  "license": "ISC",
   "main": "app.js",
+  "type": "module",
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "lint": "eslint ."
+    "lint": "eslint . --fix"
   },
   "dependencies": {
     "express": "^4.21.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.7"
+    "eslint": "^9.11.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.30.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "nodemon": "^3.1.7",
+    "prettier": "^3.3.3"
   }
 }
