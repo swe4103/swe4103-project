@@ -37,7 +37,7 @@
 
 ## 🛠️ Technologies & Architecture
 
-For details on technologies used, and architecture followed, please refer to [Technologies & Architecture](https://github.com/swe4103/swe4103-project/blob/main/docs/tech-arch.md)
+For details on technologies and architecture, please refer to [Technologies & Architecture](https://github.com/swe4103/swe4103-project/blob/main/docs/tech-arch.md)
 
 ## 🏗️ Directory Structure
 
@@ -136,7 +136,7 @@ cd swe4103-project
 yarn install
 ```
 
-4. At this point, you can run either just the client (frontend React.js application), just run the server (backend Express.js API), or you can run them concurrently, communicating with eachother
+4. At this point, you can run either just the client (frontend React.js application), just the server (backend Express.js API), or you can run them concurrently, communicating with eachother
 
 **Client**
 
@@ -144,7 +144,7 @@ yarn install
 yarn client
 ```
 
-Client application should be running at `http://localhost:????`
+Client application should be running at `http://localhost:5173`
 
 **Server (API)**
 
