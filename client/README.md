@@ -6,7 +6,7 @@
 ## Directory Structure
 
 - `public/`
-- Holds static assets like images, and favicons. These files are made available to the public, for example, a company logo used in a static header is a good example of what to store here.
+  - Holds static assets like images, and favicons. These files are made available to the public, for example, a company logo used in a static header is a good example of what to store here.
 - `src/`
   - Everything under here is not released to the public. (This is where we store the bulk of our code)
   - `assets/`
