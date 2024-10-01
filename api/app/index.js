@@ -1,4 +1,3 @@
-// app/index.js
 import express from 'express'
 
 import { syncDb } from '#services/db.js'
@@ -9,6 +8,7 @@ app.use(express.json())
   try {
     await syncDb()
   } catch (error) {
+    console.error(`Unable to sync database: ${error}`)
     process.exit(1)
   }
 })()
