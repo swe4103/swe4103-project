@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { syncDatabase } from '#db'
+import { syncDatabase } from '#services/db.js'
 
 const app = express()
 app.use(express.json())

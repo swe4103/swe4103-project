@@ -1,9 +1,12 @@
 # API
 
-- Backend Express.js API Server. Created following [How to structure an Express.js REST API with best practices](https://blog.treblle.com/egergr/)
+- Backend Express.js API Server
+- Created following [How to structure an Express.js REST API with best practices](https://blog.treblle.com/egergr/)
 
 ## Directory Structure
 
+- `__tests__`
+  - Test files
 - `app/`
   - Application code for server
   - `config/`

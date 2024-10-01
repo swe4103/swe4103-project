@@ -46,6 +46,6 @@ This document outlines the technolgies used in this project, and the underlying 
 
 ## Architecture
 
-This project follows a 2-tier **(this may change to 3-tier if we ever decide to migrate to a cloud hosted DB)** client-server architecture. The React frontend handles the user interface and communicates with the Express backend API to manage data and server-side logic. This ensures a clear separation between the presentation and application layers.
+This project follows a 2-tier mono-repo client-server architecture. The React frontend handles the user interface and communicates with the Express backend API to manage data and server-side logic. This ensures a clear separation between the presentation and application layers within a single repository.
 
 <p align="center"><img width="500px" src="../assets/client-server-diagram.png" style="background-color: #ffffff; border-radius: 8px; padding: 24px;" /></p>
