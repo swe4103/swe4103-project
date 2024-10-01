@@ -9,7 +9,7 @@
     "start": "node app.js",
     "dev": "nodemon app.js",
     "lint": "eslint . --fix",
-    "test": "node --experimental-vm-modules --no-warnings $(yarn bin jest)"
+    "test": "NODE_ENV=test node --experimental-vm-modules --no-warnings $(yarn bin jest)"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",

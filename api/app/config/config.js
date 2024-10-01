@@ -7,7 +7,7 @@ const env = process.env.NODE_ENV || 'development'
 const dbConfig = {
   development: {
     dialect: 'sqlite',
-    storage: process.env.DATABASE_STORAGE || './database.sqlite',
+    storage: process.env.DATABASE_STORAGE,
     logging: process.env.DB_LOGGING === 'true' ? console.log : false,
   },
   test: {
@@ -17,14 +17,14 @@ const dbConfig = {
   },
   production: {
     dialect: 'sqlite',
-    storage: process.env.DATABASE_STORAGE || './database.sqlite',
+    storage: process.env.DATABASE_STORAGE,
     logging: false,
   },
 }
 
 const config = {
-  port: process.env.PORT || 3000,
-  logging: process.env.LOGGING === 'true',
+  env,
+  port: process.env.PORT,
   db: dbConfig[env],
 }
 

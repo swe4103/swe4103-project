@@ -6,7 +6,7 @@
 ## Directory Structure
 
 - `__tests__`
-  - Test files
+  - Test files for api tests
 - `app/`
   - Application code for server
   - `config/`
@@ -21,5 +21,7 @@
     - Declares the path of API endpoints and assigns to controllers
   - `services/`
     - Handles business logic and interacts with data sources or external APIs (like our database)
+- `jest/`
+  - Jest configuration for setup and teardown hooks
 - `spec/`
   - OpenAPI specification for API design

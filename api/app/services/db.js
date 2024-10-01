@@ -1,17 +1,17 @@
+// services/db.js
 import { Sequelize } from 'sequelize'
 
 import config from '#config'
 
 const sequelize = new Sequelize(config.db)
 
-export const syncDatabase = async () => {
+export const syncDb = async () => {
   try {
     await sequelize.authenticate()
     await sequelize.sync()
-    console.log('Database connection established and models synced')
+    console.log('Database connection established')
   } catch (error) {
-    console.error('Unable to connect to database:', error)
-    process.exit(1)
+    throw error
   }
 }
 

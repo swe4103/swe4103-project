@@ -1,6 +1,6 @@
 import request from 'supertest'
 
-import app from '../app/index.js'
+import app from '#app'
 
 describe('Test Express App', () => {
   it('should respond with a 404 status code on root endpoint', async () => {
