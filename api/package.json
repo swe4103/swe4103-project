@@ -9,12 +9,13 @@
     "start": "node app.js",
     "dev": "nodemon app.js",
     "lint": "eslint . --fix",
-    "test": "node --experimental-vm-modules --no-warnings $(yarn bin jest)"
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "dependencies": {
     "express": "^4.21.0"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "eslint": "^9.11.1",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.30.0",
