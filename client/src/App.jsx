@@ -1,8 +1,8 @@
 import { useState } from 'react'
 
 import './App.css'
-import LoginForm from './components/LoginForm'
-import RegisterForm from './components/RegisterForm'
+import LoginForm from './components/LoginForm/LoginForm'
+import RegisterForm from './components/RegistrationForm/RegisterForm'
 
 const App = () => {
   const [isRegister, setIsRegister] = useState(false) // Toggle between login and signup
