@@ -61,6 +61,8 @@ For details on technologies and architecture, please refer to [Technologies & Ar
   - Scripts for operations related to CI/CD pipeline
 - `.gitignore`
   - Files or directories that git ignores
+- `.nvmrc`
+  - Defines the Node.js version for a project
 - `prettierrc.json`
   - Prettier config
 - `CONTRIBUTING.md`
@@ -84,16 +86,18 @@ For guidlines and instructions on contributing, please refer to [CONTRIBUTING.md
 
 ### Prerequisites
 
-- **Node.js** (v14 or higher) and **Yarn** must be installed on your machine. You can verify if you have these by running the following commands
+- **Node.js** and **Yarn** must be installed on your machine. You can verify if you have these by running the following commands
 
 ```bash
 node -v
 yarn -v
+nvm -v  # For Windows, use 'nvm version'
 ```
 
 #### Windows
 
 - You can download Node.js from the official [Node.js website](https://nodejs.org/en)
+- After installing Node.js, install Node Version Manager (`nvm`) by following [this guide](https://www.freecodecamp.org/news/node-version-manager-nvm-install-guide/)
 - After installing Node.js, install Yarn by running
 
 ```bash
@@ -106,6 +110,19 @@ npm install -g yarn
 
 ```bash
 brew install node
+```
+
+- To install Node Version Manager (`nvm`), also use Homebrew
+
+```bash
+brew install nvm
+```
+
+**Note**: I had some issues with nvm not being added to my path, so if after installing you still cannot run `nvm -v`, add it to your path and try again
+
+```bash
+export NVM_DIR="$HOME/.nvm"
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
 ```
 
 - To install Yarn, also use Homebrew
@@ -130,13 +147,20 @@ git clone https://github.com/swe4103/swe4103-project.git
 cd swe4103-project
 ```
 
-3. Install the necessary dependencies
+3. Install and use the version of node specified in the `.nvmrc` file by running the following commands
+
+```bash
+nvm install
+nvm use
+```
+
+4. Install the necessary dependencies
 
 ```bash
 yarn install
 ```
 
-4. At this point, you can run either just the client (frontend React.js application), just the server (backend Express.js API), or you can run them concurrently, communicating with eachother
+5. At this point, you can run either just the client (frontend React.js application), just the server (backend Express.js API), or you can run them concurrently, communicating with eachother
 
 **Client**
 
