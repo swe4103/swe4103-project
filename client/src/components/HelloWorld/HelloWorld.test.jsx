@@ -5,7 +5,7 @@ import '@testing-library/jest-dom'
 
 afterEach(cleanup)
 
-test('renders learn vite link', () => {
+test('Contains "Hello World!" text', () => {
   const { getByText } = render(<HelloWorld />)
   const text = getByText(/Hello World!/i)
   expect(text).toBeInTheDocument()
