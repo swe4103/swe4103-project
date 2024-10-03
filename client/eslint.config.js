@@ -40,6 +40,7 @@ export default [
       ...react.configs['jsx-runtime'].rules,
       ...reactHooks.configs.recommended.rules,
       'react/jsx-no-target-blank': 'off',
+      'react/prop-types': 'off', // Disable prop-types rule
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
       'prettier/prettier': ['error'],
       ...prettierConfig.rules,
