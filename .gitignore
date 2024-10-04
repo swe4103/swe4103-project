@@ -6,9 +6,6 @@ logs/
 *.log*
 *.gz
 
-# SQLite
-*.sqlite
-
 # OS generated files
 .DS_Store
 
