@@ -5,6 +5,25 @@ orbs:
   node: circleci/node@5.0.2
 
 jobs:
+  lint_client:
+    executor: node/default
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: yarn
+      - run:
+          command: cd client && yarn lint
+          name: Lint client code
+
+  lint_api:
+    executor: node/default
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: yarn
+      - run:
+          command: cd api && yarn lint
+          name: Lint API code
   build_and_test_client: # this can be any name you choose
     executor: node/default # use the default executor defined within the orb
     steps:
@@ -31,6 +50,26 @@ jobs:
 workflows:
   build_test_deploy:
     jobs:
+      - lint_client:
+        filters:
+          branches:
+            only:
+              - main
+          pull_requests:
+            types:
+              - opened
+              - synchronize
+              - reopened
+      - lint_api:
+        filters:
+          branches:
+            only:
+              - main
+          pull_requests:
+            types:
+              - opened
+              - synchronize
+              - reopened
       - build_and_test_client:
         filters:
           branches:

@@ -18,6 +18,8 @@ dist-ssr/
 # Testing
 coverage/
 *.lcov
+# for running circleci job locally
+process.yml
 
 # Env files
 .env
