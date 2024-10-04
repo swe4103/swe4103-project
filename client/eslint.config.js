@@ -1,6 +1,7 @@
 import js from '@eslint/js'
 import prettierConfig from 'eslint-config-prettier'
 import eslintPluginImport from 'eslint-plugin-import'
+import jest from 'eslint-plugin-jest'
 import prettier from 'eslint-plugin-prettier'
 import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
@@ -8,6 +9,18 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import globals from 'globals'
 
 export default [
+  js.configs.recommended,
+  {
+    files: ['**/__tests__/**', '**/*.{test,spec}.{js,jsx}'],
+    plugins: {
+      jest, // Use the jest plugin
+    },
+    ...jest.configs['flat/recommended'],
+    rules: {
+      ...jest.configs['flat/recommended'].rules,
+      'jest/prefer-expect-assertions': 'off',
+    },
+  },
   {
     ignores: ['dist'],
   },
@@ -40,6 +53,7 @@ export default [
       ...react.configs['jsx-runtime'].rules,
       ...reactHooks.configs.recommended.rules,
       'react/jsx-no-target-blank': 'off',
+      'react/prop-types': 'off', // Disable prop-types rule
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
       'prettier/prettier': ['error'],
       ...prettierConfig.rules,
