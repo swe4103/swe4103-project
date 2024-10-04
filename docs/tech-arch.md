@@ -19,8 +19,8 @@ This document outlines the technolgies used in this project, and the underlying 
 
 - [**Express.js**](https://expressjs.com/)
   - Backend web application framework
-- [**SQLite**](https://www.sqlite.org/)
-  - Embedded on-disk SQL database engine
+- [**Cosmos DB**](https://azure.microsoft.com/en-us/products/cosmos-db)
+  - NoSQL cloud database
 
 ### Development & Quality Tools
 
@@ -42,10 +42,12 @@ This document outlines the technolgies used in this project, and the underlying 
 - [**CircleCI**](https://circleci.com/)
   - Continuous integration and continuous delivery platform
 - [**Amazon Web Services (AWS)**](https://aws.amazon.com/)
-  - Cloud service provider
+  - Amazon cloud service provider
+- [**Microsoft Azure**](https://azure.microsoft.com/en-ca)
+  - Microsoft cloud service provider
 
 ## Architecture
 
-This project follows a 2-tier mono-repo client-server architecture. The React frontend handles the user interface and communicates with the Express backend API to manage data and server-side logic. This ensures a clear separation between the presentation and application layers within a single repository.
+This project follows a mono-repo 3-tier client-server architecture. The React frontend handles the user interface and communicates with the Express backend API to manage data and server-side logic. This ensures a clear separation between the presentation and application layers within a single repository.
 
 <p align="center"><img width="500px" src="../assets/client-server-diagram.png" style="background-color: #ffffff; border-radius: 8px; padding: 24px;" /></p>

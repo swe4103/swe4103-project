@@ -15,8 +15,6 @@
     - The methods that process an endpoint and unpack web layer data to dispatch to services
   - `middleware/`
     - Reusable plugins to modify requests typically used for cache control, authentication, error handling, etc.
-  - `models/`
-    - Models used for SQLite (Sequelize)
   - `routes/`
     - Declares the path of API endpoints and assigns to controllers
   - `services/`
