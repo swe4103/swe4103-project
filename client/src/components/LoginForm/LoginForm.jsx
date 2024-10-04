@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { useState } from 'react'
 import '../../App.css'
 
@@ -7,7 +8,7 @@ const LoginForm = ({ setIsRegister }) => {
   const [loginPassword, setLoginPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
 
-  // Event handlers for email, passowrd
+  // Event handlers for email, password
   const onEmailChange = event => {
     setLoginEmail(event.target.value)
   }
@@ -23,27 +24,17 @@ const LoginForm = ({ setIsRegister }) => {
 
     // TODO: Send request to API
     try {
-      const response = await fetch('endpoint', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: loginEmail,
-          password: loginPassword,
-        }),
+      const response = await axios.post('endpoint', {
+        email: loginEmail,
+        password: loginPassword,
       })
 
-      if (!response.ok) {
-        throw new Error('Login failed! Please check your credentials.')
-      }
-
-      const data = await response.json()
       // Handle successful login (e.g., set user state, redirect, etc.)
-      console.log('Login successful:', data)
+      console.log('Login successful:', response.data)
     } catch (error) {
-      setErrorMessage(error.message)
-      return errorMessage
+      setErrorMessage(
+        error.response?.data?.message || 'Login failed! Please check your credentials.',
+      )
     }
   }
 
@@ -77,6 +68,7 @@ const LoginForm = ({ setIsRegister }) => {
           Login
         </button>
       </form>
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
       <div style={{ marginTop: '20px' }}>
         <p>Don&apos;t have an account?</p>
         <button className="rounded-button" onClick={() => setIsRegister(true)}>

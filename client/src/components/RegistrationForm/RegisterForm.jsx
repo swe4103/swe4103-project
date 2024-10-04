@@ -1,8 +1,9 @@
+import axios from 'axios'
 import { useState } from 'react'
 import '../../App.css'
 
 const RegisterForm = ({ setIsRegister }) => {
-  // State hooks for email, password, and error
+  // State hooks for email, password, confirm password, and error
   const [registerEmail, setRegisterEmail] = useState('')
   const [registerPassword, setRegisterPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -37,27 +38,15 @@ const RegisterForm = ({ setIsRegister }) => {
 
     // TODO: Send request to API
     try {
-      const response = await fetch('endpoint', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: registerEmail,
-          password: registerPassword,
-        }),
+      const response = await axios.post('endpoint', {
+        email: registerEmail,
+        password: registerPassword,
       })
 
-      if (!response.ok) {
-        throw new Error('Registration failed! Please try again.')
-      }
-
-      const data = response.json()
-      // TODO: Handle successful registration (e.g., redirect, show message, etc.)
-      console.log('Registration successful:', data)
+      // Handle successful registration (e.g., redirect, show message, etc.)
+      console.log('Registration successful:', response.data)
     } catch (error) {
-      setErrorMessage(error.message)
-      return errorMessage
+      setErrorMessage(error.response?.data?.message || 'Registration failed! Please try again.')
     }
   }
 
