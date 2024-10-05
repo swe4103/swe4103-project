@@ -12,9 +12,11 @@
     "test": "NODE_ENV=test node --experimental-vm-modules --no-warnings $(yarn bin jest)"
   },
   "dependencies": {
-    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
-    "express": "^4.21.0"
+    "express": "^4.21.0",
+    "jsonwebtoken": "^9.0.2",
+    "node-cache": "^5.1.2"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
