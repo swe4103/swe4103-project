@@ -4,6 +4,7 @@ const AuthContext = createContext()
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null)
   const login = userToken => {
+    // TODO: Make API request (cosmos)
     setToken(userToken)
   }
   const logout = () => {
@@ -23,3 +24,5 @@ export const useAuth = () => {
   }
   return context
 }
+
+export default AuthProvider
