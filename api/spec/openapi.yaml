@@ -18,10 +18,6 @@ tags:
     description: User related operations
   - name: projects
     description: Project related operations
-  - name: invitations
-    description: Invitation related operations
-  - name: admin
-    description: Administrator related operations
 paths:
   /auth/login:
     post:
@@ -77,7 +73,7 @@ paths:
       tags:
         - auth
       summary: Register a new user via invitation
-      description: Registers a new user based on the invitation token.
+      description: Registers a new user based on the invitation token. If the user is a student, they will be redirected to accept the invitation.
       parameters:
         - name: token
           in: query
@@ -92,80 +88,20 @@ paths:
             schema:
               type: object
               properties:
-                userId:
-                  type: integer
-                  format: int64
-                  example: 1
-                email:
-                  type: string
-                  example: 'student@example.com'
                 displayName:
                   type: string
                   example: 'John Doe'
-                role:
-                  type: string
-                  enum:
-                    - STUDENT
-                    - INSTRUCTOR
-                    - ADMIN
-                  example: 'STUDENT'
                 password:
                   type: string
                   format: password
                   example: 'securepassword123'
       responses:
         '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AuthResponse'
-          description: User registered
+          description: User registered successfully
         '403':
           description: Invalid or expired invitation token
         '400':
           description: Bad request
-  /invitations/accept:
-    post:
-      tags:
-        - invitations
-      summary: Accept an invitation for existing users
-      description: Accepts the invitation and adds the existing user to the specified project.
-      parameters:
-        - name: token
-          in: query
-          required: true
-          schema:
-            type: string
-            example: 'invite-token-example'
-      security:
-        - authorization: []
-      responses:
-        '200':
-          description: User added to the project successfully
-        '403':
-          description: Invalid or expired invitation token
-        '400':
-          description: Bad request
-        '401':
-          description: Unauthorized
-  /invitations/{token}:
-    delete:
-      tags:
-        - invitations
-      summary: Delete an invite
-      description: Deletes a specific invite by the token.
-      parameters:
-        - name: token
-          in: path
-          required: true
-          schema:
-            type: string
-            example: 'invite-token-example'
-      responses:
-        '204':
-          description: Invite deleted successfully
-        '404':
-          description: Invite not found
   /projects:
     post:
       tags:
@@ -250,11 +186,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                projectName:
-                  type: string
-                  example: 'Updated Project Name'
+              $ref: '#/components/schemas/Project'
       security:
         - authorization: []
       responses:
@@ -285,20 +217,12 @@ paths:
           description: Project deleted successfully
         '404':
           description: Project not found
-
-  /projects/{projectId}/invite:
+  /users/invite:
     post:
       tags:
-        - projects
-      parameters:
-        - name: projectId
-          in: path
-          required: true
-          schema:
-            type: string
-            example: 'project-abc123'
-      summary: Send invites to students for a project
-      description: Instructors send bulk invites to students for a specific project. The invitation flow will handle registration if needed or directly add the student to the project.
+        - users
+      summary: Send invites (either student or instructor)
+      description: Admins can invite instructors and students. Instructors can only invite students to their projects.
       security:
         - authorization: []
       requestBody:
@@ -312,22 +236,61 @@ paths:
                   type: array
                   items:
                     type: string
-                    example: 'student@example.com'
+                    example: 'invitee@example.com'
+                role:
+                  type: string
+                  enum:
+                    - STUDENT
+                    - INSTRUCTOR
+                  example: 'STUDENT'
+                projectId:
+                  type: string
+                  nullable: true
+                  example: 'project-abc123'
       responses:
         '200':
           description: Invitations sent successfully
         '400':
-          description: Bad request
-        '401':
-          description: Unauthorized - Only instructors can send project invitations
-  /admin/invite:
+          description: Bad request (missing required fields or incorrect type)
+        '403':
+          description: Unauthorized access (e.g., an instructor trying to invite another instructor)
+  /users/invite/accept:
     post:
       tags:
-        - admin
-      summary: Invite new instructors
-      description: Admins send email invites to new instructors. Instructors will register through the invite.
+        - users
+      summary: Accept an invitation
+      description: Accepts the invitation based on the provided token and adds the user to the relevant project or role.
       security:
         - authorization: []
+      parameters:
+        - name: token
+          in: query
+          required: true
+          schema:
+            type: string
+            example: 'invite-token-example'
+      responses:
+        '200':
+          description: Invitation accepted successfully
+        '403':
+          description: Invalid or expired invitation token
+        '400':
+          description: Bad request
+  /users/invite/{token}:
+    put:
+      tags:
+        - users
+      summary: Update an invite
+      description: Allows updating the invite’s details such as email or expiry date.
+      security:
+        - authorization: []
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 'invite-token-example'
       requestBody:
         required: true
         content:
@@ -335,16 +298,43 @@ paths:
             schema:
               type: object
               properties:
-                emails:
-                  type: array
-                  items:
-                    type: string
-                    example: 'instructor@example.com'
+                email:
+                  type: string
+                  example: 'invitee@example.com'
+                expiry:
+                  type: string
+                  format: date-time
+                  example: '2024-12-31T23:59:59Z'
+                status:
+                  type: string
+                  enum:
+                    - PENDING
+                    - ACCEPTED
+                  example: 'PENDING'
       responses:
         '200':
-          description: Invitations sent successfully
-        '401':
-          description: Unauthorized - only admins can send instructor invites
+          description: Invite updated successfully
+        '404':
+          description: Invite not found
+    delete:
+      tags:
+        - users
+      summary: Delete an invite
+      description: Deletes the invite by its token.
+      security:
+        - authorization: []
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 'invite-token-example'
+      responses:
+        '204':
+          description: Invite deleted successfully
+        '404':
+          description: Invite not found
   /users/{userId}:
     get:
       tags:
@@ -473,9 +463,6 @@ components:
           items:
             type: object
             properties:
-              userId:
-                type: string
-                example: 'user-456'
               email:
                 type: string
                 example: 'student@example.com'
@@ -490,11 +477,6 @@ components:
                 type: string
                 description: Only present if status is PENDING
                 example: 'invite-token-example'
-              expiry:
-                type: string
-                format: date-time
-                description: Only present if status is PENDING
-                example: '2024-12-31T23:59:59Z'
     AuthResponse:
       type: object
       properties:

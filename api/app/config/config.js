@@ -5,7 +5,8 @@ dotenv.config()
 const config = {
   env: process.env.NODE_ENV || 'development',
   port: process.env.PORT || 3000,
-  jwtSecret: process.env.JWT_SECRET,
+  jwtLoginSecret: process.env.JWT_LOGIN_SECRET,
+  jwtInviteSecret: process.env.JWT_INVITE_SECRET,
   // add more things over time
 }
 export default config

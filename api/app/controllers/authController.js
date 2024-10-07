@@ -2,57 +2,86 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
 import config from '#config'
-import { getUserByEmail } from '#models/userModel.js'
-import { blacklist } from '#services/nodeCache.js'
+import { Roles } from '#constants/roles.js'
+import { blacklist } from '#services/blacklistCache.js'
 
-export const login = async (req, res) => {
-  const { email, password } = req.body
+export default {
+  login: async (req, res) => {
+    const { email, password } = req.body
 
-  try {
-    const user = await getUserByEmail(email)
+    try {
+      // TODO query db
+      const user = null
 
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' })
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' })
+      }
+
+      const isPasswordValid = await bcrypt.compare(password, user.password)
+      if (!isPasswordValid) {
+        return res.status(401).json({ message: 'Invalid email or password' })
+      }
+
+      const token = jwt.sign({ userId: user.id, role: user.role }, config.jwtLoginSecret, {
+        expiresIn: '1d',
+      })
+
+      res.json({
+        token,
+        user: {
+          userId: user.id,
+          email: user.email,
+          displayName: user.displayName,
+          role: user.role,
+        },
+      })
+    } catch (error) {
+      console.error('Error logging in:', error)
+      res.status(500).json({ message: 'Internal server error' })
+    }
+  },
+  logout: async (req, res) => {
+    const authHeader = req.headers.authorization
+    if (!authHeader) {
+      return res.status(400).json({ message: 'Authorization header missing' })
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password)
-    if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Invalid email or password' })
+    const token = authHeader.split(' ')[1]
+    if (!token) {
+      return res.status(400).json({ message: 'Token missing in authorization header' })
     }
 
-    const token = jwt.sign({ userId: user.id, role: user.role }, config.jwtSecret, {
-      expiresIn: '24h',
-    })
+    blacklist(token)
+    res.status(200).json({ message: 'Logged out successfully' })
+  },
+  register: async (req, res) => {
+    // step 1: get invitee from auth middleware
+    const invitee = req.invitee
+    const { displayName, password } = req.body
 
-    res.json({
-      token,
-      user: {
-        userId: user.id,
-        email: user.email,
-        displayName: user.displayName,
-        role: user.role,
-      },
-    })
-  } catch (error) {
-    res.status(500).json({ message: 'Internal server error', error })
-  }
-}
+    try {
+      // step 2: hash the password
+      const hashedPassword = await bcrypt.hash(password, 10)
 
-export const logout = (req, res) => {
-  const authHeader = req.headers.authorization
-  if (!authHeader) {
-    return res.status(400).json({ message: 'Authorization header missing' })
-  }
-
-  const token = authHeader.split(' ')[1]
-  if (!token) {
-    return res.status(400).json({ message: 'Token missing in authorization header' })
-  }
-
-  blacklist(token)
-  res.status(200).json({ message: 'Logged out successfully' })
-}
-
-export const register = (req, res) => {
-  console.log('not implemented')
+      // step 3: handle registration based on role
+      // if instrcutor, then add to db
+      if (invitee.role === Roles.INSTRUCTOR) {
+        // TODO add instructor entry in the database
+      } else if (invitee.role === Roles.STUDENT) {
+        // if student then add student to db then redirect
+        if (!invitee.projectId) {
+          return res
+            .status(400)
+            .json({ message: 'Project ID is required for student registration' })
+        }
+        // TODO add student entry in the database
+      } else {
+        return res.status(400).json({ message: 'Bad request' })
+      }
+      return res.status(201).json({ message: 'User registered successfully' })
+    } catch (error) {
+      console.error('Error registering user:', error)
+      return res.status(500).json({ message: 'Internal server error' })
+    }
+  },
 }
