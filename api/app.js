@@ -1,5 +1,6 @@
-import app from './app/index.js'
+import app from '#app'
+import config from '#config'
 
-const port = process.env.PORT || '3000'
+const port = config.port
 
 app.listen(port, () => console.log(`App listening on port ${port}`))
