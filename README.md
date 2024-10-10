@@ -57,8 +57,6 @@ For details on technologies and architecture, please refer to [Technologies & Ar
   - Refer to [`client/README.md`](https://github.com/swe4103/swe4103-project/blob/main/client/README.md)
 - `docs/`
   - Documentation related to project specification
-- `scripts/`
-  - Scripts for operations related to CI/CD pipeline
 - `.gitignore`
   - Files or directories that git ignores
 - `.nvmrc`

@@ -1,13 +1,15 @@
 import axios from 'axios'
 import { useState } from 'react'
+import { Navigate } from 'react-router-dom'
 import '../../App.css'
 
-const RegisterForm = ({ setIsRegister }) => {
-  // State hooks for email, password, confirm password, and error
+const RegisterForm = () => {
+  // State hooks for email, password, confirm password, error, and navigation
   const [registerEmail, setRegisterEmail] = useState('')
   const [registerPassword, setRegisterPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
+  const [navigateToLogin, setNavigateToLogin] = useState(false) // State to manage navigation
 
   // Event handlers for email, password, confirm password
   const onEmailChange = event => {
@@ -45,9 +47,16 @@ const RegisterForm = ({ setIsRegister }) => {
 
       // Handle successful registration (e.g., redirect, show message, etc.)
       console.log('Registration successful:', response.data)
+      // Set navigateToLogin to true after successful registration
+      setNavigateToLogin(true)
     } catch (error) {
       setErrorMessage(error.response?.data?.message || 'Registration failed! Please try again.')
     }
+  }
+
+  // If navigating to login, render Navigate component
+  if (navigateToLogin) {
+    return <Navigate to="/login" /> // Adjust the path as necessary
   }
 
   return (
@@ -92,11 +101,12 @@ const RegisterForm = ({ setIsRegister }) => {
         </button>
         <div style={{ marginTop: '20px' }}>
           <p>Already have an account?</p>
-          <button className="rounded-button" onClick={() => setIsRegister(false)}>
+          <button className="rounded-button" onClick={() => setNavigateToLogin(true)}>
             Log In
           </button>
         </div>
       </form>
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
     </div>
   )
 }
