@@ -8,5 +8,6 @@
   "useTabs": false,
   "tabWidth": 2,
   "trailingComma": "all",
-  "singleQuote": true
+  "singleQuote": true,
+  "endOfLine": "lf"
 }

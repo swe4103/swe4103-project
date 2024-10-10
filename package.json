@@ -39,5 +39,8 @@
     "*.{json,md}": [
       "yarn prettier"
     ]
+  },
+  "dependencies": {
+    "axios": "^1.7.7"
   }
 }
