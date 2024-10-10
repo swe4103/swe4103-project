@@ -1,16 +1,18 @@
 import axios from 'axios'
 import { useState } from 'react'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import '../../App.css'
 import { useAuth } from '../../state/AuthProvider/AuthProvider'
 
 const LoginForm = () => {
-  // State hooks for login email, password, and navigation
+  // State hooks for login email, password, loading, and error message
   const [loginEmail, setLoginEmail] = useState('')
   const [loginPassword, setLoginPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
-  const [navigateToRegister, setNavigateToRegister] = useState(false) // State to manage navigation
+  // const [navigateToRegister, setNavigateToRegister] = useState(false)
+  const [isLoading, setIsLoading] = useState(false) // Loading state for login request
+
   const { login } = useAuth() // Get login function from AuthProvider
   const navigate = useNavigate() // React Router hook for navigation
 
@@ -25,30 +27,29 @@ const LoginForm = () => {
 
   // Event handler for form submission
   const onSubmitLogin = async event => {
-    // Prevent form from refreshing page
-    event.preventDefault()
+    event.preventDefault() // Prevent form from refreshing page
+    setIsLoading(true) // Set loading state to true
+
     try {
       const response = await axios.post('http://localhost:3000/api/auth/login', {
         email: loginEmail,
         password: loginPassword,
       })
-      const { token, user } = response.data
-      await login(token, user)
-
-      // Handle successful login (e.g., set user state, redirect, etc.)
-      console.log('Login successful:', response.data)
+      await login(response.data)
       navigate('/')
     } catch (error) {
       setErrorMessage(
         error.response?.data?.message || 'Login failed! Please check your credentials.',
       )
+    } finally {
+      setIsLoading(false) // Set loading state back to false
     }
   }
 
   // If navigating to registration, render Navigate component
-  if (navigateToRegister) {
-    return <Navigate to="/register" /> // Adjust the path as necessary
-  }
+  // if (navigateToRegister) {
+  //   return <Navigate to="/register" /> // Adjust the path as necessary
+  // }
 
   return (
     <div className="login-signup-container">
@@ -63,6 +64,7 @@ const LoginForm = () => {
             required
             value={loginEmail}
             onChange={onEmailChange}
+            disabled={isLoading} // Disable input when loading
           />
         </div>
         <div className="input-group">
@@ -74,19 +76,24 @@ const LoginForm = () => {
             required
             value={loginPassword}
             onChange={onPasswordChange}
+            disabled={isLoading} // Disable input when loading
           />
         </div>
-        <button type="submit" className="rounded-button">
-          Login
+        <button type="submit" className="rounded-button" disabled={isLoading}>
+          {isLoading ? 'Logging in...' : 'Login'} {/* Show loading text if isLoading */}
         </button>
       </form>
       {errorMessage && <p className="error-message">{errorMessage}</p>}
-      <div style={{ marginTop: '20px' }}>
+      {/* <div style={{ marginTop: '20px' }}>
         <p>Don&apos;t have an account?</p>
-        <button className="rounded-button" onClick={() => setNavigateToRegister(true)}>
+        <button
+          className="rounded-button"
+          onClick={() => setNavigateToRegister(true)}
+          disabled={isLoading}
+        >
           Register Now
         </button>
-      </div>
+      </div> */}
     </div>
   )
 }

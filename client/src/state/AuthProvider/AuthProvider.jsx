@@ -3,36 +3,31 @@ import { createContext, useContext, useState, useEffect } from 'react'
 const AuthContext = createContext()
 
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(null)
   const [user, setUser] = useState(null)
+  const [isLoading, setIsLoading] = useState(true) // Track the loading state
 
   useEffect(() => {
-    const storedToken = localStorage.getItem('token')
-    const storedUser = localStorage.getItem('user')
-    if (storedToken) {
-      setToken(storedToken)
-      setUser(storedUser ? JSON.parse(storedUser) : null)
+    const storedUser = localStorage.getItem('me')
+
+    if (storedUser) {
+      setUser(JSON.parse(storedUser))
     }
+
+    setIsLoading(false)
   }, [])
 
-  const login = async (token, user) => {
-    setToken(token)
+  const login = async user => {
     setUser(user)
-    localStorage.setItem('token', token)
-    localStorage.setItem('user', JSON.stringify(user))
+    localStorage.setItem('me', JSON.stringify(user))
   }
 
   const logout = async () => {
-    setToken(null)
     setUser(null)
-    localStorage.removeItem('token')
-    localStorage.remove('user')
+    localStorage.removeItem('me')
   }
 
-  const isAuthenticated = !!token
-
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, user }}>
+    <AuthContext.Provider value={{ login, logout, user, isLoading }}>
       {children}
     </AuthContext.Provider>
   )

@@ -99,12 +99,12 @@ const RegisterForm = () => {
         <button type="submit" className="rounded-button">
           Register
         </button>
-        <div style={{ marginTop: '20px' }}>
+        {/* <div style={{ marginTop: '20px' }}>
           <p>Already have an account?</p>
           <button className="rounded-button" onClick={() => setNavigateToLogin(true)}>
             Log In
           </button>
-        </div>
+        </div> */}
       </form>
       {errorMessage && <p className="error-message">{errorMessage}</p>}
     </div>

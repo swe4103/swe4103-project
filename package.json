@@ -17,6 +17,7 @@
     "test:api": "yarn workspace api test",
     "test:client": "yarn workspace client test",
     "test": "yarn test:client && yarn test:api",
+    "preview": "yarn workspace client build && concurrently --kill-others-on-fail \"yarn workspace api start\"  \"yarn workspace client preview\"",
     "prettier": "prettier --write \"**/*.{js,jsx,json,md}\"",
     "postinstall": "husky"
   },
