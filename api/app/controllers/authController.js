@@ -4,14 +4,14 @@ import jwt from 'jsonwebtoken'
 import config from '#config'
 import { Roles } from '#constants/roles.js'
 import { blacklist } from '#services/blacklistCache.js'
+import { getUserByEmail } from '#services/userService.js'
 
 export default {
   login: async (req, res) => {
     const { email, password } = req.body
 
     try {
-      // TODO query db
-      const user = null
+      const user = await getUserByEmail(email)
 
       if (!user) {
         return res.status(404).json({ message: 'User not found' })
@@ -22,14 +22,14 @@ export default {
         return res.status(401).json({ message: 'Invalid email or password' })
       }
 
-      const token = jwt.sign({ userId: user.id, role: user.role }, config.jwtLoginSecret, {
+      const token = jwt.sign({ id: user.id, role: user.role }, config.jwtLoginSecret, {
         expiresIn: '1d',
       })
 
       res.json({
         token,
         user: {
-          userId: user.id,
+          id: user.id,
           email: user.email,
           displayName: user.displayName,
           role: user.role,

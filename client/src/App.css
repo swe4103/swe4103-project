@@ -108,3 +108,7 @@ body {
 .rounded-button:active {
   background-color: #003d80;
 }
+
+.error-message {
+  color: #ed4337
+}

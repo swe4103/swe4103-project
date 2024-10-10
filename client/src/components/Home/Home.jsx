@@ -1,9 +1,7 @@
+import StudentJoyForm from '../../components/TeamJoyRating/StudentJoyForm'
+
 const Home = () => {
-  return (
-    <div>
-      <h1>Home Page</h1>
-    </div>
-  )
+  return <StudentJoyForm />
 }
 
 export default Home

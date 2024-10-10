@@ -145,14 +145,14 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Project'
-  /projects/{projectId}:
+  /projects/{id}:
     get:
       tags:
         - projects
       summary: Get project by ID
       description: Retrieves details of a project by its project ID.
       parameters:
-        - name: projectId
+        - name: id
           in: path
           required: true
           schema:
@@ -175,7 +175,7 @@ paths:
       summary: Update a project
       description: Updates the details of a specific project.
       parameters:
-        - name: projectId
+        - name: id
           in: path
           required: true
           schema:
@@ -204,7 +204,7 @@ paths:
       summary: Delete a project
       description: Deletes a specific project from the system.
       parameters:
-        - name: projectId
+        - name: id
           in: path
           required: true
           schema:
@@ -335,7 +335,7 @@ paths:
           description: Invite deleted successfully
         '404':
           description: Invite not found
-  /users/{userId}:
+  /users/{id}:
     get:
       tags:
         - users
@@ -344,7 +344,7 @@ paths:
       security:
         - authorization: []
       parameters:
-        - name: userId
+        - name: id
           in: path
           required: true
           schema:
@@ -367,7 +367,7 @@ paths:
       security:
         - authorization: []
       parameters:
-        - name: userId
+        - name: id
           in: path
           required: true
           schema:
@@ -396,7 +396,7 @@ paths:
       security:
         - authorization: []
       parameters:
-        - name: userId
+        - name: id
           in: path
           required: true
           schema:
@@ -418,7 +418,7 @@ components:
     User:
       type: object
       properties:
-        userId:
+        id:
           type: integer
           format: int64
           example: 1
@@ -439,13 +439,13 @@ components:
           items:
             type: object
             properties:
-              projectId:
+              id:
                 type: string
                 example: 'project-abc123'
     Project:
       type: object
       properties:
-        projectId:
+        id:
           type: string
           example: 'project-abc123'
         projectName:

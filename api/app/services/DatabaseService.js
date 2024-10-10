@@ -1,12 +1,12 @@
-import config from '../config/config'
+import { CosmosClient } from '@azure/cosmos'
+
+import config from '#config'
 
 const USER_COLLECTION = 'User'
 const PROJECT_COLLECTION = 'Project'
 
-const { CosmosClient } = require('@azure/cosmos')
-
 const endpoint = config.db.cosmos_endpoint
-const key = config.db.cosmos_uri
+const key = config.db.cosmos_key
 
 const client = new CosmosClient({
   endpoint,
@@ -15,8 +15,8 @@ const client = new CosmosClient({
 
 const database = client.database(config.db.cosmos_db_id)
 
-function getContainer(type) {
-  switch (type) {
+export const getContainer = containerName => {
+  switch (containerName) {
     case 'User':
       return database.container(USER_COLLECTION)
     case 'Project':
@@ -29,8 +29,8 @@ function getContainer(type) {
 // CRUD Operations
 
 // Save a record
-async function saveRecord(record) {
-  const container = getContainer(record.constructor.name)
+export const saveRecord = async (containerName, record) => {
+  const container = getContainer(containerName)
   try {
     const { resource } = await container.items.create(record)
     return true
@@ -41,8 +41,8 @@ async function saveRecord(record) {
 }
 
 // Get a single record based on id
-async function getRecord(type, id) {
-  const container = getContainer(type)
+export const getRecord = async (containerName, id) => {
+  const container = getContainer(containerName)
   try {
     const { resource } = await container.item('id', id).read()
     return resource
@@ -52,13 +52,26 @@ async function getRecord(type, id) {
   }
 }
 
+// Generic filter function to query records based on a given filter
+export const filterRecords = async (containerName, filterQuery) => {
+  const container = getContainer(containerName)
+
+  try {
+    const { resources } = await container.items.query(filterQuery).fetchAll()
+    return resources.length > 0 ? resources : null
+  } catch (error) {
+    console.log(error.message)
+    return null
+  }
+}
+
 // Get all records whose value matches the inputted value for the field name
-async function listRecords(type, field, val) {
+export const listRecords = async (containerName, field, val) => {
   if (field === null || id === null) {
     console.log('Error: Both field and value must be included.') // add log error handling
     return null
   }
-  const container = getContainer(type)
+  const container = getContainer(containerName)
   try {
     if (field === null || id === null) {
       const { resources } = await container.items
@@ -80,5 +93,3 @@ async function listRecords(type, field, val) {
     return null
   }
 }
-
-module.exports = { saveRecord, getRecord, listRecords }

@@ -1,7 +1,9 @@
 import axios from 'axios'
 import { useState } from 'react'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
+
 import '../../App.css'
+import { useAuth } from '../../state/AuthProvider/AuthProvider'
 
 const LoginForm = () => {
   // State hooks for login email, password, and navigation
@@ -9,6 +11,8 @@ const LoginForm = () => {
   const [loginPassword, setLoginPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const [navigateToRegister, setNavigateToRegister] = useState(false) // State to manage navigation
+  const { login } = useAuth() // Get login function from AuthProvider
+  const navigate = useNavigate() // React Router hook for navigation
 
   // Event handlers for email, password
   const onEmailChange = event => {
@@ -23,16 +27,17 @@ const LoginForm = () => {
   const onSubmitLogin = async event => {
     // Prevent form from refreshing page
     event.preventDefault()
-
-    // TODO: Send request to API
     try {
-      const response = await axios.post('endpoint', {
+      const response = await axios.post('http://localhost:3000/api/auth/login', {
         email: loginEmail,
         password: loginPassword,
       })
+      const { token, user } = response.data
+      await login(token, user)
 
       // Handle successful login (e.g., set user state, redirect, etc.)
       console.log('Login successful:', response.data)
+      navigate('/')
     } catch (error) {
       setErrorMessage(
         error.response?.data?.message || 'Login failed! Please check your credentials.',
