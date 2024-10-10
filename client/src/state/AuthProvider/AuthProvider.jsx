@@ -1,22 +1,38 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useState, useEffect } from 'react'
 
 const AuthContext = createContext()
+
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(null)
-  const login = userToken => {
-    // TODO: Make API request (cosmos)
-    setToken(userToken)
+  const [user, setUser] = useState(null)
+  const [isLoading, setIsLoading] = useState(true) // Track the loading state
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('me')
+
+    if (storedUser) {
+      setUser(JSON.parse(storedUser))
+    }
+
+    setIsLoading(false)
+  }, [])
+
+  const login = async user => {
+    setUser(user)
+    localStorage.setItem('me', JSON.stringify(user))
   }
-  const logout = () => {
-    setToken(null)
+
+  const logout = async () => {
+    setUser(null)
+    localStorage.removeItem('me')
   }
-  const isAuthenticated = !!token
+
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ login, logout, user, isLoading }}>
       {children}
     </AuthContext.Provider>
   )
 }
+
 export const useAuth = () => {
   const context = useContext(AuthContext)
   if (!context) {

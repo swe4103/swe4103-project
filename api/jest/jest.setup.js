@@ -1,6 +1,6 @@
 // this was for sqlite but we can use this file for global setup and teardown functions
-beforeAll(async () => {
-  // await sequelize.sync({ force: true })
+beforeEach(() => {
+  // jest.clearAllMocks() // Clear all mocks before each test
 })
 
 afterAll(async () => {

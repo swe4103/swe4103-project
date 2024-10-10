@@ -1,0 +1,487 @@
+openapi: 3.0.3
+info:
+  title: SWE4103
+  description: 'This is the API specification for the SWE4103 project.'
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: mcollet1@unb.ca
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+tags:
+  - name: auth
+    description: Authentication related operations
+  - name: users
+    description: User related operations
+  - name: projects
+    description: Project related operations
+paths:
+  /auth/login:
+    post:
+      tags:
+        - auth
+      summary: Log user into the system
+      description: Log a user into the system.
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                  format: password
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '403':
+          description: Invalid username/password supplied
+        '400':
+          description: Bad request
+  /auth/logout:
+    post:
+      tags:
+        - auth
+      security:
+        - authorization: []
+      summary: Log out user
+      description: Log out current logged in user.
+      operationId: logoutUser
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+  /auth/register:
+    post:
+      tags:
+        - auth
+      summary: Register a new user via invitation
+      description: Registers a new user based on the invitation token. If the user is a student, they will be redirected to accept the invitation.
+      parameters:
+        - name: token
+          in: query
+          required: true
+          schema:
+            type: string
+            example: 'invite-token-example'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                displayName:
+                  type: string
+                  example: 'John Doe'
+                password:
+                  type: string
+                  format: password
+                  example: 'securepassword123'
+      responses:
+        '201':
+          description: User registered successfully
+        '403':
+          description: Invalid or expired invitation token
+        '400':
+          description: Bad request
+  /projects:
+    post:
+      tags:
+        - projects
+      summary: Create a new project
+      description: Allows instructors or admins to create a new project (course).
+      security:
+        - authorization: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projectName:
+                  type: string
+                  example: 'Math 101'
+      responses:
+        '201':
+          description: Project created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '403':
+          description: Unauthorized - only instructors or admins can create projects
+    get:
+      tags:
+        - projects
+      summary: Get all projects for the current user
+      description: Fetches all projects the current user is involved in.
+      security:
+        - authorization: []
+      responses:
+        '200':
+          description: List of projects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Project'
+  /projects/{id}:
+    get:
+      tags:
+        - projects
+      summary: Get project by ID
+      description: Retrieves details of a project by its project ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 'project-abc123'
+      security:
+        - authorization: []
+      responses:
+        '200':
+          description: Project retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '404':
+          description: Project not found
+    put:
+      tags:
+        - projects
+      summary: Update a project
+      description: Updates the details of a specific project.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 'project-abc123'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+      security:
+        - authorization: []
+      responses:
+        '200':
+          description: Project updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '404':
+          description: Project not found
+    delete:
+      tags:
+        - projects
+      summary: Delete a project
+      description: Deletes a specific project from the system.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 'project-abc123'
+      security:
+        - authorization: []
+      responses:
+        '204':
+          description: Project deleted successfully
+        '404':
+          description: Project not found
+  /users/invite:
+    post:
+      tags:
+        - users
+      summary: Send invites (either student or instructor)
+      description: Admins can invite instructors and students. Instructors can only invite students to their projects.
+      security:
+        - authorization: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                emails:
+                  type: array
+                  items:
+                    type: string
+                    example: 'invitee@example.com'
+                role:
+                  type: string
+                  enum:
+                    - STUDENT
+                    - INSTRUCTOR
+                  example: 'STUDENT'
+                projectId:
+                  type: string
+                  nullable: true
+                  example: 'project-abc123'
+      responses:
+        '200':
+          description: Invitations sent successfully
+        '400':
+          description: Bad request (missing required fields or incorrect type)
+        '403':
+          description: Unauthorized access (e.g., an instructor trying to invite another instructor)
+  /users/invite/accept:
+    post:
+      tags:
+        - users
+      summary: Accept an invitation
+      description: Accepts the invitation based on the provided token and adds the user to the relevant project or role.
+      security:
+        - authorization: []
+      parameters:
+        - name: token
+          in: query
+          required: true
+          schema:
+            type: string
+            example: 'invite-token-example'
+      responses:
+        '200':
+          description: Invitation accepted successfully
+        '403':
+          description: Invalid or expired invitation token
+        '400':
+          description: Bad request
+  /users/invite/{token}:
+    put:
+      tags:
+        - users
+      summary: Update an invite
+      description: Allows updating the invite’s details such as email or expiry date.
+      security:
+        - authorization: []
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 'invite-token-example'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: 'invitee@example.com'
+                expiry:
+                  type: string
+                  format: date-time
+                  example: '2024-12-31T23:59:59Z'
+                status:
+                  type: string
+                  enum:
+                    - PENDING
+                    - ACCEPTED
+                  example: 'PENDING'
+      responses:
+        '200':
+          description: Invite updated successfully
+        '404':
+          description: Invite not found
+    delete:
+      tags:
+        - users
+      summary: Delete an invite
+      description: Deletes the invite by its token.
+      security:
+        - authorization: []
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 'invite-token-example'
+      responses:
+        '204':
+          description: Invite deleted successfully
+        '404':
+          description: Invite not found
+  /users/{id}:
+    get:
+      tags:
+        - users
+      summary: Get user by ID
+      description: Retrieves the details of a specific user by their user ID.
+      security:
+        - authorization: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: User retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+    put:
+      tags:
+        - users
+      summary: Update user details
+      description: Updates the details of a specific user.
+      security:
+        - authorization: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+    delete:
+      tags:
+        - users
+      summary: Delete user by ID
+      description: Deletes a user from the system by their user ID.
+      security:
+        - authorization: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '204':
+          description: User deleted successfully
+        '404':
+          description: User not found
+
+components:
+  securitySchemes:
+    authorization:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        email:
+          type: string
+          example: john@email.com
+        displayName:
+          type: string
+          example: John Doe
+        role:
+          type: string
+          enum:
+            - STUDENT
+            - INSTRUCTOR
+            - ADMIN
+        projects:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                example: 'project-abc123'
+    Project:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 'project-abc123'
+        projectName:
+          type: string
+          example: 'Math 101'
+        instructorId:
+          type: string
+          example: 'user-123'
+        expiresIn:
+          type: string
+          format: date-time
+          example: '2024-12-31T23:59:59Z'
+        participants:
+          type: array
+          items:
+            type: object
+            properties:
+              email:
+                type: string
+                example: 'student@example.com'
+              status:
+                type: string
+                enum:
+                  - PENDING
+                  - ACTIVE
+                  - EXPIRED
+                example: 'PENDING'
+              token:
+                type: string
+                description: Only present if status is PENDING
+                example: 'invite-token-example'
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          example: 'jwt-token-example'
+        user:
+          $ref: '#/components/schemas/User'
