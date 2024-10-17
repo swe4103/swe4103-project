@@ -2,7 +2,6 @@ import axios from 'axios'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import '../../App.css'
 import { useAuth } from '../../state/AuthProvider/AuthProvider'
 
 const LoginForm = () => {

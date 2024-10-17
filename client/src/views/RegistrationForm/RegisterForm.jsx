@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { useState } from 'react'
 import { Navigate } from 'react-router-dom'
-import '../../App.css'
 
 const RegisterForm = () => {
   // State hooks for email, password, confirm password, error, and navigation
