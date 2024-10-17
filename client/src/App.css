@@ -1,4 +1,4 @@
-#root {
+/* #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
@@ -44,6 +44,7 @@
 /* Login/Sign-Up Styling - Alex Groom 
 * Temporary colors and fonts - they can change once we decide on a design style and colour palette
 */
+/*
 body {
   font-family: Arial, sans-serif;
   background-color: #f4f4f9;
@@ -111,4 +112,4 @@ body {
 
 .error-message {
   color: #ed4337
-}
+} */
