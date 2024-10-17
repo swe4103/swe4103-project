@@ -1,0 +1,32 @@
+// button styling to ensure consistency accross app
+
+@use 'variables';
+
+.btn-primary {
+  background-color: variables.$primary-color !important;
+  color: variables.$text-light !important;
+}
+
+.btn-secondary {
+  background-color: variables.$secondary-color !important;
+  color: variables.$text-light !important;
+}
+
+// might not need below
+.rounded-button {
+  background-color: variables.$primary-color;
+  color: variables.$white-color;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+
+  &:hover {
+    background-color: variables.$primary-hover-color;
+  }
+
+  &:active {
+    background-color: variables.$primary-active-color;
+  }
+}

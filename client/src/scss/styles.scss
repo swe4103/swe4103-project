@@ -1,0 +1,48 @@
+// Define global styles here
+// Import Bootstrap and other required modules first
+// override defualt bootstrap colors
+@use 'variables';
+@use 'globals';
+@use 'buttons';
+@use 'forms';
+@use 'sass:map';
+
+@use 'bootstrap/scss/bootstrap' with (
+  $theme-colors: (
+    'primary': variables.$primary-color,
+    'secondary': variables.$secondary-color,
+    'light': variables.$light-color,
+    'dark': variables.$dark-color,
+    'accent': variables.$accent-color,
+  )
+);
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: variables.$background-color; // Use the global variable if defined
+}
+
+// Button overrides
+// .btn-primary {
+//   background-color: map.get(bootstrap.$theme-colors, 'primary') !important;
+//   color: map.get(bootstrap.$theme-colors, 'light') !important;
+// }
+
+// // Global styles
+// html,
+// body {
+//   height: 100%;
+//   margin: 0;
+//   padding: 0;
+//   background-color: $background-color; // Use the variable for consistency
+// }
+
+// // Button overrides
+// .btn-primary {
+//   background-color: $primary-color !important;
+//   color: $text-light !important;
+// }

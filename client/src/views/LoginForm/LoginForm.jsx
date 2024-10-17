@@ -1,16 +1,19 @@
 import axios from 'axios'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Navigate } from 'react-router-dom'
 
 import '../../App.css'
+import ButtonPrimary from '../../components/Button/ButtonPrimary'
+import ButtonSecondary from '../../components/Button/ButtonSecondary'
 import { useAuth } from '../../state/AuthProvider/AuthProvider'
+import '../../scss/styles.scss'
 
 const LoginForm = () => {
   // State hooks for login email, password, loading, and error message
   const [loginEmail, setLoginEmail] = useState('')
   const [loginPassword, setLoginPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
-  // const [navigateToRegister, setNavigateToRegister] = useState(false)
+  const [navigateToRegister, setNavigateToRegister] = useState(false)
   const [isLoading, setIsLoading] = useState(false) // Loading state for login request
 
   const { login } = useAuth() // Get login function from AuthProvider
@@ -47,9 +50,9 @@ const LoginForm = () => {
   }
 
   // If navigating to registration, render Navigate component
-  // if (navigateToRegister) {
-  //   return <Navigate to="/register" /> // Adjust the path as necessary
-  // }
+  if (navigateToRegister) {
+    return <Navigate to="/register" /> // Adjust the path as necessary
+  }
 
   return (
     <div className="login-signup-container">
@@ -79,21 +82,15 @@ const LoginForm = () => {
             disabled={isLoading} // Disable input when loading
           />
         </div>
-        <button type="submit" className="rounded-button" disabled={isLoading}>
-          {isLoading ? 'Logging in...' : 'Login'} {/* Show loading text if isLoading */}
-        </button>
+        <ButtonPrimary disabled={isLoading}>{isLoading ? 'Logging in...' : 'Login'}</ButtonPrimary>
       </form>
       {errorMessage && <p className="error-message">{errorMessage}</p>}
-      {/* <div style={{ marginTop: '20px' }}>
+      <div style={{ marginTop: '20px' }}>
         <p>Don&apos;t have an account?</p>
-        <button
-          className="rounded-button"
-          onClick={() => setNavigateToRegister(true)}
-          disabled={isLoading}
-        >
-          Register Now
-        </button>
-      </div> */}
+        <ButtonSecondary onClick={() => setNavigateToRegister(true)} disabled={isLoading}>
+          Register Now!
+        </ButtonSecondary>
+      </div>
     </div>
   )
 }

@@ -44,7 +44,7 @@
 /* Login/Sign-Up Styling - Alex Groom 
 * Temporary colors and fonts - they can change once we decide on a design style and colour palette
 */
-body {
+/* body {
   font-family: Arial, sans-serif;
   background-color: #f4f4f9;
   margin: 0;
@@ -111,4 +111,4 @@ body {
 
 .error-message {
   color: #ed4337
-}
+} */

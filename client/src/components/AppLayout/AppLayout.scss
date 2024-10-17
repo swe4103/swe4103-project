@@ -1,0 +1,59 @@
+// src/components/AppLayout/AppLayout.scss
+
+// Import global styles to use variables
+@use '../../scss/_variables.scss' as *;
+
+.app-layout {
+  display: flex;
+  //flex-direction: row;
+  //justify-content: center;
+  //align-items: center;
+  min-height: 100vh; // Ensures full viewport height is covered
+}
+
+// .sidebar {
+//   width: 250px;
+//   height: 100vh; // Full viewport height
+//   position: fixed;
+//   z-index: 1;
+//   top: 0;
+//   left: 0;
+//   padding-top: 20px;
+//   display: flex;
+//   flex-direction: row;
+//   align-items: start;
+//   justify-content: start;
+//   background-color: $primary-color;
+//   color: $text-light;
+// }
+
+.sidebar {
+  width: 250px;
+  transition: width 0.3s;
+  &.collapsed {
+    width: 80px;
+  }
+}
+
+// .navbar {
+//   width: 100%;
+// }
+
+// .navbar-brand {
+//   margin-bottom: 20px; // Adds space between the brand title and the nav links
+// }
+
+// .nav {
+//   flex-direction: column; // Stack the links vertically
+// }
+
+// .nav-link {
+//   margin-bottom: 10px; // Add some space between each link
+// }
+
+.main-content {
+  //flex: 1;
+  //padding: 20px;
+  background-color: $background-color;
+  //margin-left: 250px;
+}

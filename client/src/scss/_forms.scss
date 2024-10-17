@@ -1,0 +1,68 @@
+// styles for forms
+@use 'variables';
+
+.basic-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group {
+  margin-bottom: 15px;
+  text-align: left;
+
+  label {
+    margin-bottom: 5px;
+    display: block;
+    font-size: variables.$font-size-base;
+  }
+
+  input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: variables.$font-size-base;
+    background-color: variables.$input-background-color;
+    color: variables.$input-text-color;
+  }
+}
+
+.login-signup-container {
+  background-color: white;
+  padding: 20px;
+  //border-radius: 10px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  //width: 300px;
+  text-align: center;
+  
+}
+
+.basic-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.input-group label {
+  margin-bottom: 5px;
+  display: block;
+  font-size: 14px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  background-color: lightgray;
+  color: black;
+}
+
+.error-message {
+  color: variables.$error-color;
+}

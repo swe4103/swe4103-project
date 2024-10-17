@@ -1,0 +1,13 @@
+// Global styles for body styling
+@use 'variables';
+
+body {
+  font-family: variables.$font-family; // TODO: find better font
+  background-color: variables.$background-color;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}

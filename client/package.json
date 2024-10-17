@@ -22,6 +22,7 @@
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.5",
     "react-dom": "^18.3.1",
+    "react-pro-sidebar": "^1.1.0",
     "react-router-dom": "^6.26.2"
   },
   "devDependencies": {
@@ -44,6 +45,7 @@
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "jest-transform-stub": "^2.0.0",
+    "sass": "1.77.6",
     "vite": "^5.4.1"
   }
 }
