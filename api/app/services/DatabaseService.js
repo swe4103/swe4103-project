@@ -33,10 +33,10 @@ export const saveRecord = async (containerName, record) => {
   const container = getContainer(containerName)
   try {
     const { resource } = await container.items.create(record)
-    return true
+    return resource
   } catch (error) {
     console.error(error.message)
-    return false
+    return null
   }
 }
 
@@ -48,6 +48,22 @@ export const getRecord = async (containerName, id) => {
     return resource
   } catch (error) {
     console.log(error.message)
+    return null
+  }
+}
+
+export const updateRecord = async (containerName, id, updatedData) => {
+  const container = getContainer(containerName)
+  try {
+    const { resource: existingRecord } = await container.item(id).read()
+    if (!existingRecord) {
+      throw new Error('Record not found')
+    }
+    const updatedRecord = { ...existingRecord, ...updatedData }
+    const { resource } = await container.items.upsert(updatedRecord)
+    return resource
+  } catch (error) {
+    console.error(error.message)
     return null
   }
 }

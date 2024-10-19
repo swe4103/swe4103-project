@@ -11,10 +11,10 @@ export default {
     role: Joi.string().valid(Roles.INSTRUCTOR, Roles.STUDENT).required().messages({
       'any.only': 'Invalid invite type. Must be either STUDENT or INSTRUCTOR.',
     }),
-    projectId: Joi.when('role', {
+    teamId: Joi.when('role', {
       is: Roles.STUDENT,
       then: Joi.string().required().messages({
-        'any.required': 'Project ID is required for student invitations.',
+        'any.required': 'Team ID is required for student invitations.',
       }),
       otherwise: Joi.optional(),
     }),
