@@ -1,25 +1,23 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
-import AppLayout from './components/AppLayout/AppLayout.jsx'
+import AppLayout from './components/AppLayout/AppLayout'
 import ProtectedRoutes from './components/ProtectedRoutes/ProtectedRoutes'
 import AuthProvider from './state/AuthProvider/AuthProvider'
-import Home from './views/Home/Home.jsx'
+import AdminView from './views/AdminView/AdminView'
+import Home from './views/Home/Home'
 import LoginForm from './views/LoginForm/LoginForm'
-import RegisterForm from './views/RegistrationForm/RegisterForm.jsx'
-//import RegisterForm from './views/RegistrationForm/RegisterForm'
+import RegisterForm from './views/RegistrationForm/RegisterForm'
 
 const App = () => {
   return (
     <Router>
       <AuthProvider>
         <Routes>
-          {/* Public Routes */}
           <Route path="/login" element={<LoginForm />} />
           <Route path="/register" element={<RegisterForm />} />
 
-          {/* Protected Routes */}
           <Route element={<ProtectedRoutes />}>
-            {/* Dummy component for testing purposes */}
+            <Route path="/admin" element={<AdminView />} />
             <Route path="/" element={<AppLayout />}>
               <Route index element={<Home />} />
             </Route>

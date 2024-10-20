@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { Navigate, useSearchParams, useNavigate } from 'react-router-dom'
 
 import logo from '../../assets/images/doge.png'
+import Button from '../../components/Button/Button'
 import Card from '../../components/Card/Card'
 import { useAuth } from '../../state/AuthProvider/AuthProvider'
 
@@ -114,7 +115,7 @@ const RegisterForm = () => {
           <div className="flex flex-col items-center p-7 gap-5">
             <img src={logo} alt="Doge" width="50%" />
             <h2 className="text-2xl">Welcome</h2>
-            <p>Sign in to continue to __insert_name__</p>
+            <p>Sign in to continue to FlowBoard</p>
             <form className="flex flex-col gap-6 w-full" onSubmit={onSubmitRegister}>
               <input
                 className="p-2 rounded-md border border-primary"
@@ -147,13 +148,14 @@ const RegisterForm = () => {
                 disabled={isLoading} // Disable input when loading
               />
               {errorMessage && <p className="text-danger text-center">{errorMessage}</p>}
-              <button
+              <Button
                 type="submit"
-                className="rounded-md bg-primary w-100 px-4 py-3 text-white"
+                style={{ height: '50px' }}
                 disabled={isLoading}
+                isLoading={isLoading}
               >
-                {isLoading ? 'Registering...' : 'Register'} {/* Show loading text if isLoading */}
-              </button>
+                Register
+              </Button>
             </form>
           </div>
         </Card>

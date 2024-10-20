@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 
 import logo from '../../assets/images/doge.png'
+import Button from '../../components/Button/Button'
 import Card from '../../components/Card/Card'
 import { useAuth } from '../../state/AuthProvider/AuthProvider'
 
@@ -56,14 +57,14 @@ const LoginForm = () => {
 
   return (
     <div className="flex justify-center items-center h-screen bg-primary">
-      <Card width="400px" height="600px" className="flex">
+      <Card width="400px" height="600px" className="flex justify-center items-center">
         <div className="flex flex-col items-center p-7 gap-5">
           <img src={logo} alt="Doge" width="50%" />
           <h2 className="text-2xl">Welcome</h2>
-          <p>Sign in to continue to __insert_name__</p>
+          <p>Sign in to continue to FlowBoard</p>
           <form className="flex flex-col gap-6 w-full" onSubmit={onSubmitLogin}>
             <input
-              className="p-2 rounded-md border border-primary"
+              className="p-3 rounded-md border border-primary"
               type="email"
               id="email"
               placeholder="Email"
@@ -73,7 +74,7 @@ const LoginForm = () => {
               disabled={isLoading} // Disable input when loading
             />
             <input
-              className="p-2 rounded-md border border-primary"
+              className="p-3 rounded-md border border-primary"
               type="password"
               id="password"
               placeholder="Password"
@@ -83,13 +84,14 @@ const LoginForm = () => {
               disabled={isLoading} // Disable input when loading
             />
             {errorMessage && <p className="text-danger text-center">{errorMessage}</p>}
-            <button
+            <Button
               type="submit"
-              className="rounded-md bg-primary w-100 px-4 py-3 text-white"
+              style={{ height: '50px' }}
               disabled={isLoading}
+              isLoading={isLoading}
             >
-              {isLoading ? 'Logging in...' : 'Login'} {/* Show loading text if isLoading */}
-            </button>
+              Login
+            </Button>
           </form>
         </div>
       </Card>

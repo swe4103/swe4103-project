@@ -5,5 +5,5 @@ export const routes = {
 
 export const getTitle = pathname => {
   const key = pathname.replace('/', '')
-  return key === '' ? routes.dashboard.label : routes[key].label
+  return key === '' ? routes.home.label : routes[key].label
 }
