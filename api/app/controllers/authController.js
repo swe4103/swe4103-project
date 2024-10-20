@@ -77,6 +77,7 @@ export const register = async (req, res) => {
       role: invitee.role,
       ...(invitee.role === Roles.STUDENT && { groups: [invitee.teamId] }),
     })
+    blacklist(req.query.token)
     return res.status(201).json({ message: 'User registered successfully' })
   } catch (error) {
     console.error('Error registering user:', error)

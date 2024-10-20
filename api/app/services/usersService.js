@@ -23,7 +23,7 @@ export const updateUserById = async (id, data) => updateRecord('User', id, data)
 
 export const getUserByEmail = async email => {
   const response = await listRecords('User', 'email', email)
-  return response[0]
+  return response ? response[0] : null
 }
 
 export const getUsersByEmails = async emails => {
@@ -52,7 +52,7 @@ export const inviteUsersByEmail = async ({ emails, role, teamId }) => {
     const token = jwt.sign(
       { email, role, ...(role === Roles.STUDENT && { teamId }) },
       config.jwtInviteSecret,
-      { expiresIn: '3d' },
+      { expiresIn: '1d' },
     )
     console.log(token)
     // TODO: Send invitation email with token
