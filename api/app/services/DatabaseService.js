@@ -106,3 +106,17 @@ export const listRecords = async (containerName, field, val) => {
     return null
   }
 }
+
+export const deleteRecord = async (containerName, id) => {
+  const container = getContainer(containerName)
+  try {
+    const { resource } = await container.item(id).delete()
+    if (!resource) {
+      throw new Error(`Record with ID ${id} not found`)
+    }
+    return id
+  } catch (error) {
+    console.error(`Error deleting record with ID ${id}:`, error.message)
+    return null
+  }
+}

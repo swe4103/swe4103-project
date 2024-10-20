@@ -10,11 +10,14 @@ import {
   saveRecord,
   updateRecord,
   upsertRecord,
-} from '#services/DatabaseService.js'
+  deleteRecord,
+} from '#services/databaseService.js'
 
 export const createUser = async user => await saveRecord('User', { id: uuidv4(), ...user })
 
 export const getUserById = async id => await getRecord('User', id)
+
+export const deleteUserById = async id => deleteRecord('User', id)
 
 export const updateUserById = async (id, data) => updateRecord('User', id, data)
 
@@ -31,7 +34,7 @@ export const getUsersByEmails = async emails => {
   return await filterRecords('User', query)
 }
 
-export const inviteUsers = async ({ emails, role, teamId }) => {
+export const inviteUsersByEmail = async ({ emails, role, teamId }) => {
   const users = (await getUsersByEmails(emails)) || []
 
   const existingUsers = users.filter(user => emails.includes(user.email))

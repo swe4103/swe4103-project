@@ -22,6 +22,8 @@ tags:
     description: Project related operations
   - name: teams
     description: Teams related operations
+  - name: joy
+    description: Team Joy related operations
 paths:
   /auth/login:
     post:
@@ -567,6 +569,137 @@ paths:
           description: Class deleted successfully
         '404':
           description: Class not found
+  /joy:
+    post:
+      summary: Create a new joy rating
+      tags:
+        - joy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JoyRating'
+      responses:
+        '201':
+          description: Joy rating created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JoyRating'
+        '400':
+          description: Bad request
+
+    get:
+      summary: Get all joy ratings with optional filters
+      tags:
+        - joy
+      parameters:
+        - in: query
+          name: userId
+          required: true
+          schema:
+            type: string
+            description: The ID of the user whose joy ratings to retrieve
+        - in: query
+          name: teamId
+          required: true
+          schema:
+            type: string
+            description: (Optional) Filter joy ratings by a specific team
+        - in: query
+          name: fromDate
+          schema:
+            type: string
+            format: date-time
+            description: (Optional) Retrieve ratings from this date onward
+        - in: query
+          name: toDate
+          schema:
+            type: string
+            format: date-time
+            description: (Optional) Retrieve ratings up to this date
+      responses:
+        '200':
+          description: A list of joy ratings matching the filters
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/JoyRating'
+        '400':
+          description: Bad request - Invalid query parameters
+        '500':
+          description: Internal server error
+
+  /joy/{id}:
+    get:
+      summary: Get a joy rating by ID
+      tags:
+        - joy
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            description: The ID of the joy rating
+      responses:
+        '200':
+          description: Joy rating found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JoyRating'
+        '404':
+          description: Joy rating not found
+
+    put:
+      summary: Update a joy rating by ID
+      tags:
+        - joy
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            description: The ID of the joy rating
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JoyRating'
+      responses:
+        '200':
+          description: Joy rating updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JoyRating'
+        '400':
+          description: Bad request
+        '404':
+          description: Joy rating not found
+
+    delete:
+      summary: Delete a joy rating by ID
+      tags:
+        - joy
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            description: The ID of the joy rating
+      responses:
+        '204':
+          description: Joy rating deleted successfully
+        '404':
+          description: Joy rating not found
 components:
   securitySchemes:
     authorization:
@@ -598,7 +731,7 @@ components:
           type: array
           items:
             type: string
-            description: "For an INSTRUCTOR - List of classes they teach. For a STUDENT - List of teams they are on"
+            description: 'For an INSTRUCTOR - List of classes they teach. For a STUDENT - List of teams they are on'
     Class:
       type: object
       properties:
@@ -655,16 +788,16 @@ components:
         user:
           $ref: '#/components/schemas/User'
     TokenValidationResponse:
-        type: object
-        properties:
-          valid:
-            type: boolean
-            description: Whether the token is valid or not
-          decoded:
-            type: object
-            nullable: true
-            description: Decoded token data (if valid)
-          error:
-            type: string
-            nullable: true
-            description: Error message (if the token is invalid or expired)
+      type: object
+      properties:
+        valid:
+          type: boolean
+          description: Whether the token is valid or not
+        decoded:
+          type: object
+          nullable: true
+          description: Decoded token data (if valid)
+        error:
+          type: string
+          nullable: true
+          description: Error message (if the token is invalid or expired)

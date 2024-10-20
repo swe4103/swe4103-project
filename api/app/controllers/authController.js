@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 import config from '#config'
 import Roles from '#constants/roles.js'
 import { blacklist } from '#services/blacklistCache.js'
-import { getUserByEmail, createUser } from '#services/userService.js'
+import { getUserByEmail, createUser } from '#services/usersService.js'
 
 export const login = async (req, res) => {
   const { email, password } = req.body
