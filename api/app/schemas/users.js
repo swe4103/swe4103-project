@@ -1,6 +1,6 @@
 import Joi from 'joi'
 
-import { Roles } from '#constants/roles.js'
+import Roles from '#constants/roles.js'
 
 export default {
   invite: Joi.object({

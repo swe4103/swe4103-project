@@ -16,8 +16,12 @@ tags:
     description: Authentication related operations
   - name: users
     description: User related operations
+  - name: classes
+    description: Class related operations
   - name: projects
     description: Project related operations
+  - name: teams
+    description: Teams related operations
 paths:
   /auth/login:
     post:
@@ -102,6 +106,35 @@ paths:
           description: Invalid or expired invitation token
         '400':
           description: Bad request
+
+  /api/auth/validate-token:
+    get:
+      summary: Validate a token
+      tags:
+        - auth
+      parameters:
+        - in: query
+          name: token
+          required: true
+          schema:
+            type: string
+            description: JWT token sent via email or used for authentication
+        - in: query
+          name: type
+          required: true
+          schema:
+            type: string
+            enum: [auth, invite]
+            description: Type of the token being validated
+      responses:
+        '200':
+          description: Token validation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenValidationResponse'
+        '400':
+          description: Bad request, missing or malformed token or tokenType
   /projects:
     post:
       tags:
@@ -326,7 +359,214 @@ paths:
           description: User deleted successfully
         '404':
           description: User not found
+  /teams:
+    post:
+      summary: Create a new team
+      tags:
+        - teams
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Team'
+      responses:
+        '201':
+          description: Team created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        '400':
+          description: Bad request
 
+    get:
+      summary: Get all teams for the current user
+      tags:
+        - teams
+      responses:
+        '200':
+          description: A list of teams
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Team'
+        '500':
+          description: Internal server error
+
+  /teams/{id}:
+    get:
+      summary: Get a team by ID
+      tags:
+        - teams
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The GUID of the team
+      responses:
+        '200':
+          description: Team found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        '404':
+          description: Team not found
+
+    put:
+      summary: Update a team by ID
+      tags:
+        - teams
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The GUID of the team
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Team'
+      responses:
+        '200':
+          description: Team updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        '400':
+          description: Bad request
+        '404':
+          description: Team not found
+
+    delete:
+      summary: Delete a team by ID
+      tags:
+        - teams
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The GUID of the team
+      responses:
+        '204':
+          description: Team deleted successfully
+        '404':
+          description: Team not found
+  /classes:
+    post:
+      summary: Create a new class
+      tags:
+        - classes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Class'
+      responses:
+        '201':
+          description: Class created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Class'
+        '400':
+          description: Bad request
+
+    get:
+      summary: Get all classes for the current user
+      tags:
+        - classes
+      responses:
+        '200':
+          description: A list of classes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Class'
+        '500':
+          description: Internal server error
+
+  /classes/{id}:
+    get:
+      summary: Get a class by ID
+      tags:
+        - classes
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The GUID of the class
+      responses:
+        '200':
+          description: Class found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Class'
+        '404':
+          description: Class not found
+
+    put:
+      summary: Update a class by ID
+      tags:
+        - classes
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The GUID of the class
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Class'
+      responses:
+        '200':
+          description: Class updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Class'
+        '400':
+          description: Bad request
+        '404':
+          description: Class not found
+
+    delete:
+      summary: Delete a class by ID
+      tags:
+        - classes
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The GUID of the class
+      responses:
+        '204':
+          description: Class deleted successfully
+        '404':
+          description: Class not found
 components:
   securitySchemes:
     authorization:
@@ -359,6 +599,14 @@ components:
           items:
             type: string
             description: "For an INSTRUCTOR - List of classes they teach. For a STUDENT - List of teams they are on"
+    Class:
+      type: object
+      properties:
+        id:
+          type: string
+          description: GUID (String)
+        name:
+          type: string
     Team:
       type: object
       properties:
@@ -406,3 +654,17 @@ components:
           example: 'jwt-token-example'
         user:
           $ref: '#/components/schemas/User'
+    TokenValidationResponse:
+        type: object
+        properties:
+          valid:
+            type: boolean
+            description: Whether the token is valid or not
+          decoded:
+            type: object
+            nullable: true
+            description: Decoded token data (if valid)
+          error:
+            type: string
+            nullable: true
+            description: Error message (if the token is invalid or expired)

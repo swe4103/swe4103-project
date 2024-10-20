@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
 import config from '#config'
-import { Roles } from '#constants/roles.js'
+import Roles from '#constants/roles.js'
 import { blacklist } from '#services/blacklistCache.js'
 import { getUserByEmail, createUser } from '#services/userService.js'
 
@@ -74,5 +74,20 @@ export const register = async (req, res) => {
   } catch (error) {
     console.error('Error registering user:', error)
     return res.status(500).json({ message: 'Internal server error' })
+  }
+}
+
+export const validateToken = (req, res) => {
+  const { token, type } = req.query
+  if (!token || !tokenType) {
+    return res.status(400).json({ message: 'Token and type are required' })
+  }
+
+  const secret = tokenType === 'auth' ? config.jwtAuthSecret : config.jwtInviteSecret
+  try {
+    const decoded = jwt.verify(token, secret)
+    res.json({ valid: true, decoded })
+  } catch (error) {
+    res.json({ valid: false, error: 'Invalid or expired token' })
   }
 }

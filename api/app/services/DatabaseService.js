@@ -68,12 +68,20 @@ export const updateRecord = async (containerName, id, updatedData) => {
   }
 }
 
+export const upsertRecord = async (containerName, record) => {
+  const container = getContainer(containerName)
+  const { resource } = await container.items.upsert(record)
+  return resource
+}
+
 // Generic filter function to query records based on a given filter
 export const filterRecords = async (containerName, filterQuery) => {
   const container = getContainer(containerName)
 
   try {
-    const { resources } = await container.items.query(filterQuery).fetchAll()
+    const { resources } = await container.items
+      .query(filterQuery, { enableCrossPartitionQuery: true })
+      .fetchAll()
     return resources.length > 0 ? resources : null
   } catch (error) {
     console.log(error.message)
@@ -87,23 +95,12 @@ export const listRecords = async (containerName, field, val) => {
     console.log('Error: Both field and value must be included.') // add log error handling
     return null
   }
-  const container = getContainer(containerName)
   try {
-    if (field === null || id === null) {
-      const { resources } = await container.items
-        .query(
-          {
-            query: `SELECT * FROM c WHERE c.${field} = @value`,
-            parameters: [{ name: '@value', value: val }],
-          },
-          {
-            enableCrossPartitionQuery: true, // enable cross partition query so that multiple items can be fetched
-          },
-        )
-        .fetchAll()
-
-      return resources
+    const query = {
+      query: `SELECT * FROM c WHERE c.${field} = @value`,
+      parameters: [{ name: '@value', value: val }],
     }
+    return await filterRecords(containerName, query)
   } catch (error) {
     console.log(error.message)
     return null

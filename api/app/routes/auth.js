@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { login, logout, register } from '#controllers/authController.js'
+import { login, logout, register, validateToken } from '#controllers/authController.js'
 import { inviteJWT, authJWT } from '#middleware/authMiddleware.js'
 
 const router = express.Router()
@@ -11,5 +11,7 @@ router.post('/login', login)
 router.post('/logout', authJWT, logout)
 // POST /api/auth/register
 router.post('/register', inviteJWT, register)
+// GET /api/auth/validate-token
+router.get('/validate-token', validateToken)
 
 export default router
