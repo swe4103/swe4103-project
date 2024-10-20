@@ -22,7 +22,7 @@ export const deleteUserById = async id => deleteRecord('User', id)
 export const updateUserById = async (id, data) => updateRecord('User', id, data)
 
 export const getUserByEmail = async email => {
-  const response = listRecords('User', 'email', email)
+  const response = await listRecords('User', 'email', email)
   return response[0]
 }
 
@@ -54,6 +54,7 @@ export const inviteUsersByEmail = async ({ emails, role, teamId }) => {
       config.jwtInviteSecret,
       { expiresIn: '3d' },
     )
+    console.log(token)
     // TODO: Send invitation email with token
   })
   return Promise.all([...existingPromises, ...newPromises])

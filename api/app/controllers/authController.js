@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken'
 
 import config from '#config'
 import Roles from '#constants/roles.js'
+import { registerSchema } from '#schemas/users.js'
 import { blacklist } from '#services/blacklistCache.js'
 import { getUserByEmail, createUser } from '#services/usersService.js'
 
@@ -55,7 +56,13 @@ export const logout = async (req, res) => {
 
 export const register = async (req, res) => {
   const { invitee } = req
-  const { displayName, password } = req.body
+
+  const { error, value } = registerSchema.validate(req.body)
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message })
+  }
+
+  const { displayName, password } = value
 
   if (invitee.role === Roles.STUDENT && !invitee.teamId) {
     return res.status(400).json({ message: 'Team ID is required for student registration' })
