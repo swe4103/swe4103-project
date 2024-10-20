@@ -86,11 +86,11 @@ export const register = async (req, res) => {
 
 export const validateToken = (req, res) => {
   const { token, type } = req.query
-  if (!token || !tokenType) {
+  if (!token || !type) {
     return res.status(400).json({ message: 'Token and type are required' })
   }
 
-  const secret = tokenType === 'auth' ? config.jwtAuthSecret : config.jwtInviteSecret
+  const secret = type === 'auth' ? config.jwtAuthSecret : config.jwtInviteSecret
   try {
     const decoded = jwt.verify(token, secret)
     res.json({ valid: true, decoded })
