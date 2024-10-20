@@ -136,7 +136,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/TokenValidationResponse'
         '400':
-          description: Bad request, missing or malformed token or tokenType
+          description: Bad request, missing or malformed token or type
   /projects:
     post:
       tags:
