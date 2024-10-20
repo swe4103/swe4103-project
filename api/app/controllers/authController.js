@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 import config from '#config'
 import Roles from '#constants/roles.js'
 import { registerSchema } from '#schemas/users.js'
-import { blacklist } from '#services/blacklistCache.js'
+import { blacklist, isBlacklisted } from '#services/blacklistCache.js'
 import { getUserByEmail, createUser } from '#services/usersService.js'
 
 export const login = async (req, res) => {
@@ -86,6 +86,7 @@ export const register = async (req, res) => {
 }
 
 export const validateToken = (req, res) => {
+  f
   const { token, type } = req.query
   if (!token || !type) {
     return res.status(400).json({ message: 'Token and type are required' })
@@ -94,8 +95,11 @@ export const validateToken = (req, res) => {
   const secret = type === 'auth' ? config.jwtAuthSecret : config.jwtInviteSecret
   try {
     const decoded = jwt.verify(token, secret)
-    res.json({ valid: true, decoded })
+    if (isBlacklisted(token)) {
+      return res.json({ valid: false, error: 'Token is blacklisted' })
+    }
+    return res.json({ valid: true, decoded })
   } catch (error) {
-    res.json({ valid: false, error: 'Invalid or expired token' })
+    return res.json({ valid: false, error: 'Invalid or expired token' })
   }
 }
