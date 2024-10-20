@@ -86,7 +86,6 @@ export const register = async (req, res) => {
 }
 
 export const validateToken = (req, res) => {
-  f
   const { token, type } = req.query
   if (!token || !type) {
     return res.status(400).json({ message: 'Token and type are required' })
