@@ -1,5 +1,5 @@
 export const routes = {
-  home: { path: '/home', icon: 'table-columns', label: 'Home' },
+  home: { path: '/', icon: 'table-columns', label: 'Home' },
   settings: { path: '/settings', icon: 'gear', label: 'Settings' },
 }
 
