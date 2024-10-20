@@ -44,3 +44,8 @@ export const inviteSchema = Joi.object({
     otherwise: Joi.optional(),
   }),
 })
+
+export const registerSchema = Joi.object({
+  displayName: Joi.string(),
+  password: passwordSchema,
+})

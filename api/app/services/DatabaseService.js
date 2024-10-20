@@ -5,17 +5,20 @@ import config from '#config'
 const USER_COLLECTION = 'User'
 const PROJECT_COLLECTION = 'Project'
 
-const endpoint = config.db.cosmos_endpoint
-const key = config.db.cosmos_key
+let database = null
 
-const client = new CosmosClient({
-  endpoint,
-  key,
-})
+export const initializeDatabase = () => {
+  const endpoint = config.db.cosmos_endpoint
+  const key = config.db.cosmos_key
 
-const database = client.database(config.db.cosmos_db_id)
+  const client = new CosmosClient({ endpoint, key })
+  database = client.database(config.db.cosmos_db_id)
+}
 
 export const getContainer = containerName => {
+  if (!database) {
+    throw new Error('Database not initialized')
+  }
   switch (containerName) {
     case 'User':
       return database.container(USER_COLLECTION)
@@ -91,10 +94,6 @@ export const filterRecords = async (containerName, filterQuery) => {
 
 // Get all records whose value matches the inputted value for the field name
 export const listRecords = async (containerName, field, val) => {
-  if (field === null || id === null) {
-    console.log('Error: Both field and value must be included.') // add log error handling
-    return null
-  }
   try {
     const query = {
       query: `SELECT * FROM c WHERE c.${field} = @value`,
