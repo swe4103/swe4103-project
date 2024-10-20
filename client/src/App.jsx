@@ -5,6 +5,7 @@ import ProtectedRoutes from './components/ProtectedRoutes/ProtectedRoutes'
 import AuthProvider from './state/AuthProvider/AuthProvider'
 import Home from './views/Home/Home.jsx'
 import LoginForm from './views/LoginForm/LoginForm'
+import RegisterForm from './views/RegistrationForm/RegisterForm.jsx'
 //import RegisterForm from './views/RegistrationForm/RegisterForm'
 
 const App = () => {
@@ -14,6 +15,7 @@ const App = () => {
         <Routes>
           {/* Public Routes */}
           <Route path="/login" element={<LoginForm />} />
+          <Route path="/register" element={<RegisterForm />} />
 
           {/* Protected Routes */}
           <Route element={<ProtectedRoutes />}>

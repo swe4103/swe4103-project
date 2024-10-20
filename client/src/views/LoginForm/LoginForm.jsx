@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 import logo from '../../assets/images/doge.png'
 import Card from '../../components/Card/Card'
@@ -10,12 +10,12 @@ const LoginForm = () => {
   // State hooks for login email, password, loading, and error message
   const [loginEmail, setLoginEmail] = useState('')
   const [loginPassword, setLoginPassword] = useState('')
-  // TODO add me const [errorMessage, setErrorMessage] = useState('')
-  // const [navigateToRegister, setNavigateToRegister] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false) // Loading state for login request
 
   const { login } = useAuth() // Get login function from AuthProvider
   const navigate = useNavigate() // React Router hook for navigation
+  const location = useLocation()
 
   // Event handlers for email, password
   const onEmailChange = event => {
@@ -25,6 +25,14 @@ const LoginForm = () => {
   const onPasswordChange = event => {
     setLoginPassword(event.target.value)
   }
+
+  useEffect(() => {
+    if (location.state?.invalidToken) {
+      setErrorMessage(
+        'Invalid invite token. Please log in or contact your instructor or administrator',
+      )
+    }
+  }, [location.state])
 
   // Event handler for form submission
   const onSubmitLogin = async event => {
@@ -40,9 +48,7 @@ const LoginForm = () => {
       navigate('/')
     } catch (error) {
       console.error(error)
-      // TODO add me setErrorMessage(
-      //   error.response?.data?.message || 'Login failed! Please check your credentials.',
-      // )
+      setErrorMessage('Login failed. Please check your credentials.')
     } finally {
       setIsLoading(false) // Set loading state back to false
     }
@@ -76,6 +82,7 @@ const LoginForm = () => {
               onChange={onPasswordChange}
               disabled={isLoading} // Disable input when loading
             />
+            {errorMessage && <p className="text-danger text-center">{errorMessage}</p>}
             <button
               type="submit"
               className="rounded-md bg-primary w-100 px-4 py-3 text-white"
@@ -87,50 +94,6 @@ const LoginForm = () => {
         </div>
       </Card>
     </div>
-
-    // <div className="login-signup-container">
-    //   <h2>Login</h2>
-    //   <form className="basic-form" onSubmit={onSubmitLogin}>
-    //     <div className="input-group">
-    //       <label htmlFor="email">Email</label>
-    //       <input
-    //         type="email"
-    //         id="email"
-    //         placeholder="Enter your username"
-    //         required
-    //         value={loginEmail}
-    //         onChange={onEmailChange}
-    //         disabled={isLoading} // Disable input when loading
-    //       />
-    //     </div>
-    //     <div className="input-group">
-    //       <label htmlFor="password">Password</label>
-    //       <input
-    //         type="password"
-    //         id="password"
-    //         placeholder="Enter your password"
-    //         required
-    //         value={loginPassword}
-    //         onChange={onPasswordChange}
-    //         disabled={isLoading} // Disable input when loading
-    //       />
-    //     </div>
-    //     <button type="submit" className="rounded-button" disabled={isLoading}>
-    //       {isLoading ? 'Logging in...' : 'Login'} {/* Show loading text if isLoading */}
-    //     </button>
-    //   </form>
-    //   {errorMessage && <p className="error-message">{errorMessage}</p>}
-    //   {/* <div style={{ marginTop: '20px' }}>
-    //     <p>Don&apos;t have an account?</p>
-    //     <button
-    //       className="rounded-button"
-    //       onClick={() => setNavigateToRegister(true)}
-    //       disabled={isLoading}
-    //     >
-    //       Register Now
-    //     </button>
-    //   </div> */}
-    // </div>
   )
 }
 
