@@ -16,8 +16,14 @@ tags:
     description: Authentication related operations
   - name: users
     description: User related operations
+  - name: classes
+    description: Class related operations
   - name: projects
     description: Project related operations
+  - name: teams
+    description: Teams related operations
+  - name: joy
+    description: Team Joy related operations
 paths:
   /auth/login:
     post:
@@ -73,7 +79,7 @@ paths:
       tags:
         - auth
       summary: Register a new user via invitation
-      description: Registers a new user based on the invitation token. If the user is a student, they will be redirected to accept the invitation.
+      description: Registers a new user based on the invitation token.
       parameters:
         - name: token
           in: query
@@ -102,6 +108,35 @@ paths:
           description: Invalid or expired invitation token
         '400':
           description: Bad request
+
+  /api/auth/validate-token:
+    get:
+      summary: Validate a token
+      tags:
+        - auth
+      parameters:
+        - in: query
+          name: token
+          required: true
+          schema:
+            type: string
+            description: JWT token sent via email or used for authentication
+        - in: query
+          name: type
+          required: true
+          schema:
+            type: string
+            enum: [auth, invite]
+            description: Type of the token being validated
+      responses:
+        '200':
+          description: Token validation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenValidationResponse'
+        '400':
+          description: Bad request, missing or malformed token or tokenType
   /projects:
     post:
       tags:
@@ -243,10 +278,10 @@ paths:
                     - STUDENT
                     - INSTRUCTOR
                   example: 'STUDENT'
-                projectId:
+                teamId:
                   type: string
                   nullable: true
-                  example: 'project-abc123'
+                  example: 'team-abc123'
       responses:
         '200':
           description: Invitations sent successfully
@@ -254,87 +289,6 @@ paths:
           description: Bad request (missing required fields or incorrect type)
         '403':
           description: Unauthorized access (e.g., an instructor trying to invite another instructor)
-  /users/invite/accept:
-    post:
-      tags:
-        - users
-      summary: Accept an invitation
-      description: Accepts the invitation based on the provided token and adds the user to the relevant project or role.
-      security:
-        - authorization: []
-      parameters:
-        - name: token
-          in: query
-          required: true
-          schema:
-            type: string
-            example: 'invite-token-example'
-      responses:
-        '200':
-          description: Invitation accepted successfully
-        '403':
-          description: Invalid or expired invitation token
-        '400':
-          description: Bad request
-  /users/invite/{token}:
-    put:
-      tags:
-        - users
-      summary: Update an invite
-      description: Allows updating the invite’s details such as email or expiry date.
-      security:
-        - authorization: []
-      parameters:
-        - name: token
-          in: path
-          required: true
-          schema:
-            type: string
-            example: 'invite-token-example'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  example: 'invitee@example.com'
-                expiry:
-                  type: string
-                  format: date-time
-                  example: '2024-12-31T23:59:59Z'
-                status:
-                  type: string
-                  enum:
-                    - PENDING
-                    - ACCEPTED
-                  example: 'PENDING'
-      responses:
-        '200':
-          description: Invite updated successfully
-        '404':
-          description: Invite not found
-    delete:
-      tags:
-        - users
-      summary: Delete an invite
-      description: Deletes the invite by its token.
-      security:
-        - authorization: []
-      parameters:
-        - name: token
-          in: path
-          required: true
-          schema:
-            type: string
-            example: 'invite-token-example'
-      responses:
-        '204':
-          description: Invite deleted successfully
-        '404':
-          description: Invite not found
   /users/{id}:
     get:
       tags:
@@ -407,7 +361,345 @@ paths:
           description: User deleted successfully
         '404':
           description: User not found
+  /teams:
+    post:
+      summary: Create a new team
+      tags:
+        - teams
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Team'
+      responses:
+        '201':
+          description: Team created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        '400':
+          description: Bad request
 
+    get:
+      summary: Get all teams for the current user
+      tags:
+        - teams
+      responses:
+        '200':
+          description: A list of teams
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Team'
+        '500':
+          description: Internal server error
+
+  /teams/{id}:
+    get:
+      summary: Get a team by ID
+      tags:
+        - teams
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The GUID of the team
+      responses:
+        '200':
+          description: Team found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        '404':
+          description: Team not found
+
+    put:
+      summary: Update a team by ID
+      tags:
+        - teams
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The GUID of the team
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Team'
+      responses:
+        '200':
+          description: Team updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        '400':
+          description: Bad request
+        '404':
+          description: Team not found
+
+    delete:
+      summary: Delete a team by ID
+      tags:
+        - teams
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The GUID of the team
+      responses:
+        '204':
+          description: Team deleted successfully
+        '404':
+          description: Team not found
+  /classes:
+    post:
+      summary: Create a new class
+      tags:
+        - classes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Class'
+      responses:
+        '201':
+          description: Class created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Class'
+        '400':
+          description: Bad request
+
+    get:
+      summary: Get all classes for the current user
+      tags:
+        - classes
+      responses:
+        '200':
+          description: A list of classes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Class'
+        '500':
+          description: Internal server error
+
+  /classes/{id}:
+    get:
+      summary: Get a class by ID
+      tags:
+        - classes
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The GUID of the class
+      responses:
+        '200':
+          description: Class found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Class'
+        '404':
+          description: Class not found
+
+    put:
+      summary: Update a class by ID
+      tags:
+        - classes
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The GUID of the class
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Class'
+      responses:
+        '200':
+          description: Class updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Class'
+        '400':
+          description: Bad request
+        '404':
+          description: Class not found
+
+    delete:
+      summary: Delete a class by ID
+      tags:
+        - classes
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The GUID of the class
+      responses:
+        '204':
+          description: Class deleted successfully
+        '404':
+          description: Class not found
+  /joy:
+    post:
+      summary: Create a new joy rating
+      tags:
+        - joy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JoyRating'
+      responses:
+        '201':
+          description: Joy rating created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JoyRating'
+        '400':
+          description: Bad request
+
+    get:
+      summary: Get all joy ratings with optional filters
+      tags:
+        - joy
+      parameters:
+        - in: query
+          name: userId
+          required: true
+          schema:
+            type: string
+            description: The ID of the user whose joy ratings to retrieve
+        - in: query
+          name: teamId
+          required: true
+          schema:
+            type: string
+            description: (Optional) Filter joy ratings by a specific team
+        - in: query
+          name: fromDate
+          schema:
+            type: string
+            format: date-time
+            description: (Optional) Retrieve ratings from this date onward
+        - in: query
+          name: toDate
+          schema:
+            type: string
+            format: date-time
+            description: (Optional) Retrieve ratings up to this date
+      responses:
+        '200':
+          description: A list of joy ratings matching the filters
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/JoyRating'
+        '400':
+          description: Bad request - Invalid query parameters
+        '500':
+          description: Internal server error
+
+  /joy/{id}:
+    get:
+      summary: Get a joy rating by ID
+      tags:
+        - joy
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            description: The ID of the joy rating
+      responses:
+        '200':
+          description: Joy rating found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JoyRating'
+        '404':
+          description: Joy rating not found
+
+    put:
+      summary: Update a joy rating by ID
+      tags:
+        - joy
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            description: The ID of the joy rating
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JoyRating'
+      responses:
+        '200':
+          description: Joy rating updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JoyRating'
+        '400':
+          description: Bad request
+        '404':
+          description: Joy rating not found
+
+    delete:
+      summary: Delete a joy rating by ID
+      tags:
+        - joy
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            description: The ID of the joy rating
+      responses:
+        '204':
+          description: Joy rating deleted successfully
+        '404':
+          description: Joy rating not found
 components:
   securitySchemes:
     authorization:
@@ -419,12 +711,13 @@ components:
       type: object
       properties:
         id:
-          type: integer
-          format: int64
-          example: 1
+          type: string
         email:
           type: string
           example: john@email.com
+        password:
+          type: string
+          description: Hash (String)
         displayName:
           type: string
           example: John Doe
@@ -434,49 +727,58 @@ components:
             - STUDENT
             - INSTRUCTOR
             - ADMIN
-        projects:
+        groups:
           type: array
           items:
-            type: object
-            properties:
-              id:
-                type: string
-                example: 'project-abc123'
+            type: string
+            description: 'For an INSTRUCTOR - List of classes they teach. For a STUDENT - List of teams they are on'
+    Class:
+      type: object
+      properties:
+        id:
+          type: string
+          description: GUID (String)
+        name:
+          type: string
+    Team:
+      type: object
+      properties:
+        id:
+          type: string
+          description: GUID (String)
+        name:
+          type: string
+        projectId:
+          type: string
+          description: GUID (String)
     Project:
       type: object
       properties:
         id:
           type: string
-          example: 'project-abc123'
-        projectName:
+          description: GUID (String)
+        name:
           type: string
-          example: 'Math 101'
-        instructorId:
+        classId:
           type: string
-          example: 'user-123'
-        expiresIn:
+          description: GUID (String)
+    JoyRating:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+          description: GUID (String)
+        teamId:
+          type: string
+          description: GUID (String)
+        date:
           type: string
           format: date-time
-          example: '2024-12-31T23:59:59Z'
-        participants:
-          type: array
-          items:
-            type: object
-            properties:
-              email:
-                type: string
-                example: 'student@example.com'
-              status:
-                type: string
-                enum:
-                  - PENDING
-                  - ACTIVE
-                  - EXPIRED
-                example: 'PENDING'
-              token:
-                type: string
-                description: Only present if status is PENDING
-                example: 'invite-token-example'
+        rating:
+          type: integer
+          description: Int from 0-5
     AuthResponse:
       type: object
       properties:
@@ -485,3 +787,17 @@ components:
           example: 'jwt-token-example'
         user:
           $ref: '#/components/schemas/User'
+    TokenValidationResponse:
+      type: object
+      properties:
+        valid:
+          type: boolean
+          description: Whether the token is valid or not
+        decoded:
+          type: object
+          nullable: true
+          description: Decoded token data (if valid)
+        error:
+          type: string
+          nullable: true
+          description: Error message (if the token is invalid or expired)
