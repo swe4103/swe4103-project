@@ -148,12 +148,7 @@ const RegisterForm = () => {
                 disabled={isLoading} // Disable input when loading
               />
               {errorMessage && <p className="text-danger text-center">{errorMessage}</p>}
-              <Button
-                type="submit"
-                style={{ height: '50px' }}
-                disabled={isLoading}
-                isLoading={isLoading}
-              >
+              <Button type="submit" style={{ height: '50px' }} isLoading={isLoading}>
                 Register
               </Button>
             </form>

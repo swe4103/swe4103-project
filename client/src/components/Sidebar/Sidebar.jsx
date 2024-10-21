@@ -17,7 +17,7 @@ const Sidebar = ({ routes }) => {
     >
       <Link to="/">
         <div className="flex justify-center w-full h-header">
-          <Logo coloured={false} withText={expanded} size={1.3} />
+          <Logo coloured={false} withText={expanded} size={1.8} />
         </div>
       </Link>
       <hr className="w-full border-slate-600" />

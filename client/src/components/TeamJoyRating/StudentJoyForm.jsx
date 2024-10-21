@@ -49,7 +49,7 @@ const StudentJoyForm = () => {
       <RatingReview rating={rating} setRating={setRating} />
       {success && <h1 className="text-success">Updated team joy successfully!</h1>}
       {error && <h1 className="text-danger">{error}</h1>}
-      <Button disabled={loading} isLoading={loading} onClick={handleSubmit}>
+      <Button isLoading={loading} onClick={handleSubmit}>
         Submit
       </Button>
     </Card>

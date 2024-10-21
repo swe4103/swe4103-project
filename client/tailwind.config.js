@@ -17,6 +17,7 @@ export default {
       },
       fontFamily: {
         sans: 'var(--font-sans)',
+        logo: 'var(--font-logo)',
       },
     },
   },
