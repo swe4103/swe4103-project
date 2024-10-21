@@ -4,6 +4,7 @@ import config from '#config'
 
 const USER_COLLECTION = 'User'
 const PROJECT_COLLECTION = 'Project'
+const CLASS_COLLECTION = 'Class'
 
 let database = null
 
@@ -24,6 +25,8 @@ export const getContainer = containerName => {
       return database.container(USER_COLLECTION)
     case 'Project':
       return database.container(PROJECT_COLLECTION)
+    case 'Class':
+      return database.container(CLASS_COLLECTION)
     default:
       throw new Error('Unknown record type')
   }
@@ -47,7 +50,7 @@ export const saveRecord = async (containerName, record) => {
 export const getRecord = async (containerName, id) => {
   const container = getContainer(containerName)
   try {
-    const { resource } = await container.item('id', id).read()
+    const { resource } = await container.item(id, id).read()
     return resource
   } catch (error) {
     console.log(error.message)
