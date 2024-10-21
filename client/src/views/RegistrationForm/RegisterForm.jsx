@@ -1,19 +1,64 @@
 import axios from 'axios'
-import { useState } from 'react'
-import { Navigate } from 'react-router-dom'
-import '../../App.css'
+import { useState, useEffect } from 'react'
+import { Navigate, useSearchParams, useNavigate } from 'react-router-dom'
+
+import Button from '../../components/Button/Button'
+import Card from '../../components/Card/Card'
+import Logo from '../../components/Logo/Logo'
+import { useAuth } from '../../state/AuthProvider/AuthProvider'
 
 const RegisterForm = () => {
   // State hooks for email, password, confirm password, error, and navigation
-  const [registerEmail, setRegisterEmail] = useState('')
+  const host = 'http://localhost:3000'
+  const [isValidToken, setIsValidToken] = useState(null) // Track token validity
+  const [searchParams] = useSearchParams() // Get query params
+  const token = searchParams.get('token') // Extract the token
+  const [displayName, setDisplayName] = useState('')
   const [registerPassword, setRegisterPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
-  const [navigateToLogin, setNavigateToLogin] = useState(false) // State to manage navigation
+  const [email, setEmail] = useState('')
+  const { login } = useAuth()
+  const navigate = useNavigate() // React Router hook for navigation
 
-  // Event handlers for email, password, confirm password
-  const onEmailChange = event => {
-    setRegisterEmail(event.target.value)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const validateToken = async () => {
+      try {
+        const url = `${host}/api/auth/validate-token?token=${token}&type=invite`
+        const response = await axios.get(url)
+        if (response.data.valid) {
+          setEmail(response.data.decoded.email)
+          setIsValidToken(true) // Token is valid, allow rendering
+        } else {
+          setIsValidToken(false) // Invalid token, redirect or show error
+        }
+      } catch (error) {
+        console.error('Token validation failed:', error)
+        setIsValidToken(false)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    if (token) {
+      validateToken()
+    } else {
+      setIsValidToken(false) // No token provided, redirect or show error
+      setIsLoading(false)
+    }
+  }, [token])
+
+  if (!isLoading && isValidToken === false) {
+    return (
+      <Navigate to="/login" state={{ invalidToken: true }} /> // Redirect to login if invalid token
+    )
+  }
+
+  // Event handlers for display name, password, confirm password
+  const onDisplayNameChange = event => {
+    setDisplayName(event.target.value)
   }
 
   const onPasswordChange = event => {
@@ -27,86 +72,89 @@ const RegisterForm = () => {
   // Event handler for form submission
   const onSubmitRegister = async event => {
     // Prevent form from refreshing page
+    const url = `${host}/api/auth/register?token=${token}`
+
     event.preventDefault()
 
     // Check if passwords match
     if (registerPassword !== confirmPassword) {
-      setErrorMessage('Error: Passwords do not match')
-      alert(errorMessage)
+      setErrorMessage('Passwords do not match')
       return
-    } else {
-      setErrorMessage('')
     }
 
-    // TODO: Send request to API
     try {
-      const response = await axios.post('endpoint', {
-        email: registerEmail,
+      setIsLoading(true)
+
+      const response = await axios.post(url, {
+        displayName: displayName,
         password: registerPassword,
       })
 
       // Handle successful registration (e.g., redirect, show message, etc.)
       console.log('Registration successful:', response.data)
-      // Set navigateToLogin to true after successful registration
-      setNavigateToLogin(true)
-    } catch (error) {
-      setErrorMessage(error.response?.data?.message || 'Registration failed! Please try again.')
-    }
-  }
+      const loginResponse = await axios.post('http://localhost:3000/api/auth/login', {
+        email: email,
+        password: registerPassword,
+      })
+      await login(loginResponse.data)
+      navigate('/')
 
-  // If navigating to login, render Navigate component
-  if (navigateToLogin) {
-    return <Navigate to="/login" /> // Adjust the path as necessary
+      // Set navigateToLogin to true after successful registration
+    } catch (error) {
+      setIsLoading(false)
+      setErrorMessage(error.response?.data?.message || 'Registration failed! Please try again.')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
     <div className="login-signup-container">
-      <h2>Register</h2>
-      <form className="basic-form" onSubmit={onSubmitRegister}>
-        <div className="input-group">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            placeholder="Create a username"
-            required
-            value={registerEmail}
-            onChange={onEmailChange}
-          />
-        </div>
-        <div className="input-group">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            placeholder="Create a password"
-            required
-            value={registerPassword}
-            onChange={onPasswordChange}
-          />
-        </div>
-        <div className="input-group">
-          <label htmlFor="password-confirm">Confirm Password</label>
-          <input
-            type="password"
-            id="passwordConfirm"
-            placeholder="Re-enter password"
-            required
-            value={confirmPassword}
-            onChange={onConfirmPasswordChange}
-          />
-        </div>
-        <button type="submit" className="rounded-button">
-          Register
-        </button>
-        {/* <div style={{ marginTop: '20px' }}>
-          <p>Already have an account?</p>
-          <button className="rounded-button" onClick={() => setNavigateToLogin(true)}>
-            Log In
-          </button>
-        </div> */}
-      </form>
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
+      <div className="flex justify-center items-center h-screen bg-primary">
+        <Card width="400px" height="600px" className="flex">
+          <div className="flex flex-col items-center p-7 gap-5">
+            <Logo withText={true} coloured={true} className="p-3" />
+            <h2 className="text-2xl">Welcome</h2>
+            <p>Sign in to continue to FlowBoard</p>
+            <form className="flex flex-col gap-6 w-full" onSubmit={onSubmitRegister}>
+              <input
+                className="p-2 rounded-md border border-primary"
+                type="display-name"
+                id="display-name"
+                placeholder="Display Name"
+                required
+                value={displayName}
+                onChange={onDisplayNameChange}
+                disabled={isLoading} // Disable input when loading
+              />
+              <input
+                className="p-2 rounded-md border border-primary"
+                type="password"
+                id="password"
+                placeholder="Password"
+                required
+                value={registerPassword}
+                onChange={onPasswordChange}
+                disabled={isLoading} // Disable input when loading
+              />
+              <input
+                className="p-2 rounded-md border border-primary"
+                type="password"
+                id="password"
+                placeholder="Confirm Password"
+                required
+                value={confirmPassword}
+                onChange={onConfirmPasswordChange}
+                disabled={isLoading} // Disable input when loading
+              />
+              {errorMessage && <p className="text-danger text-center">{errorMessage}</p>}
+              <Button type="submit" style={{ height: '50px' }} isLoading={isLoading}>
+                Register
+              </Button>
+            </form>
+          </div>
+        </Card>
+      </div>
     </div>
   )
 }

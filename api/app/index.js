@@ -1,19 +1,19 @@
 import cors from 'cors'
 import express from 'express'
 
+import config from '#config'
 import auth from '#routes/auth.js'
+import joy from '#routes/joy.js'
 import users from '#routes/users.js'
 
 const app = express()
 
 // middleware
-const allowedOrigins = ['http://localhost:5173', 'http://localhost:4173']
-
 app.use(express.json())
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (!origin || config.allowedOrigins.includes(origin)) {
         callback(null, true)
       } else {
         callback(new Error('Not allowed by CORS'))
@@ -25,5 +25,6 @@ app.use(
 // routes
 app.use('/api/auth', auth)
 app.use('/api/users', users)
+app.use('/api/joy', joy)
 
 export default app

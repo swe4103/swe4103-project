@@ -1,6 +1,41 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@400;700&display=swap');
+
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  --color-primary: #013b55; /* primary colour */
+  --color-secondary: #0f172a; /* Secondary (hover colour) */
+  --color-accent: #f07b0a; /* Accent colour */
+
+  --color-danger: #e53e3e; /* Error colour */
+  --color-success: #38a169; /* success colour */
+
+  --color-light: #f7fafc;
+  --color-dark: #1a202c;
+  --color-white: #ffffff;
+  --font-sans: 'Inter', 'sans-serif';
+  --font-logo: 'Oswald', 'sans-serif';
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+}
+
+.transition-ease {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+/* line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
@@ -10,10 +45,9 @@
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+  -moz-osx-font-smoothing: grayscale; */
 
-a {
+/* a {
   font-weight: 500;
   color: #646cff;
   text-decoration: inherit;
@@ -65,4 +99,4 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
+} */

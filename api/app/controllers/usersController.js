@@ -1,52 +1,73 @@
 import config from '#config'
-import { Roles } from '#constants/roles.js'
-import usersSchema from '#schemas/users.js'
+import Roles from '#constants/roles.js'
+import { inviteSchema, updateUserSchema } from '#schemas/users.js'
+import {
+  inviteUsersByEmail,
+  getUserById,
+  updateUserById,
+  deleteUserById,
+} from '#services/usersService.js'
 
-export default {
-  invite: async (req, res) => {
-    // step 1: validate request body
-    const { error } = usersSchema.invite.validate(req.body)
-    if (error) {
-      return res.status(400).json({ message: error.details[0].message })
+export const inviteUsers = async (req, res) => {
+  const { error, value } = inviteSchema.validate(req.body)
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message })
+  }
+
+  try {
+    await inviteUsersByEmail(value)
+    return res.status(200).json({ message: `${req.body.role} invitations sent successfully.` })
+  } catch (error) {
+    console.error('Error sending invites:', error)
+    return res.status(500).json({ message: 'Internal server error' })
+  }
+}
+
+export const getUser = async (req, res) => {
+  const { id } = req.params
+  try {
+    const user = await getUserById(id)
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' })
+    }
+    return res.status(200).json(user)
+  } catch (error) {
+    console.error('Error retrieving user: ', error)
+    return res.status(500).json({ message: 'Internal server error' })
+  }
+}
+
+export const updateUser = async (req, res) => {
+  const { id } = req.params
+
+  const { error, value } = updateUserSchema.validate(req.body)
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message })
+  }
+
+  try {
+    const updatedUser = await updateUserById(id, value)
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' })
+    }
+    return res.status(200).json(updatedUser)
+  } catch (error) {
+    console.error('Error updating user: ', error)
+    return res.status(500).json({ message: 'Internal server error' })
+  }
+}
+
+export const deleteUser = async (req, res) => {
+  const { id } = req.params
+  try {
+    const deletedID = await deleteUserById(id)
+    if (!deletedId) {
+      return res.status(404).json({ message: 'User not found' })
     }
 
-    // step 2: validate request authorization
-    const { emails, role, projectId } = req.body
-    const inviterRole = req.user.role
-    if (
-      inviterRole === Roles.STUDENT ||
-      (role === Roles.INSTRUCTOR && inviterRole !== Roles.ADMIN)
-    ) {
-      return res.status(403).json({ message: 'You are not authorized to send this invite' })
-    }
-
-    try {
-      // step 3: generate tokens and send emails
-      const invitations = emails.map(email => {
-        const tokenPayload = { email, role }
-        if (role === Roles.STUDENT) {
-          tokenPayload.projectId = projectId
-        }
-        const token = jwt.sign(tokenPayload, config.jwtInviteSecret, { expiresIn: '3d' })
-        // TODO update project in DB with email and status, and token
-        // TODO return Promise.all([sendInviteEmail(email, role, token)])
-        return null
-      })
-
-      await Promise.all(invitations)
-      return res.status(200).json({ message: `${role} invitations sent successfully.` })
-    } catch (error) {
-      console.error('Error sending invites:', error)
-      return res.status(500).json({ message: 'Internal server error' })
-    }
-  },
-  acceptInvite: async (req, res) => {
-    const invitee = req.invitee
-    try {
-      // TODO update db project participant status and remove token, blacklist token
-    } catch (error) {
-      console.error('Error accepting invite:', error)
-      return res.status(500).json({ message: 'Internal server error' })
-    }
-  },
+    return res.status(204).send()
+  } catch (error) {
+    console.error('Error deleting user: ', error)
+    return res.status(500).json({ message: 'Internal server error' })
+  }
 }

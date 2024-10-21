@@ -1,8 +1,10 @@
 import axios from 'axios'
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 
-import '../../App.css'
+import Button from '../../components/Button/Button'
+import Card from '../../components/Card/Card'
+import Logo from '../../components/Logo/Logo'
 import { useAuth } from '../../state/AuthProvider/AuthProvider'
 
 const LoginForm = () => {
@@ -10,11 +12,11 @@ const LoginForm = () => {
   const [loginEmail, setLoginEmail] = useState('')
   const [loginPassword, setLoginPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
-  // const [navigateToRegister, setNavigateToRegister] = useState(false)
   const [isLoading, setIsLoading] = useState(false) // Loading state for login request
 
   const { login } = useAuth() // Get login function from AuthProvider
   const navigate = useNavigate() // React Router hook for navigation
+  const location = useLocation()
 
   // Event handlers for email, password
   const onEmailChange = event => {
@@ -24,6 +26,14 @@ const LoginForm = () => {
   const onPasswordChange = event => {
     setLoginPassword(event.target.value)
   }
+
+  useEffect(() => {
+    if (location.state?.invalidToken) {
+      setErrorMessage(
+        'Invalid invite token. Please log in or contact your instructor or administrator',
+      )
+    }
+  }, [location.state])
 
   // Event handler for form submission
   const onSubmitLogin = async event => {
@@ -38,62 +48,48 @@ const LoginForm = () => {
       await login(response.data)
       navigate('/')
     } catch (error) {
-      setErrorMessage(
-        error.response?.data?.message || 'Login failed! Please check your credentials.',
-      )
+      console.error(error)
+      setErrorMessage('Incorrect email or password')
     } finally {
       setIsLoading(false) // Set loading state back to false
     }
   }
 
-  // If navigating to registration, render Navigate component
-  // if (navigateToRegister) {
-  //   return <Navigate to="/register" /> // Adjust the path as necessary
-  // }
-
   return (
-    <div className="login-signup-container">
-      <h2>Login</h2>
-      <form className="basic-form" onSubmit={onSubmitLogin}>
-        <div className="input-group">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            placeholder="Enter your username"
-            required
-            value={loginEmail}
-            onChange={onEmailChange}
-            disabled={isLoading} // Disable input when loading
-          />
+    <div className="flex justify-center items-center h-screen bg-primary">
+      <Card width="400px" height="600px" className="flex justify-center items-center">
+        <div className="flex flex-col items-center p-7 gap-5 w-full">
+          <Logo withText={true} coloured={true} className="p-3" />
+          <h2 className="text-2xl">Welcome</h2>
+          <p>Sign in to continue to TimeFlow</p>
+          <form className="flex flex-col gap-6 w-full" onSubmit={onSubmitLogin}>
+            <input
+              className="p-3 rounded-md border border-primary"
+              type="email"
+              id="email"
+              placeholder="Email"
+              required
+              value={loginEmail}
+              onChange={onEmailChange}
+              disabled={isLoading} // Disable input when loading
+            />
+            <input
+              className="p-3 rounded-md border border-primary"
+              type="password"
+              id="password"
+              placeholder="Password"
+              required
+              value={loginPassword}
+              onChange={onPasswordChange}
+              disabled={isLoading} // Disable input when loading
+            />
+            {errorMessage && <p className="text-danger text-center">{errorMessage}</p>}
+            <Button type="submit" style={{ height: '50px' }} isLoading={isLoading}>
+              Login
+            </Button>
+          </form>
         </div>
-        <div className="input-group">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            placeholder="Enter your password"
-            required
-            value={loginPassword}
-            onChange={onPasswordChange}
-            disabled={isLoading} // Disable input when loading
-          />
-        </div>
-        <button type="submit" className="rounded-button" disabled={isLoading}>
-          {isLoading ? 'Logging in...' : 'Login'} {/* Show loading text if isLoading */}
-        </button>
-      </form>
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
-      {/* <div style={{ marginTop: '20px' }}>
-        <p>Don&apos;t have an account?</p>
-        <button
-          className="rounded-button"
-          onClick={() => setNavigateToRegister(true)}
-          disabled={isLoading}
-        >
-          Register Now
-        </button>
-      </div> */}
+      </Card>
     </div>
   )
 }
