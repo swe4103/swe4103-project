@@ -3,6 +3,7 @@ import express from 'express'
 
 import config from '#config'
 import auth from '#routes/auth.js'
+import classes from '#routes/classes.js'
 import joy from '#routes/joy.js'
 import users from '#routes/users.js'
 
@@ -26,5 +27,6 @@ app.use(
 app.use('/api/auth', auth)
 app.use('/api/users', users)
 app.use('/api/joy', joy)
+app.use('/api/classes', classes)
 
 export default app

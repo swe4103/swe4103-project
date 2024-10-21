@@ -6,7 +6,7 @@ import {
   saveRecord,
   updateRecord,
   deleteRecord,
-} from '#services/databaseService.js'
+} from '#services/DatabaseService.js'
 
 export const createJoy = async joyRating =>
   await saveRecord('JoyRating', { id: uuidv4(), ...joyRating })

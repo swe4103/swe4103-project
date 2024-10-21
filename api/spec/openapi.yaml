@@ -740,6 +740,9 @@ components:
           description: GUID (String)
         name:
           type: string
+        year:
+          type: integer
+          format: int64
     Team:
       type: object
       properties:

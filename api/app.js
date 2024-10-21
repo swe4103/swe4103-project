@@ -1,6 +1,6 @@
 import app from '#app'
 import config from '#config'
-import { initializeDatabase } from '#services/databaseService.js'
+import { initializeDatabase } from '#services/DatabaseService.js'
 
 const port = config.port
 
