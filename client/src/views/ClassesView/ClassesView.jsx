@@ -1,6 +1,6 @@
 import StudentJoyForm from '../../components/TeamJoyRating/StudentJoyForm'
 
-const Home = () => {
+const ClassesView = () => {
   return (
     <>
       <StudentJoyForm />
@@ -8,4 +8,4 @@ const Home = () => {
   )
 }
 
-export default Home
+export default ClassesView
