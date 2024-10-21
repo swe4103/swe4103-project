@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
-  title: SWE4103
-  description: 'This is the API specification for the SWE4103 project.'
+  title: SWE4103 - TimeFlow
+  description: 'This is the API specification for the SWE4103 - TimeFlow project.'
   termsOfService: http://swagger.io/terms/
   contact:
     email: mcollet1@unb.ca
@@ -136,7 +136,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/TokenValidationResponse'
         '400':
-          description: Bad request, missing or malformed token or type
+          description: Bad request, missing or malformed token or tokenType
   /projects:
     post:
       tags:
