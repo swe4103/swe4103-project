@@ -4,9 +4,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@400;700&display=swap');
 
 :root {
-  --color-primary: #023047; /* primary colour */
+  --color-primary: #013b55; /* primary colour */
   --color-secondary: #0f172a; /* Secondary (hover colour) */
-  --color-accent: #00c2cb; /* Accent colour */
+  --color-accent: #f07b0a; /* Accent colour */
 
   --color-danger: #e53e3e; /* Error colour */
   --color-success: #38a169; /* success colour */

@@ -12,9 +12,7 @@ const Button = ({
     <button
       type={type}
       onClick={onClick}
-      className={`rounded-md w-100 px-4 py-3 text-white hover:bg-secondary transition-ease ${className} ${
-        disabled || isLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-primary'
-      }`}
+      className={`bg-primary rounded-md w-100 px-4 py-3 text-white hover:bg-accent transition-ease ${className}`}
       style={style}
       disabled={disabled || isLoading}
       {...rest}

@@ -10,6 +10,7 @@ const Header = () => {
   const { logout, user } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
+  const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
 
   const handleLogout = async () => {
     await axios.post('http://localhost:3000/api/auth/logout', null, {
@@ -33,7 +34,7 @@ const Header = () => {
               <div className="flex flex-col p-3 gap-2 items-center">
                 <span>Name: {user.user.displayName}</span>
                 <span>Email: {user.user.email}</span>
-                <span>Role: {user.user.role}</span>
+                <span>Role: {capitalize(user.user.role)}</span>
               </div>
               <hr />
               <Link

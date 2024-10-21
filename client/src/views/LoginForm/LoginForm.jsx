@@ -2,9 +2,9 @@ import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 
-import logo from '../../assets/images/doge.png'
 import Button from '../../components/Button/Button'
 import Card from '../../components/Card/Card'
+import Logo from '../../components/Logo/Logo'
 import { useAuth } from '../../state/AuthProvider/AuthProvider'
 
 const LoginForm = () => {
@@ -49,7 +49,7 @@ const LoginForm = () => {
       navigate('/')
     } catch (error) {
       console.error(error)
-      setErrorMessage('Login failed. Please check your credentials.')
+      setErrorMessage('Incorrect email or password')
     } finally {
       setIsLoading(false) // Set loading state back to false
     }
@@ -58,10 +58,10 @@ const LoginForm = () => {
   return (
     <div className="flex justify-center items-center h-screen bg-primary">
       <Card width="400px" height="600px" className="flex justify-center items-center">
-        <div className="flex flex-col items-center p-7 gap-5">
-          <img src={logo} alt="Doge" width="50%" />
+        <div className="flex flex-col items-center p-7 gap-5 w-full">
+          <Logo withText={true} coloured={true} className="p-3" />
           <h2 className="text-2xl">Welcome</h2>
-          <p>Sign in to continue to FlowBoard</p>
+          <p>Sign in to continue to TimeFlow</p>
           <form className="flex flex-col gap-6 w-full" onSubmit={onSubmitLogin}>
             <input
               className="p-3 rounded-md border border-primary"

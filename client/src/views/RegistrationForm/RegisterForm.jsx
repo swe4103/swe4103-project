@@ -2,9 +2,9 @@ import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { Navigate, useSearchParams, useNavigate } from 'react-router-dom'
 
-import logo from '../../assets/images/doge.png'
 import Button from '../../components/Button/Button'
 import Card from '../../components/Card/Card'
+import Logo from '../../components/Logo/Logo'
 import { useAuth } from '../../state/AuthProvider/AuthProvider'
 
 const RegisterForm = () => {
@@ -113,7 +113,7 @@ const RegisterForm = () => {
       <div className="flex justify-center items-center h-screen bg-primary">
         <Card width="400px" height="600px" className="flex">
           <div className="flex flex-col items-center p-7 gap-5">
-            <img src={logo} alt="Doge" width="50%" />
+            <Logo withText={true} coloured={true} className="p-3" />
             <h2 className="text-2xl">Welcome</h2>
             <p>Sign in to continue to FlowBoard</p>
             <form className="flex flex-col gap-6 w-full" onSubmit={onSubmitRegister}>

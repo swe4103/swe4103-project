@@ -2,6 +2,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
+import Logo from '../Logo/Logo'
+
 import SidebarLink from './SidebarLink'
 
 const Sidebar = ({ routes }) => {
@@ -13,7 +15,11 @@ const Sidebar = ({ routes }) => {
     <nav
       className={`${isExpanded} bg-primary text-light flex flex-col transition-all duration-300 ease-in-out relative z-50`}
     >
-      <Link to="/app/dashboard" className="flex items-center h-header justify-center p-2" />
+      <Link to="/">
+        <div className="flex justify-center w-full h-header">
+          <Logo coloured={false} withText={expanded} size={1.3} />
+        </div>
+      </Link>
       <hr className="w-full border-slate-600" />
       <button
         onClick={toggleExpanded}

@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import AppLayout from './components/AppLayout/AppLayout'
 import ProtectedRoutes from './components/ProtectedRoutes/ProtectedRoutes'
 import AuthProvider from './state/AuthProvider/AuthProvider'
-import AdminView from './views/AdminView/AdminView'
 import Home from './views/Home/Home'
 import LoginForm from './views/LoginForm/LoginForm'
 import RegisterForm from './views/RegistrationForm/RegisterForm'
@@ -15,9 +14,7 @@ const App = () => {
         <Routes>
           <Route path="/login" element={<LoginForm />} />
           <Route path="/register" element={<RegisterForm />} />
-
           <Route element={<ProtectedRoutes />}>
-            <Route path="/admin" element={<AdminView />} />
             <Route path="/" element={<AppLayout />}>
               <Route index element={<Home />} />
             </Route>
