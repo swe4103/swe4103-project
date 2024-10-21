@@ -1,4 +1,4 @@
-export const Roles = {
+export default {
   STUDENT: 'STUDENT',
   INSTRUCTOR: 'INSTRUCTOR',
   ADMIN: 'ADMIN',

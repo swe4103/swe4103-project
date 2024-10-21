@@ -14,7 +14,7 @@
   - `constants/`
     - Constant values
   - `controllers/`
-    - The methods that process an endpoint and unpack web layer data to dispatch to services. Uses models to interact with external services like the database
+    - The methods that process an endpoint and unpack web layer data to dispatch to services.
   - `middleware/`
     - Reusable plugins to modify requests typically used for cache control, authentication, error handling, etc.
   - `routes/`
@@ -23,7 +23,5 @@
     - Validation schemas used by JOI to validate requests
   - `services/`
     - Handles business logic and interacts with data sources or external APIs (like our database)
-- `jest/`
-  - Jest configuration for setup and teardown hooks
 - `spec/`
   - OpenAPI specification for API design
