@@ -54,6 +54,7 @@ export const inviteUsersByEmail = async ({ emails, role, teamId }) => {
       config.jwtInviteSecret,
       { expiresIn: '1d' },
     )
+    console.log(token)
     // TODO: Send invitation email with token
   })
   return Promise.all([...existingPromises, ...newPromises])

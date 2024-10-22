@@ -27,7 +27,7 @@ const Sidebar = ({ routes }) => {
       >
         <FontAwesomeIcon className="text-xs" icon={expanded ? 'chevron-left' : 'chevron-right'} />
       </button>
-      <div className="flex flex-col gap-4 py-3">
+      <div className="flex flex-col gap-2 py-3">
         {Object.values(routes).map(route => (
           <SidebarLink
             key={route.label}
