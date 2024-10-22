@@ -1,3 +1,4 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
@@ -13,6 +14,7 @@ const LoginForm = () => {
   const [loginPassword, setLoginPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false) // Loading state for login request
+  const [showPassword, setShowPassword] = useState(false)
 
   const { login } = useAuth() // Get login function from AuthProvider
   const navigate = useNavigate() // React Router hook for navigation
@@ -25,6 +27,10 @@ const LoginForm = () => {
 
   const onPasswordChange = event => {
     setLoginPassword(event.target.value)
+  }
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(prevShowPassword => !prevShowPassword)
   }
 
   useEffect(() => {
@@ -83,6 +89,12 @@ const LoginForm = () => {
               onChange={onPasswordChange}
               disabled={isLoading} // Disable input when loading
             />
+            <span
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+              onClick={togglePasswordVisibility}
+            >
+              <FontAwesomeIcon icon={showPassword ? 'faEyeRegular' : 'faEyeSolid'} />
+            </span>
             {errorMessage && <p className="text-danger text-center">{errorMessage}</p>}
             <Button type="submit" style={{ height: '50px' }} isLoading={isLoading}>
               Login

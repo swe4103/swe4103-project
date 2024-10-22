@@ -1,5 +1,6 @@
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons'
+import { faEye as faEyeRegular } from '@fortawesome/free-regular-svg-icons'
 import {
   faChevronRight,
   faChevronLeft,
@@ -16,6 +17,7 @@ import {
   faPrint,
 } from '@fortawesome/free-solid-svg-icons'
 import { faStar as faStarSolid } from '@fortawesome/free-solid-svg-icons'
+import { faEye as faEyeSolid } from '@fortawesome/free-solid-svg-icons'
 
 library.add(
   faChevronRight,
@@ -33,4 +35,6 @@ library.add(
   faPrint,
   faStarSolid,
   faStarRegular,
+  faEyeRegular,
+  faEyeSolid,
 )

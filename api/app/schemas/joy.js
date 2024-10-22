@@ -14,8 +14,7 @@ export const updateJoyRatingSchema = joyRatingSchema.fork(
 )
 
 export const joyRatingsQuerySchema = Joi.object({
-  userId: Joi.string().required().messages({
-    'any.required': 'userId is required',
+  userId: Joi.string().optional().messages({
     'string.empty': 'userId cannot be empty',
   }),
   teamId: Joi.string().required().messages({
