@@ -6,26 +6,26 @@ import {
   listTenPoints,
   updateTenPoint,
   deleteTenPoint,
-} from '../controllers/joyController.js'
+} from '../controllers/tenPointController.js'
 
 import Roles from '#constants/roles.js'
 import { authJWT } from '#middleware/authMiddleware.js'
 
 const router = express.Router()
 
-// POST /api/joy
+// POST /api/tenPoint
 router.post('/', authJWT, createTenPoint)
 
-// GET /api/joy
+// GET /api/tenPoint
 router.get('/', authJWT, listTenPoints)
 
-// GET /api/joy/:id
+// GET /api/tenPoint/:id
 router.get('/:id', authJWT, getTenPoint)
 
-// PUT /api/joy/:id
+// PUT /api/tenPoint/:id
 router.put('/:id', authJWT, updateTenPoint)
 
-// DELETE /api/joy/:id
+// DELETE /api/tenPoint/:id
 router.delete('/:id', authJWT, deleteTenPoint)
 
 export default router
