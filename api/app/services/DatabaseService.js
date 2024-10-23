@@ -5,6 +5,7 @@ import config from '#config'
 const USER_COLLECTION = 'User'
 const PROJECT_COLLECTION = 'Project'
 const CLASS_COLLECTION = 'Class'
+const TEAM_COLLECTION = 'Team'
 
 let database = null
 
@@ -27,6 +28,8 @@ export const getContainer = containerName => {
       return database.container(PROJECT_COLLECTION)
     case 'Class':
       return database.container(CLASS_COLLECTION)
+    case 'Team':
+      return database.container(TEAM_COLLECTION)
     default:
       throw new Error('Unknown record type')
   }
