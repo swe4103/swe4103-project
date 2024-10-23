@@ -6,7 +6,7 @@ import {
   saveRecord,
   updateRecord,
   deleteRecord,
-} from '#services/databaseService.js'
+} from '#services/DatabaseService.js'
 
 export const createJoy = async joyRating =>
   await saveRecord('JoyRating', { id: uuidv4(), ...joyRating })
@@ -18,16 +18,23 @@ export const deleteJoyById = async id => deleteRecord('JoyRating', id)
 export const updateJoyById = async (id, data) => updateRecord('JoyRating', id, data)
 
 export const listJoys = async ({ userId, teamId, fromDate, toDate }) => {
+  if (!userId && !teamId) {
+    throw new Error('Either userId or teamId must be provided.')
+  }
+
   const query = `
     SELECT * FROM c 
-    WHERE c.userId = @userId AND c.teamId = @teamId
-    ${fromDate ? 'AND c.date >= @fromDate' : ''}
-    ${toDate ? 'AND c.date <= @toDate' : ''}
+    WHERE 
+      ${userId ? 'c.userId = @userId' : ''}
+      ${userId && teamId ? 'AND' : ''}
+      ${teamId ? 'c.teamId = @teamId' : ''}
+      ${fromDate ? 'AND c.date >= @fromDate' : ''}
+      ${toDate ? 'AND c.date <= @toDate' : ''}
   `.trim()
 
   const parameters = [
-    { name: '@userId', value: userId },
-    { name: '@teamId', value: teamId },
+    userId && { name: '@userId', value: userId },
+    teamId && { name: '@teamId', value: teamId },
     fromDate && { name: '@fromDate', value: fromDate },
     toDate && { name: '@toDate', value: toDate },
   ].filter(Boolean)

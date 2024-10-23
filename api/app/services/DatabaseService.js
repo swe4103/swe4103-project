@@ -4,6 +4,9 @@ import config from '#config'
 
 const USER_COLLECTION = 'User'
 const PROJECT_COLLECTION = 'Project'
+const CLASS_COLLECTION = 'Class'
+const TEAM_COLLECTION = 'Team'
+const JOY_COLLECTION = 'Joy'
 
 let database = null
 
@@ -24,14 +27,17 @@ export const getContainer = containerName => {
       return database.container(USER_COLLECTION)
     case 'Project':
       return database.container(PROJECT_COLLECTION)
+    case 'Class':
+      return database.container(CLASS_COLLECTION)
+    case 'Team':
+      return database.container(TEAM_COLLECTION)
+    case 'JOY':
+      return database.container(JOY_COLLECTION)
     default:
       throw new Error('Unknown record type')
   }
 }
 
-// CRUD Operations
-
-// Save a record
 export const saveRecord = async (containerName, record) => {
   const container = getContainer(containerName)
   try {
@@ -43,11 +49,10 @@ export const saveRecord = async (containerName, record) => {
   }
 }
 
-// Get a single record based on id
 export const getRecord = async (containerName, id) => {
   const container = getContainer(containerName)
   try {
-    const { resource } = await container.item('id', id).read()
+    const { resource } = await container.item(id, id).read()
     return resource
   } catch (error) {
     console.log(error.message)
@@ -77,7 +82,6 @@ export const upsertRecord = async (containerName, record) => {
   return resource
 }
 
-// Generic filter function to query records based on a given filter
 export const filterRecords = async (containerName, filterQuery) => {
   const container = getContainer(containerName)
 
@@ -92,7 +96,6 @@ export const filterRecords = async (containerName, filterQuery) => {
   }
 }
 
-// Get all records whose value matches the inputted value for the field name
 export const listRecords = async (containerName, field, val) => {
   try {
     const query = {

@@ -1,9 +1,7 @@
-# <p align="center">SWE4103 Project (To Be Named)</p>
+# <p align="center">TimeFlow - A Development Team Dashboard</p>
 
-<p align="center"><- We can come up with a fun product name if you guys want -></p>
-<p align="center"><- Logo when we have one -></p>
-<p align="center">A Development Team Dashboard, specifically suited for student team projects, to track team and team member productivity, and sentiment as they move through a course project. 
-(More details to be added as feature are implemented)</p>
+<p align="center"><img src="assets/logo.svg" width="350px"/></p>
+<p align="center">A Development Team Dashboard, specifically suited for student team projects, to track team and team member productivity, and sentiment as they move through a course project.</p>
 
 ## 🧭 Table of Contents
 
