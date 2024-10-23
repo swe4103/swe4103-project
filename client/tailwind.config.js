@@ -10,6 +10,7 @@ export default {
         secondary: 'var(--color-secondary)',
         accent: 'var(--color-accent)',
         danger: 'var(--color-danger)',
+        warning: 'var(--color-warning)',
         success: 'var(--color-success)',
         light: 'var(--color-light)',
         dark: 'var(--color-dark)',

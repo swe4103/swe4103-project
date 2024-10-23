@@ -1,13 +1,21 @@
-import { getRecord, deleteRecord, updateRecord, filterRecords } from '#services/DatabaseService.js'
+import { v4 as uuidv4 } from 'uuid'
+
+import {
+  getRecord,
+  deleteRecord,
+  updateRecord,
+  filterRecords,
+  saveRecord,
+} from '#services/DatabaseService.js'
 
 export const createNewProject = async project =>
   await saveRecord('Project', { id: uuidv4(), ...project })
 
 export const getProjectById = async id => await getRecord('Project', id)
 
-export const deleteProjectById = async id => deleteRecord('Project', id)
+export const deleteProjectById = async id => await deleteRecord('Project', id)
 
-export const updateProjectById = async (id, data) => updateRecord('Project', id, data)
+export const updateProjectById = async (id, data) => await updateRecord('Project', id, data)
 
 export const listProjectsByClassId = async ({ classId }) => {
   if (!classId) {
@@ -21,5 +29,5 @@ export const listProjectsByClassId = async ({ classId }) => {
 
   const parameters = [{ name: '@classId', value: classId }]
 
-  return filterRecords(PROJECT_COLLECTION, { query, parameters })
+  return await filterRecords(PROJECT_COLLECTION, { query, parameters })
 }

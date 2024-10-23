@@ -17,9 +17,9 @@ export const createUser = async user => await saveRecord('User', { id: uuidv4(),
 
 export const getUserById = async id => await getRecord('User', id)
 
-export const deleteUserById = async id => deleteRecord('User', id)
+export const deleteUserById = async id => await deleteRecord('User', id)
 
-export const updateUserById = async (id, data) => updateRecord('User', id, data)
+export const updateUserById = async (id, data) => await updateRecord('User', id, data)
 
 export const getUserByEmail = async email => {
   const response = await listRecords('User', 'email', email)
@@ -57,6 +57,7 @@ export const inviteUsersByEmail = async ({ emails, role, teamId }) => {
       config.jwtInviteSecret,
       { expiresIn: '1d' },
     )
+    console.log(token)
     // TODO: Send invitation email with token
   })
   return Promise.all([...existingPromises, ...newPromises])
