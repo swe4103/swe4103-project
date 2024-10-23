@@ -12,7 +12,7 @@ import {
   updateRecord,
   upsertRecord,
   deleteRecord,
-} from '#services/databaseService.js'
+} from '#services/DatabaseService.js'
 
 export const createUser = async user => await saveRecord('User', { id: uuidv4(), ...user })
 
