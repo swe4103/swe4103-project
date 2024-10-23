@@ -16,7 +16,6 @@ const passwordSchema = Joi.string()
   })
 
 export const userSchema = Joi.object({
-  id: Joi.string(),
   password: passwordSchema,
   displayName: Joi.string(),
   email: Joi.string().email(),

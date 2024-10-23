@@ -2,7 +2,7 @@ import express from 'express'
 
 import Roles from '#constants/roles.js'
 import { inviteUsers, getUser, updateUser, deleteUser } from '#controllers/usersController.js'
-import { authJWT, inviteJWT } from '#middleware/authMiddleware.js'
+import { authJWT } from '#middleware/authMiddleware.js'
 import { authorizeRoles } from '#middleware/roleMiddleware.js'
 
 const router = express.Router()

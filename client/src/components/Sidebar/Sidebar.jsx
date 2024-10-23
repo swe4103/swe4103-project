@@ -6,7 +6,7 @@ import Logo from '../Logo/Logo'
 
 import SidebarLink from './SidebarLink'
 
-const Sidebar = ({ routes }) => {
+const Sidebar = ({ navRoutes }) => {
   const [expanded, setExpanded] = useState(false)
   const toggleExpanded = () => setExpanded(!expanded)
   const isExpanded = expanded ? 'w-60' : 'w-20'
@@ -27,8 +27,8 @@ const Sidebar = ({ routes }) => {
       >
         <FontAwesomeIcon className="text-xs" icon={expanded ? 'chevron-left' : 'chevron-right'} />
       </button>
-      <div className="flex flex-col gap-4 py-3">
-        {Object.values(routes).map(route => (
+      <div className="flex flex-col gap-2 py-3">
+        {Object.values(navRoutes).map(route => (
           <SidebarLink
             key={route.label}
             to={route.path}

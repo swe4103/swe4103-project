@@ -5,6 +5,7 @@ import {
   deleteClassById,
   createNewClass,
 } from '#services/classesService.js'
+import { updateUserById } from '#services/usersService.js'
 
 export const createClass = async (req, res) => {
   const { error, value } = classSchema.validate(req.body)
@@ -13,7 +14,7 @@ export const createClass = async (req, res) => {
   }
 
   try {
-    const clazz = createNewClass(value)
+    const clazz = await createNewClass(value)
     return res.status(201).json(clazz)
   } catch (error) {
     console.error('Error creating class: ', error)

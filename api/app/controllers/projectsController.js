@@ -14,7 +14,7 @@ export const createProject = async (req, res) => {
   }
 
   try {
-    const project = createNewProject(value)
+    const project = await createNewProject(value)
     return res.status(201).json(project)
   } catch (error) {
     console.error('Error creating project: ', error)

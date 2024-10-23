@@ -1,12 +1,20 @@
-import { getRecord, deleteRecord, updateRecord, filterRecords } from '#services/DatabaseService.js'
+import { v4 as uuidv4 } from 'uuid'
+
+import {
+  getRecord,
+  deleteRecord,
+  updateRecord,
+  filterRecords,
+  saveRecord,
+} from '#services/DatabaseService.js'
 
 export const createNewClass = async clazz => await saveRecord('Class', { id: uuidv4(), ...clazz })
 
 export const getClassById = async id => await getRecord('Class', id)
 
-export const deleteClassById = async id => deleteRecord('Class', id)
+export const deleteClassById = async id => await deleteRecord('Class', id)
 
-export const updateClassById = async (id, data) => updateRecord('Class', id, data)
+export const updateClassById = async (id, data) => await updateRecord('Class', id, data)
 
 export const listClassesByIds = async ({ teamId, projectId }) => {
   if (!teamId && !projectId) {
@@ -26,5 +34,5 @@ export const listClassesByIds = async ({ teamId, projectId }) => {
     projectId && { name: '@projectId', value: projectId },
   ].filter(Boolean)
 
-  return filterRecords(CLASS_COLLECTION, { query, parameters })
+  return await filterRecords(CLASS_COLLECTION, { query, parameters })
 }

@@ -11,11 +11,11 @@ import {
 export const createJoy = async joyRating =>
   await saveRecord('JoyRating', { id: uuidv4(), ...joyRating })
 
-export const getJoyById = async id => getRecord('JoyRating', id)
+export const getJoyById = async id => await getRecord('JoyRating', id)
 
-export const deleteJoyById = async id => deleteRecord('JoyRating', id)
+export const deleteJoyById = async id => await deleteRecord('JoyRating', id)
 
-export const updateJoyById = async (id, data) => updateRecord('JoyRating', id, data)
+export const updateJoyById = async (id, data) => await updateRecord('JoyRating', id, data)
 
 export const listJoys = async ({ userId, teamId, fromDate, toDate }) => {
   if (!userId && !teamId) {
@@ -39,5 +39,5 @@ export const listJoys = async ({ userId, teamId, fromDate, toDate }) => {
     toDate && { name: '@toDate', value: toDate },
   ].filter(Boolean)
 
-  return filterRecords('JoyRatings', { query, parameters })
+  return await filterRecords('JoyRatings', { query, parameters })
 }

@@ -1,7 +1,6 @@
 import Joi from 'joi'
 
 export const joyRatingSchema = Joi.object({
-  id: Joi.string().required(),
   userId: Joi.string().required().description('GUID (String) identifying the user'),
   teamId: Joi.string().required().description('GUID (String) identifying the team'),
   date: Joi.date().iso().required().description('Date-time in ISO format'),

@@ -63,7 +63,7 @@ export const getRecord = async (containerName, id) => {
 export const updateRecord = async (containerName, id, updatedData) => {
   const container = getContainer(containerName)
   try {
-    const { resource: existingRecord } = await container.item(id).read()
+    const { resource: existingRecord } = await container.item(id, id).read()
     if (!existingRecord) {
       throw new Error('Record not found')
     }
