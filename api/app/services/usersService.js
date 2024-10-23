@@ -1,3 +1,4 @@
+import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -58,3 +59,28 @@ export const inviteUsersByEmail = async ({ emails, role, teamId }) => {
   })
   return Promise.all([...existingPromises, ...newPromises])
 }
+
+export const changePassword = async (userId, currentPassword, newPassword) => {
+  try {
+    const user = await getUserById(userId)
+    if (!user) {
+      throw new Error('User not found')
+    }
+
+    const isPasswordValid = await bcrypt.compare(currentPassword, user.password)
+    if (!isPasswordValid) {
+      throw new Error('Current password is incorrect')
+    }
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10)
+
+    await updateRecord('User', userId, { password: hashedNewPassword })
+
+    return { message: 'Password changed successfully' }
+  } catch (error) {
+    throw new Error('Error changing password: ' + error.message)
+  }
+}
+
+export const updatePassword = async (userId, hashedPassword) =>
+  await updateRecord('User', userId, { password: hashedPassword })
