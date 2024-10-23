@@ -41,11 +41,14 @@ export const inviteUsersByEmail = async ({ emails, role, teamId }) => {
   const newUsers = emails.filter(email => !users.some(user => user.email === email))
 
   const existingPromises = existingUsers.map(async user => {
-    if (role !== Roles.INSTRUCTOR) {
+    if (role === Roles.INSTRUCTOR && user.role === Roles.ADMIN) {
+      user.role = 'ADMIN,INSTRUCTOR'
+    } else if (role !== Roles.INSTRUCTOR) {
       user.groups = [...new Set([...(user.groups || []), teamId])]
-      await upsertRecord('User', user)
-      // TODO: Send informational email
     }
+
+    await upsertRecord('User', user)
+    // TODO: Send informational email
   })
 
   const newPromises = newUsers.map(async email => {
