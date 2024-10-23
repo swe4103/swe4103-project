@@ -111,7 +111,7 @@ const RegisterForm = () => {
   return (
     <div className="login-signup-container">
       <div className="flex justify-center items-center h-screen bg-primary">
-        <Card width="400px" height="600px" className="flex">
+        <Card width="400px" height="600px" className="flex justify-center">
           <div className="flex flex-col items-center p-7 gap-5">
             <Logo withText={true} coloured={true} className="p-3" />
             <h2 className="text-2xl">Welcome</h2>
