@@ -12,6 +12,7 @@ import {
   upsertRecord,
   deleteRecord,
 } from '#services/DatabaseService.js'
+import { sendRegistrationEmail, sendConfirmationEmail } from '#services/emailService.js'
 
 export const createUser = async user => await saveRecord('User', { id: uuidv4(), ...user })
 
@@ -40,6 +41,11 @@ export const inviteUsersByEmail = async ({ emails, role, teamId }) => {
   const existingUsers = users.filter(user => emails.includes(user.email))
   const newUsers = emails.filter(email => !users.some(user => user.email === email))
 
+  const team = await getRecord('Team', teamId)
+  if (team == null) {
+    team = null // add error handling
+  }
+
   const existingPromises = existingUsers.map(async user => {
     if (role === Roles.INSTRUCTOR && user.role === Roles.ADMIN) {
       user.role = 'ADMIN,INSTRUCTOR'
@@ -48,7 +54,7 @@ export const inviteUsersByEmail = async ({ emails, role, teamId }) => {
     }
 
     await upsertRecord('User', user)
-    // TODO: Send informational email
+    await sendConfirmationEmail(user.email, team.name)
   })
 
   const newPromises = newUsers.map(async email => {
@@ -58,7 +64,8 @@ export const inviteUsersByEmail = async ({ emails, role, teamId }) => {
       { expiresIn: '1d' },
     )
     console.log(token)
-    // TODO: Send invitation email with token
+
+    await sendRegistrationEmail(user.email, token, team.name)
   })
   return Promise.all([...existingPromises, ...newPromises])
 }
