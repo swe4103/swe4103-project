@@ -41,20 +41,20 @@ export const inviteUsersByEmail = async ({ emails, role, teamId }) => {
   const existingUsers = users.filter(user => emails.includes(user.email))
   const newUsers = emails.filter(email => !users.some(user => user.email === email))
 
-  const team = await getRecord('Team', teamId)
-  if (team == null) {
-    team = null // add error handling
+  let message
+  if (teamId) {
+    const team = await getRecord('Team', teamId)
+    message = `You have been invited to join ${team.name} on Time Flow! Register using the following link:`
+  } else {
+    message = 'You have been invited to join Time Flow! Register using the following link:'
   }
 
   const existingPromises = existingUsers.map(async user => {
-    if (role === Roles.INSTRUCTOR && user.role === Roles.ADMIN) {
-      user.role = 'ADMIN,INSTRUCTOR'
-    } else if (role !== Roles.INSTRUCTOR) {
+    if (role !== Roles.INSTRUCTOR) {
       user.groups = [...new Set([...(user.groups || []), teamId])]
+      await upsertRecord('User', user)
+      await sendConfirmationEmail(email, team.name)
     }
-
-    await upsertRecord('User', user)
-    await sendConfirmationEmail(user.email, team.name)
   })
 
   const newPromises = newUsers.map(async email => {
@@ -63,9 +63,7 @@ export const inviteUsersByEmail = async ({ emails, role, teamId }) => {
       config.jwtInviteSecret,
       { expiresIn: '1d' },
     )
-    console.log(token)
-
-    await sendRegistrationEmail(user.email, token, team.name)
+    await sendRegistrationEmail(email, token, message)
   })
   return Promise.all([...existingPromises, ...newPromises])
 }

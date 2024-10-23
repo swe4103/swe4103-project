@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 
-function Dropdown({ children, content, width }) {
+function Dropdown({ children, content }) {
   const [isOpen, setIsOpen] = useState(false)
   const dropdownRef = useRef(null)
 
@@ -22,8 +22,7 @@ function Dropdown({ children, content, width }) {
         {children}
       </button>
       <div
-        style={{ width }}
-        className={`absolute bg-white rounded top-12 right-0 border border-slate-200 transition-transform duration-200 origin-top ${isOpen ? 'scale-y-100' : 'scale-y-0'}`}
+        className={`w-fit absolute bg-white rounded top-12 right-0 border border-slate-200 transition-transform duration-200 origin-top ${isOpen ? 'scale-y-100' : 'scale-y-0'}`}
       >
         {isOpen && content}
       </div>
