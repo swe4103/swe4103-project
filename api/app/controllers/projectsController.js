@@ -1,9 +1,10 @@
-import { updateProjectSchema, projectSchema } from '#schemas/projects.js'
+import { updateProjectSchema, projectSchema, listProjectsQuerySchema } from '#schemas/projects.js'
 import {
   getProjectById,
   updateProjectById,
   deleteProjectById,
   createNewProject,
+  listProjectsByClassId,
 } from '#services/projectsService.js'
 
 export const createProject = async (req, res) => {
@@ -13,10 +14,28 @@ export const createProject = async (req, res) => {
   }
 
   try {
-    const project = createNewClass(value)
+    const project = createNewProject(value)
     return res.status(201).json(project)
   } catch (error) {
     console.error('Error creating project: ', error)
+    return res.status(500).json({ message: 'Internal server error' })
+  }
+}
+
+export const listProjects = async (req, res) => {
+  const { error, value } = listProjectsQuerySchema.validate(req.query, { stripUnknown: true })
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message })
+  }
+
+  try {
+    const projects = await listProjectsByClassId(value)
+    if (!projects) {
+      return res.status(404).json({ message: 'No classes found' })
+    }
+    return res.status(200).json(projects)
+  } catch (error) {
+    console.error('Error fetching projects:', error)
     return res.status(500).json({ message: 'Internal server error' })
   }
 }
