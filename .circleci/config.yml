@@ -1,3 +1,4 @@
+# reference: https://circleci.com/docs/language-javascript/
 version: 2.1
 
 orbs:
@@ -13,10 +14,7 @@ jobs:
       - run:
           command: cd client && yarn lint
           name: Lint client code
-      - run:
-          command: |
-            echo "Linting client code completed."
-          
+
   lint_api:
     executor: node/default
     steps:
@@ -26,12 +24,8 @@ jobs:
       - run:
           command: cd api && yarn lint
           name: Lint API code
-      - run:
-          command: |
-            echo "Linting API code completed."
-
-  build_and_test_client:
-    executor: node/default
+  build_and_test_client: # this can be any name you choose
+    executor: node/default # use the default executor defined within the orb
     steps:
       - checkout
       - node/install-packages:
@@ -44,7 +38,7 @@ jobs:
           name: Build frontend
 
   build_and_test_api:
-    executor: node/default
+    executor: node/default # use the default executor defined within the orb
     steps:
       - checkout
       - node/install-packages:
@@ -59,24 +53,40 @@ workflows:
       - lint_client:
           filters:
             branches:
-              only: main
+              only:
+                - main
             pull_requests:
-              types: [opened, synchronize, reopened]
+              types:
+                - opened
+                - synchronize
+                - reopened
       - lint_api:
           filters:
             branches:
-              only: main
+              only:
+                - main
             pull_requests:
-              types: [opened, synchronize, reopened]
+              types:
+                - opened
+                - synchronize
+                - reopened
       - build_and_test_client:
           filters:
             branches:
-              only: main
+              only:
+                - main
             pull_requests:
-              types: [opened, synchronize, reopened]
+              types:
+                - opened
+                - synchronize
+                - reopened
       - build_and_test_api:
           filters:
             branches:
-              only: main
+              only:
+                - main
             pull_requests:
-              types: [opened, synchronize, reopened]
+              types:
+                - opened
+                - synchronize
+                - reopened
