@@ -11,12 +11,12 @@ const router = express.Router()
 router.post('/invite', authJWT, authorizeRoles(Roles.INSTRUCTOR, Roles.ADMIN), inviteUsers)
 
 // GET /api/users/:id
-router.get('/:id', authJWT, getUser)
+router.get('/:id', authJWT, authorizeRoles(Roles.STUDENT, Roles.INSTRUCTOR), getUser)
 
 // PUT /api/users/:id
-router.put('/:id', authJWT, updateUser)
+router.put('/:id', authJWT, authorizeRoles(Roles.INSTRUCTOR), updateUser)
 
 // DELETE /api/users/:id
-router.delete('/:id', authJWT, deleteUser)
+router.delete('/:id', authJWT, authorizeRoles(Roles.INSTRUCTOR), deleteUser)
 
 export default router

@@ -10,22 +10,23 @@ import {
 
 import Roles from '#constants/roles.js'
 import { authJWT } from '#middleware/authMiddleware.js'
+import { authorizeRoles } from '#middleware/roleMiddleware.js'
 
 const router = express.Router()
 
 // POST /api/joy
-router.post('/', authJWT, createJoyRating)
+router.post('/', authJWT, authorizeRoles(Roles.STUDENT), createJoyRating)
 
 // GET /api/joy
-router.get('/', authJWT, listJoyRatings)
+router.get('/', authJWT, authorizeRoles(Roles.STUDENT, Roles.INSTRUCTOR), listJoyRatings)
 
 // GET /api/joy/:id
-router.get('/:id', authJWT, getJoyRating)
+router.get('/:id', authJWT, authorizeRoles(Roles.STUDENT), getJoyRating)
 
 // PUT /api/joy/:id
-router.put('/:id', authJWT, updateJoyRating)
+router.put('/:id', authJWT, authorizeRoles(Roles.STUDENT), updateJoyRating)
 
 // DELETE /api/joy/:id
-router.delete('/:id', authJWT, deleteJoyRating)
+router.delete('/:id', authJWT, authorizeRoles(Roles.STUDENT), deleteJoyRating)
 
 export default router
