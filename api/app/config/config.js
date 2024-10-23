@@ -16,6 +16,10 @@ const configs = {
       cosmos_key: process.env.COSMOS_DB_KEY || 'dev_cosmos_key',
       cosmos_db_id: process.env.COSMOS_DB_ID || 'dev_cosmos_id',
     },
+    communicationService: {
+      connectionString: process.env.COMMUNICATION_SERVICE_CONNECTION_STRING,
+      emailDomainName: process.env.EMAIL_DOMAIN_NAME,
+    },
   },
   test: {
     port: 3000,
