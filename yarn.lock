@@ -2219,7 +2219,7 @@ anymatch@^3.0.3, anymatch@~3.1.2:
   version "1.0.0"
   dependencies:
     "@azure/cosmos" "^4.1.1"
-    api "file:../AppData/Local/Yarn/Cache/v6/npm-api-1.0.0-af08e423-a86d-41ba-aa94-2646fddd8387-1729694850696/node_modules/api"
+    api "file:../AppData/Local/Yarn/Cache/v6/npm-api-1.0.0-30fea1f8-1af3-4b06-91ab-31f827afbc60-1729696003762/node_modules/api"
     bcryptjs "^2.4.3"
     cors "^2.8.5"
     dotenv "^16.4.5"
@@ -6940,7 +6940,7 @@ supports-preserve-symlinks-flag@^1.0.0:
   version "1.0.0"
   dependencies:
     axios "^1.7.7"
-    swe4103-project "file:../AppData/Local/Yarn/Cache/v6/npm-swe4103-project-1.0.0-725494ef-b71f-478c-80ca-6b9c22e7fcc1-1729694849176/node_modules/swe4103-project"
+    swe4103-project "file:../AppData/Local/Yarn/Cache/v6/npm-swe4103-project-1.0.0-964784c1-7683-4013-baa2-291eb781b6c7-1729696002214/node_modules/swe4103-project"
 
 symbol-tree@^3.2.4:
   version "3.2.4"
