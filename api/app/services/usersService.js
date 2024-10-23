@@ -12,6 +12,7 @@ import {
   upsertRecord,
   deleteRecord,
 } from '#services/DatabaseService.js'
+import { sendRegistrationEmail, sendConfirmationEmail } from '#services/emailService.js'
 
 export const createUser = async user => await saveRecord('User', { id: uuidv4(), ...user })
 
@@ -40,15 +41,20 @@ export const inviteUsersByEmail = async ({ emails, role, teamId }) => {
   const existingUsers = users.filter(user => emails.includes(user.email))
   const newUsers = emails.filter(email => !users.some(user => user.email === email))
 
-  const existingPromises = existingUsers.map(async user => {
-    if (role === Roles.INSTRUCTOR && user.role === Roles.ADMIN) {
-      user.role = 'ADMIN,INSTRUCTOR'
-    } else if (role !== Roles.INSTRUCTOR) {
-      user.groups = [...new Set([...(user.groups || []), teamId])]
-    }
+  let message
+  if (teamId) {
+    const team = await getRecord('Team', teamId)
+    message = `You have been invited to join ${team.name} on Time Flow! Register using the following link:`
+  } else {
+    message = 'You have been invited to join Time Flow! Register using the following link:'
+  }
 
-    await upsertRecord('User', user)
-    // TODO: Send informational email
+  const existingPromises = existingUsers.map(async user => {
+    if (role !== Roles.INSTRUCTOR) {
+      user.groups = [...new Set([...(user.groups || []), teamId])]
+      await upsertRecord('User', user)
+      await sendConfirmationEmail(email, team.name)
+    }
   })
 
   const newPromises = newUsers.map(async email => {
@@ -57,8 +63,7 @@ export const inviteUsersByEmail = async ({ emails, role, teamId }) => {
       config.jwtInviteSecret,
       { expiresIn: '1d' },
     )
-    console.log(token)
-    // TODO: Send invitation email with token
+    await sendRegistrationEmail(email, token, message)
   })
   return Promise.all([...existingPromises, ...newPromises])
 }

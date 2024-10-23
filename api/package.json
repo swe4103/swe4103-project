@@ -12,6 +12,7 @@
     "test": "NODE_ENV=test ava"
   },
   "dependencies": {
+    "@azure/communication-email": "^1.0.0",
     "@azure/cosmos": "^4.1.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
