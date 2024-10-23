@@ -11,9 +11,10 @@ This document outlines the technolgies used in this project, and the underlying 
 
 - [**React.js**](https://react.dev/)
   - Frontend JavaScript library
-- [**Bootstrap**](https://getbootstrap.com/)
+- [**Tailwind**](https://tailwindcss.com/)
   - CSS framework
-  - Documentation on how it was setup within the app https://getbootstrap.com/docs/5.2/getting-started/vite/
+- [**Mocha**](https://mochajs.org/)
+  - JavaScript testing framework
 
 ### Backend
 
@@ -21,6 +22,8 @@ This document outlines the technolgies used in this project, and the underlying 
   - Backend web application framework
 - [**Cosmos DB**](https://azure.microsoft.com/en-us/products/cosmos-db)
   - NoSQL cloud database
+- [**Ava**](https://github.com/avajs/ava)
+  - Lightweight JavaScript testing framework
 
 ### Development & Quality Tools
 
@@ -41,7 +44,6 @@ This document outlines the technolgies used in this project, and the underlying 
   - Tool for defining and running multi-container applications
 - [**CircleCI**](https://circleci.com/)
   - Continuous integration and continuous delivery platform
-- [**Amazon Web Services (AWS)**](https://aws.amazon.com/)
   - Amazon cloud service provider
 - [**Microsoft Azure**](https://azure.microsoft.com/en-ca)
   - Microsoft cloud service provider
