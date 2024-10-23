@@ -14,18 +14,16 @@ export const updateJoyRatingSchema = joyRatingSchema.fork(
 )
 
 export const joyRatingsQuerySchema = Joi.object({
-  userId: Joi.string().required().messages({
-    'any.required': 'userId is required',
+  userId: Joi.string().messages({
     'string.empty': 'userId cannot be empty',
   }),
-  teamId: Joi.string().required().messages({
-    'any.required': 'teamId is required',
+  teamId: Joi.string().messages({
     'string.empty': 'teamId cannot be empty',
   }),
-  fromDate: Joi.date().iso().optional().messages({
-    'date.format': 'fromDate must be in ISO format',
+  fromDate: Joi.number().integer().optional().messages({
+    'number.base': 'fromDate must be a UNIX timestamp',
   }),
-  toDate: Joi.date().iso().optional().messages({
-    'date.format': 'toDate must be in ISO format',
+  toDate: Joi.number().integer().optional().messages({
+    'number.base': 'toDate must be a UNIX timestamp',
   }),
 })
