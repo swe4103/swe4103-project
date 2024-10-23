@@ -14,6 +14,9 @@ import {
   faMagnifyingGlass,
   faRightFromBracket,
   faPrint,
+  faPlus,
+  faTrashCan,
+  faPenToSquare,
 } from '@fortawesome/free-solid-svg-icons'
 import { faStar as faStarSolid } from '@fortawesome/free-solid-svg-icons'
 
@@ -33,4 +36,7 @@ library.add(
   faPrint,
   faStarSolid,
   faStarRegular,
+  faPlus,
+  faTrashCan,
+  faPenToSquare,
 )

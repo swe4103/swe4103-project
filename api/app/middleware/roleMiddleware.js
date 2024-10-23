@@ -7,7 +7,7 @@ export const authorizeRoles =
       return res.status(401).json({ message: 'Unauthorized: No user found' })
     }
 
-    if (!allowedRoles.includes(user.role.split(','))) {
+    if (!allowedRoles.includes(user.role)) {
       return res.status(403).json({ message: 'Forbidden: Access denied' })
     }
 

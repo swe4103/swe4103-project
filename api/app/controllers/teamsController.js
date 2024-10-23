@@ -13,7 +13,7 @@ export const createTeam = async (req, res) => {
   }
 
   try {
-    const team = createNewTeam(value)
+    const team = await createNewTeam(value)
     return res.status(201).json(team)
   } catch (error) {
     console.error('Error creating team: ', error)
