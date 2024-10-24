@@ -9,7 +9,7 @@
     "start": "node app.js",
     "dev": "nodemon app.js",
     "lint": "eslint . --fix",
-    "test": "NODE_ENV=test ava"
+    "test": "cross-env NODE_ENV=test ava"
   },
   "dependencies": {
     "@azure/communication-email": "^1.0.0",

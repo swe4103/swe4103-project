@@ -2205,7 +2205,7 @@ anymatch@^3.0.3, anymatch@~3.1.2:
   dependencies:
     "@azure/communication-email" "^1.0.0"
     "@azure/cosmos" "^4.1.1"
-    api "file:../AppData/Local/Yarn/Cache/v6/npm-api-1.0.0-e963ca95-e98a-47b7-ab53-7fca8672cef6-1729758849720/node_modules/api"
+    api "file:../AppData/Local/Yarn/Cache/v6/npm-api-1.0.0-e4682464-632f-4735-a7d2-6260206f5ef4-1729759970487/node_modules/api"
     bcryptjs "^2.4.3"
     cors "^2.8.5"
     dotenv "^16.4.5"
@@ -2980,7 +2980,7 @@ create-jest@^29.7.0:
 
 cross-env@^7.0.3:
   version "7.0.3"
-  resolved "https://registry.npmjs.org/cross-env/-/cross-env-7.0.3.tgz"
+  resolved "https://registry.yarnpkg.com/cross-env/-/cross-env-7.0.3.tgz#865264b29677dc015ba8418918965dd232fc54cf"
   integrity sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==
   dependencies:
     cross-spawn "^7.0.1"
@@ -6936,7 +6936,7 @@ supports-preserve-symlinks-flag@^1.0.0:
   version "1.0.0"
   dependencies:
     axios "^1.7.7"
-    swe4103-project "file:../AppData/Local/Yarn/Cache/v6/npm-swe4103-project-1.0.0-fe9b3720-5b50-4220-975f-f1ea67cde19b-1729758848953/node_modules/swe4103-project"
+    swe4103-project "file:../AppData/Local/Yarn/Cache/v6/npm-swe4103-project-1.0.0-7651dd94-1aca-4ba6-9d38-46e360b69f66-1729759970484/node_modules/swe4103-project"
 
 symbol-tree@^3.2.4:
   version "3.2.4"
