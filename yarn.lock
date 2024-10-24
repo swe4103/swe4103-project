@@ -2205,7 +2205,7 @@ anymatch@^3.0.3, anymatch@~3.1.2:
   dependencies:
     "@azure/communication-email" "^1.0.0"
     "@azure/cosmos" "^4.1.1"
-    api "file:../AppData/Local/Yarn/Cache/v6/npm-api-1.0.0-05b79afd-c835-416a-9bef-b2d2a9898645-1729765553075/node_modules/api"
+    api "file:../AppData/Local/Yarn/Cache/v6/npm-api-1.0.0-1090897a-6f03-4cd3-8221-eaaf20b7c7d6-1729777988529/node_modules/api"
     bcryptjs "^2.4.3"
     cors "^2.8.5"
     dotenv "^16.4.5"
@@ -6936,7 +6936,7 @@ supports-preserve-symlinks-flag@^1.0.0:
   version "1.0.0"
   dependencies:
     axios "^1.7.7"
-    swe4103-project "file:../AppData/Local/Yarn/Cache/v6/npm-swe4103-project-1.0.0-959580cf-bece-4f3d-b478-c95e5496350c-1729765551936/node_modules/swe4103-project"
+    swe4103-project "file:../AppData/Local/Yarn/Cache/v6/npm-swe4103-project-1.0.0-ca460b25-8568-4521-b62c-d87889764f6e-1729777987783/node_modules/swe4103-project"
 
 symbol-tree@^3.2.4:
   version "3.2.4"
