@@ -4,7 +4,6 @@ import AdminProtectedRoute from './components/AdminProtectedRoute/AdminProtected
 import AppLayout from './components/AppLayout/AppLayout'
 import ProtectedRoutes from './components/ProtectedRoutes/ProtectedRoutes'
 import AuthProvider from './state/AuthProvider/AuthProvider'
-import ChangePasswordForm from './views/ChangePasswordForm/ChangePasswordForm'
 import AdminView from './views/AdminView/AdminView'
 import ClassesView from './views/ClassesView/ClassesView'
 import LoginForm from './views/LoginForm/LoginForm'
@@ -27,7 +26,6 @@ const App = () => {
               <Route path="team-list" element={<TeamListView />} />
               <Route path="settings" element={<SettingsView />} />
               <Route index element={<ClassesView />} />
-              <Route path="/change-password" element={<ChangePasswordForm />} />
             </Route>
           </Route>
 
