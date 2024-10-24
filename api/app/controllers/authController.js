@@ -1,11 +1,18 @@
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
+import {
+  getUserByEmail,
+  createUser,
+  updatePassword,
+  getUserById,
+} from '../services/usersService.js'
+
 import config from '#config'
 import Roles from '#constants/roles.js'
+import { changePasswordSchema } from '#schemas/changePasswordSchema.js'
 import { registerSchema } from '#schemas/users.js'
 import { blacklist, isBlacklisted } from '#services/blacklistCache.js'
-import { getUserByEmail, createUser } from '#services/usersService.js'
 
 export const login = async (req, res) => {
   const { email, password } = req.body
@@ -101,5 +108,39 @@ export const validateToken = (req, res) => {
     return res.json({ valid: true, decoded })
   } catch (error) {
     return res.json({ valid: false, error: 'Invalid or expired token' })
+  }
+}
+
+export const changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword, confirmPassword } = req.body
+
+    const { error } = changePasswordSchema.validate({
+      currentPassword,
+      newPassword,
+      confirmPassword,
+    })
+    if (error) return res.status(400).json({ message: error.details[0].message })
+
+    const userId = req.user.id
+
+    const user = await getUserById(userId)
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' })
+    }
+
+    const isPasswordValid = await bcrypt.compare(currentPassword, user.password)
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Current password is incorrect' })
+    }
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10)
+
+    await updatePassword(userId, hashedNewPassword)
+
+    return res.status(200).json({ message: 'Password changed successfully' })
+  } catch (err) {
+    console.error('Error changing password:', err)
+    return res.status(500).json({ message: 'Internal server error' })
   }
 }
