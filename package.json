@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "client": "yarn workspace client dev",
-    "api": "yarn workspace api dev",
+    "api": "nodemon -r dotenv/config api/app.js",
     "dev": "concurrently --kill-others-on-fail \"yarn api\"  \"yarn client\"",
     "lint:client": "yarn workspace client lint",
     "lint:api": "yarn workspace api lint",

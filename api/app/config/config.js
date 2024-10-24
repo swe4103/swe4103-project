@@ -2,6 +2,12 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
+console.log(
+  'COMMUNICATION_SERVICE_CONNECTION_STRING:',
+  process.env.COMMUNICATION_SERVICE_CONNECTION_STRING,
+)
+console.log('EMAIL_DOMAIN_NAME:', process.env.EMAIL_DOMAIN_NAME)
+
 const env = process.env.NODE_ENV || 'development'
 
 const allowedOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : []

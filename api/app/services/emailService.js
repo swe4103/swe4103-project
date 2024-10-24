@@ -1,6 +1,10 @@
 import { EmailClient } from '@azure/communication-email'
 
-import config from '#config'
+import config from '../config/config.js'
+
+console.log(config.communicationService) // This will log the entire communicationService object
+console.log('Connection String:', config.communicationService.connectionString) // This will log the connection string
+console.log('Email Domain Name:', config.communicationService.emailDomainName)
 
 const emailClient = new EmailClient(config.communicationService.connectionString)
 
