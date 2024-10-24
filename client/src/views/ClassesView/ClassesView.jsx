@@ -32,6 +32,12 @@ const ClassesView = () => {
           config,
         )
         const newUser = userResponse.data
+        if (user.groups) {
+          user.user.groups = newUser.groups
+        } else {
+          // TODO fix this shit
+          user.user.groups = []
+        }
         user.user.groups = newUser.groups
 
         if (newUser.role.includes('STUDENT')) {
