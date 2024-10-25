@@ -31,8 +31,14 @@ const ClassesView = () => {
           `http://localhost:3000/api/users/${user.user.id}`,
           config,
         )
+
         const newUser = userResponse.data
-        user.user.groups = newUser.groups
+        if (user.groups) {
+          user.user.groups = newUser.groups
+        } else {
+          // TODO fix this shit
+          user.user.groups = []
+        }
 
         if (newUser.role.includes('STUDENT')) {
           const responses = await Promise.all(
