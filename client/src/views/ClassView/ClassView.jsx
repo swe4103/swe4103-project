@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
+
 import Button from '../../components/Button/Button'
 import Card from '../../components/Card/Card'
 import { useAuth } from '../../state/AuthProvider/AuthProvider'
@@ -20,39 +21,40 @@ const ClassView = () => {
   const [selectedProjectId, setSelectedProjectId] = useState('')
 
   useEffect(() => {
+    const fetchClassDetailsAndProjects = async () => {
+      if (!user || !user.token) {
+        setError('User not authenticated')
+        setIsLoading(false)
+        return
+      }
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      }
+
+      setIsLoading(true)
+      try {
+        const classResponse = await axios.get(
+          `http://localhost:3000/api/classes/${classId}`,
+          config,
+        )
+        setClassDetails(classResponse.data || null)
+
+        const projectResponse = await axios.get(`http://localhost:3000/api/projects`, {
+          ...config,
+          params: { classId },
+        })
+        setProjects(projectResponse.data || [])
+      } catch (error) {
+        console.error('Error fetching data:', error)
+        setError('Failed to fetch class details or projects')
+      }
+      setIsLoading(false)
+    }
     fetchClassDetailsAndProjects()
   }, [classId, user])
-
-  const fetchClassDetailsAndProjects = async () => {
-    if (!user || !user.token) {
-      setError('User not authenticated')
-      setIsLoading(false)
-      return
-    }
-
-    const config = {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    }
-
-    setIsLoading(true)
-    try {
-      const classResponse = await axios.get(`http://localhost:3000/api/classes/${classId}`, config)
-      setClassDetails(classResponse.data || null)
-
-      const projectResponse = await axios.get(`http://localhost:3000/api/projects`, {
-        ...config,
-        params: { classId },
-      })
-      setProjects(projectResponse.data || [])
-    } catch (error) {
-      console.error('Error fetching data:', error)
-      setError('Failed to fetch class details or projects')
-    }
-    setIsLoading(false)
-  }
-
   const handleAddProject = async e => {
     e.preventDefault()
     if (!user || !user.token) {
@@ -78,7 +80,6 @@ const ClassView = () => {
       setIsSubmitting(false)
     }
   }
-
   const handleDeleteProject = async () => {
     if (!selectedProjectId) return
 

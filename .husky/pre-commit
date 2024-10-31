@@ -1,2 +1,2 @@
 # .husky/pre-commit
-#yarn lint-staged
+yarn lint-staged
