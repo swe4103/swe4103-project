@@ -6,6 +6,7 @@ import ProtectedRoutes from './components/ProtectedRoutes/ProtectedRoutes'
 import AuthProvider from './state/AuthProvider/AuthProvider'
 import AdminView from './views/AdminView/AdminView'
 import ClassesView from './views/ClassesView/ClassesView'
+import ClassView from './views/ClassView/ClassView'
 import LoginForm from './views/LoginForm/LoginForm'
 import RegisterForm from './views/RegistrationForm/RegisterForm'
 import SettingsView from './views/SettingsView/SettingsView'
@@ -26,6 +27,7 @@ const App = () => {
               <Route path="team-list" element={<TeamListView />} />
               <Route path="settings" element={<SettingsView />} />
               <Route index element={<ClassesView />} />
+              <Route path="class/:classId" element={<ClassView />} />
             </Route>
           </Route>
 
