@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom'
 import Button from '../../components/Button/Button'
 import Card from '../../components/Card/Card'
 import { useAuth } from '../../state/AuthProvider/AuthProvider'
-//import { ClassView } from '../ClassView/ClassView'
 const ClassesView = () => {
   const { user, isLoading } = useAuth()
   const [showForm, setShowForm] = useState(false)
@@ -59,7 +58,7 @@ const ClassesView = () => {
 
   const handleSubmit = async e => {
     e.preventDefault()
-    if (isSubmitting) return // Prevent duplicate submissions
+    if (isSubmitting) return
 
     setIsSubmitting(true)
 
