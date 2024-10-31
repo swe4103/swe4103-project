@@ -27,7 +27,7 @@ const App = () => {
               <Route path="team-list" element={<TeamListView />} />
               <Route path="settings" element={<SettingsView />} />
               <Route index element={<ClassesView />} />
-              <Route path="class/:classId" element={<ClassView />} />
+              <Route path="classes/:classId" element={<ClassView />} />
             </Route>
           </Route>
 
