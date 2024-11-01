@@ -106,8 +106,30 @@ const ClassView = () => {
     <div>
       {classDetails ? (
         <div className="w-full h-full flex flex-col">
-          <h3 className="text-lg font-bold pb-4">{classDetails.name}</h3>
-          <p>Year: {classDetails.year}</p>
+          <h3 className="pb-4 m-1">
+            <label className="text-lg font-bold me-2">{classDetails.name}</label>
+            <label className="bg-gray-300 p-1 border rounded m-1 text-white">
+              {classDetails.year}
+            </label>
+          </h3>
+          <hr className="mb-2"></hr>
+
+          <h3 className="text-lg font-bold pb-4">Projects:</h3>
+          {projects.length > 0 && (
+            <Card className="flex flex-col items-center justify-center w-full p-6 h-full gap-4 mb-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+                {projects.map(project => (
+                  <div
+                    key={project.id}
+                    className="flex flex-col gap-3 bg-white border p-4 rounded-md hover:shadow"
+                  >
+                    <p className="text-md font-bold">{project.name}</p>
+                    <p className="text-sm text-gray-500">{project.description}</p>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          )}
           {user.user.role === 'INSTRUCTOR' && (
             <div className="flex gap-4 mb-4">
               <Button onClick={() => setShowProjectForm(!showProjectForm)}>
@@ -161,22 +183,6 @@ const ClassView = () => {
                 Confirm Delete
               </Button>
             </div>
-          )}
-          <h2>Projects:</h2>
-          {projects.length > 0 && (
-            <Card className="flex flex-col items-center justify-center w-full p-6 h-full gap-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
-                {projects.map(project => (
-                  <div
-                    key={project.id}
-                    className="flex flex-col gap-3 bg-white border p-4 rounded-md hover:shadow"
-                  >
-                    <p className="text-md font-bold">{project.name}</p>
-                    <p className="text-sm text-gray-500">{project.description}</p>
-                  </div>
-                ))}
-              </div>
-            </Card>
           )}
         </div>
       ) : (
