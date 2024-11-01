@@ -24,7 +24,7 @@ const App = () => {
           {/* General protected routes for non-admin users */}
           <Route element={<ProtectedRoutes />}>
             <Route path="/" element={<AppLayout />}>
-              <Route path="team-list" element={<TeamListView />} />
+              <Route path="team-list/:projectId" element={<TeamListView />} />
               <Route path="settings" element={<SettingsView />} />
               <Route index element={<ClassesView />} />
               <Route path="classes/:classId" element={<ClassView />} />

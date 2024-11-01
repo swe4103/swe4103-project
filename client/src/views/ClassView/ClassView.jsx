@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 import Button from '../../components/Button/Button'
 import Card from '../../components/Card/Card'
@@ -118,14 +118,20 @@ const ClassView = () => {
           {projects.length > 0 && (
             <Card className="flex flex-col items-center justify-center w-full p-6 h-full gap-4 mb-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
-                {projects.map(project => (
-                  <div
-                    key={project.id}
+                {projects.map(p => (
+                  <Link
+                    to={`/team-list/${p.id}`}
+                    key={p.id}
                     className="flex flex-col gap-3 bg-white border p-4 rounded-md hover:shadow"
                   >
-                    <p className="text-md font-bold">{project.name}</p>
-                    <p className="text-sm text-gray-500">{project.description}</p>
-                  </div>
+                    <div
+                      key={p.id}
+                      className="flex flex-col gap-3 bg-white border p-4 rounded-md hover:shadow"
+                    >
+                      <p className="text-md font-bold">{p.name}</p>
+                      <p className="text-sm text-gray-500">{p.description}</p>
+                    </div>
+                  </Link>
                 ))}
               </div>
             </Card>
