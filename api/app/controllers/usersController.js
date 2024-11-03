@@ -40,12 +40,14 @@ export const getUser = async (req, res) => {
 export const updateUser = async (req, res) => {
   const { id } = req.params
 
+  // Validate the request body against the updateUserSchema
   const { error, value } = updateUserSchema.validate(req.body)
   if (error) {
     return res.status(400).json({ message: error.details[0].message })
   }
 
   try {
+    // Call the service function to update the user by ID
     const updatedUser = await updateUserById(id, value)
     if (!updatedUser) {
       return res.status(404).json({ message: 'User not found' })
@@ -60,8 +62,8 @@ export const updateUser = async (req, res) => {
 export const deleteUser = async (req, res) => {
   const { id } = req.params
   try {
-    const deletedID = await deleteUserById(id)
-    if (!deletedId) {
+    const deletedId = await deleteUserById(id) // Fix variable name to deletedId
+    if (!deletedId) { // Check for the correct variable name
       return res.status(404).json({ message: 'User not found' })
     }
 
