@@ -122,14 +122,11 @@ const ClassView = () => {
                   <Link
                     to={`/team-list/${p.id}`}
                     key={p.id}
-                    className="flex flex-col gap-3 bg-white border p-4 rounded-md hover:shadow"
+                    className="flex flex-col gap-3 border p-4 bg-primary rounded-md hover:shadow"
                   >
-                    <div
-                      key={p.id}
-                      className="flex flex-col gap-3 bg-white border p-4 rounded-md hover:shadow"
-                    >
-                      <p className="text-md font-bold">{p.name}</p>
-                      <p className="text-sm text-gray-500">{p.description}</p>
+                    <div key={p.id} className="flex flex-col gap-3 bg-primary">
+                      <p className="text-md font-bold text-white">{p.name}</p>
+                      <p className="text-sm text-gray-200">{p.description}</p>
                     </div>
                   </Link>
                 ))}
