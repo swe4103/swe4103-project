@@ -143,20 +143,26 @@ git clone https://github.com/swe4103/swe4103-project.git
 cd swe4103-project
 ```
 
-3. Install and use the version of node specified in the `.nvmrc` file by running the following commands
+3. Copy the `.env.example` file and populate with valid credentials. Please reach out to any of the development leads for valid credentials.
+
+```bash
+cp api/.env.exmaple api/.env
+```
+
+4. Install and use the version of node specified in the `.nvmrc` file by running the following commands
 
 ```bash
 nvm install
 nvm use
 ```
 
-4. Install the necessary dependencies
+5. Install the necessary dependencies
 
 ```bash
 yarn install
 ```
 
-5. At this point, you can run either just the client (frontend React.js application), just the server (backend Express.js API), or you can run them concurrently, communicating with eachother
+6. At this point, you can run either just the client (frontend React.js application), just the server (backend Express.js API), or you can run them concurrently, communicating with eachother
 
 **Client**
 
