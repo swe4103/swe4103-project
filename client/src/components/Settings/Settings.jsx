@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useState } from 'react'
 
 import { useAuth } from '../../state/AuthProvider/AuthProvider'
-import './Settings.css'
+//import './Settings.css'
 
 const Settings = () => {
   const { user, updateUser } = useAuth()
@@ -45,7 +45,7 @@ const Settings = () => {
       try {
         // Make an API call to update the display name on the server
         await axios.put(
-          'http://localhost:3000/api/user/displayName',
+          `http://localhost:3000/api/users/${user.user.id}`,
           { displayName: newDisplayName },
           {
             headers: {
@@ -54,13 +54,14 @@ const Settings = () => {
           },
         )
 
-        // Update the display name locally in the component's state
-        setDisplayName(newDisplayName)
-
-        updateUser({ ...user, user: { ...user.user, displayName: newDisplayName } })
+        const updatedUser = {
+          ...user,
+          user: { ...user.user, displayName: newDisplayName },
+        }
+        updateUser(updatedUser) // Update global state
+        setDisplayName(newDisplayName) // Update local state
 
         setFeedbackMessage('Display name updated successfully!')
-
         setIsModalOpen(false)
       } catch {
         setFeedbackMessage('Failed to update display name. Please try again.')
