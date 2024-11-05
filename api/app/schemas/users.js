@@ -20,7 +20,7 @@ export const userSchema = Joi.object({
   displayName: Joi.string(),
   email: Joi.string().email(),
   role: Joi.string().valid(Roles.ADMIN, Roles.STUDENT, Roles.INSTRUCTOR),
-  groups: Joi.array().items(Joi.string().guid()),
+  groups: Joi.array().items(Joi.string().guid()).default([]),
 })
 
 export const updateUserSchema = userSchema.fork(Object.keys(userSchema.describe().keys), field =>
