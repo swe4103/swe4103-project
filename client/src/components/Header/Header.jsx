@@ -28,6 +28,7 @@ const Header = () => {
       <h2 className="text-xl">{getTitle(location.pathname)}</h2>
       <div className="flex w-full justify-end gap-6">
         <Dropdown
+          width="250px"
           content={
             <div className="grid grid-cols-1 text-sm text-slate-500">
               <div className="flex flex-col p-3 gap-2 items-center">
