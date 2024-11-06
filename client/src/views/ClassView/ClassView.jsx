@@ -1,9 +1,9 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { /*Link,*/ useParams } from 'react-router-dom'
 
 import Button from '../../components/Button/Button'
-import Card from '../../components/Card/Card'
 import { useAuth } from '../../state/AuthProvider/AuthProvider'
 
 const ClassView = () => {
@@ -11,14 +11,19 @@ const ClassView = () => {
   const { user } = useAuth()
   const [classDetails, setClassDetails] = useState(null)
   const [projects, setProjects] = useState([])
+  const [expandedProjectIds, setExpandedProjectIds] = useState([]) // Changed to an array to hold multiple expanded project IDs
   const [newProjectName, setNewProjectName] = useState('')
   const [newProjectDescription, setNewProjectDescription] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showProjectForm, setShowProjectForm] = useState(false)
-  const [showDeleteInput, setShowDeleteInput] = useState(false)
-  const [selectedProjectId, setSelectedProjectId] = useState('')
+  const [teams, setTeams] = useState({})
+  const [newTeamName, setNewTeamName] = useState('')
+  const [isTeamSubmitting, setIsTeamSubmitting] = useState(false)
+  const [showTeamForm, setShowTeamForm] = useState({})
+  const [showTeamDeleteInput, setShowTeamDeleteInput] = useState({})
+  const [selectedTeamId, setSelectedTeamId] = useState('')
 
   useEffect(() => {
     const fetchClassDetailsAndProjects = async () => {
@@ -55,6 +60,7 @@ const ClassView = () => {
     }
     fetchClassDetailsAndProjects()
   }, [classId, user])
+
   const handleAddProject = async e => {
     e.preventDefault()
     if (!user || !user.token) {
@@ -80,22 +86,102 @@ const ClassView = () => {
       setIsSubmitting(false)
     }
   }
-  const handleDeleteProject = async () => {
-    if (!selectedProjectId) return
 
+  const handleDeleteProject = async projectId => {
     const confirmDelete = window.confirm('Are you sure you want to delete this project?')
     if (!confirmDelete) return
 
     try {
-      await axios.delete(`http://localhost:3000/api/projects/${selectedProjectId}`, {
+      await axios.delete(`http://localhost:3000/api/projects/${projectId}`, {
         headers: { Authorization: `Bearer ${user.token}` },
       })
-      setProjects(projects.filter(project => project.id !== selectedProjectId))
-      setSelectedProjectId('') // Reset selection
-      setShowDeleteInput(false) // Hide dropdown
+      setProjects(projects.filter(project => project.id !== projectId))
     } catch (error) {
       console.error('Error deleting project:', error)
       setError('Failed to delete project')
+    }
+  }
+
+  const handleToggleProject = async projectId => {
+    setExpandedProjectIds(prev =>
+      prev.includes(projectId) ? prev.filter(id => id !== projectId) : [...prev, projectId],
+    )
+    if (!expandedProjectIds.includes(projectId)) {
+      await fetchTeams(projectId)
+    }
+  }
+
+  const fetchTeams = async projectId => {
+    if (!user || !user.token) {
+      setError('User not authenticated')
+      return
+    }
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    }
+
+    try {
+      const teamResponse = await axios.get(`http://localhost:3000/api/teams`, {
+        ...config,
+        params: { projectId },
+      })
+      setTeams(prev => ({ ...prev, [projectId]: teamResponse.data || [] }))
+    } catch (error) {
+      console.error('Error fetching teams:', error)
+      setError('Failed to fetch teams')
+    }
+  }
+
+  const handleAddTeam = async (e, projectId) => {
+    e.preventDefault()
+    if (!user || !user.token) {
+      setError('User not authenticated')
+      return
+    }
+
+    setIsTeamSubmitting(true)
+    try {
+      const response = await axios.post(
+        'http://localhost:3000/api/teams',
+        { name: newTeamName, projectId },
+        { headers: { Authorization: `Bearer ${user.token}` } },
+      )
+      setTeams(prev => ({
+        ...prev,
+        [projectId]: [...prev[projectId], response.data],
+      }))
+      setNewTeamName('')
+      setShowTeamForm(prev => ({ ...prev, [projectId]: false }))
+    } catch (error) {
+      console.error('Error adding team:', error)
+      setError('Failed to add team')
+    } finally {
+      setIsTeamSubmitting(false)
+    }
+  }
+
+  const handleDeleteTeam = async projectId => {
+    if (!selectedTeamId) return
+
+    const confirmDelete = window.confirm('Are you sure you want to delete this team?')
+    if (!confirmDelete) return
+
+    try {
+      await axios.delete(`http://localhost:3000/api/teams/${selectedTeamId}`, {
+        headers: { Authorization: `Bearer ${user.token}` },
+      })
+      setTeams(prev => ({
+        ...prev,
+        [projectId]: prev[projectId].filter(team => team.id !== selectedTeamId),
+      }))
+      setSelectedTeamId('') // Reset selection
+      setShowTeamDeleteInput(prev => ({ ...prev, [projectId]: false })) // Hide dropdown
+    } catch (error) {
+      console.error('Error deleting team:', error)
+      setError('Failed to delete team')
     }
   }
 
@@ -106,90 +192,185 @@ const ClassView = () => {
     <div>
       {classDetails ? (
         <div className="w-full h-full flex flex-col">
-          <h3 className="pb-4 m-1">
-            <label className="text-lg font-bold me-2">{classDetails.name}</label>
-            <label className="bg-gray-300 p-1 border rounded m-1 text-white">
+          <h2 className="pb-4 m-2 flex justify-between items-center">
+            <label className="text-xl font-bold text-primary">{classDetails.name}</label>
+            <label className="bg-primary px-4 py-1 border rounded-full m-1 text-white">
               {classDetails.year}
             </label>
-          </h3>
-          <hr className="mb-2"></hr>
-
-          <h3 className="text-lg font-bold pb-4">Projects:</h3>
-          {projects.length > 0 && (
-            <Card className="flex flex-col items-center justify-center w-full p-6 h-full gap-4 mb-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
-                {projects.map(p => (
-                  <Link
-                    to={`/project/${p.id}`}
-                    key={p.id}
-                    className="flex flex-col gap-3 border p-4 bg-primary rounded-md hover:shadow"
-                  >
-                    <div key={p.id} className="flex flex-col gap-3 bg-primary">
-                      <p className="text-md font-bold text-white">{p.name}</p>
-                      <p className="text-sm text-gray-200">{p.description}</p>
-                    </div>
-                  </Link>
-                ))}
+          </h2>
+          <hr className="mb-4"></hr>
+          <h3 className="pb-4 m-2 flex justify-between items-center">
+            <label className="text-xl font-bold text-primary">Projects</label>
+            {user.user.role === 'INSTRUCTOR' && !showProjectForm && (
+              <div className="flex gap-4 mb-4">
+                <Button
+                  onClick={() => setShowProjectForm(!showProjectForm)}
+                  className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition"
+                >
+                  {showProjectForm ? 'Cancel' : 'Create Project'}
+                </Button>
               </div>
-            </Card>
-          )}
-          {user.user.role === 'INSTRUCTOR' && (
-            <div className="flex gap-4 mb-4">
-              <Button onClick={() => setShowProjectForm(!showProjectForm)}>
-                {showProjectForm ? 'Cancel' : 'Add Project'}
-              </Button>
-              <Button
-                onClick={() => setShowDeleteInput(!showDeleteInput)}
-                className="bg-red-500 text-white"
-              >
-                {showDeleteInput ? 'Cancel Delete' : 'Delete Project'}
-              </Button>
-            </div>
-          )}
+            )}
+          </h3>
           {showProjectForm && (
-            <form onSubmit={handleAddProject} className="flex flex-col gap-4">
+            <form
+              onSubmit={handleAddProject}
+              className="flex flex-col gap-4 mt-0 border rounded p-4 mb-4"
+            >
+              <label className="font-semibold">New Project for {classDetails.name}</label>
+
               <input
                 type="text"
                 placeholder="Project Name"
                 value={newProjectName}
                 onChange={e => setNewProjectName(e.target.value)}
                 required
-                className="p-2 border rounded"
+                className="p-3 border rounded-md"
               />
               <input
                 type="text"
                 placeholder="Project Description"
                 value={newProjectDescription}
                 onChange={e => setNewProjectDescription(e.target.value)}
-                className="p-2 border rounded"
+                className="p-3 border rounded-md"
               />
-              <Button type="submit" disabled={isSubmitting}>
-                Submit Project
-              </Button>
+              <div className="flex gap-4 items-center justify-between">
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark transition mb-2"
+                >
+                  Submit Project
+                </Button>
+                <Button
+                  onClick={() => setShowProjectForm(!showProjectForm)}
+                  className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition"
+                >
+                  {showProjectForm ? 'Cancel' : 'Create Project'}
+                </Button>
+              </div>
             </form>
           )}
-          {showDeleteInput && (
-            <div className="flex flex-col gap-4">
-              <select
-                value={selectedProjectId}
-                onChange={e => setSelectedProjectId(e.target.value)}
-                className="p-2 border rounded"
-              >
-                <option value="">Select Project to Delete</option>
-                {projects.map(project => (
-                  <option key={project.id} value={project.id}>
-                    {project.name}
-                  </option>
-                ))}
-              </select>
-              <Button onClick={handleDeleteProject} className="bg-red-500 text-white">
-                Confirm Delete
-              </Button>
+
+          {projects.length > 0 && (
+            <div className="w-full">
+              {projects.map(p => (
+                <div
+                  key={p.id}
+                  className="mb-6 border rounded-lg shadow-sm hover:shadow-lg transition duration-300"
+                >
+                  <div
+                    className="flex justify-between items-center p-4 bg-primary text-white cursor-pointer rounded-t-lg"
+                    onClick={() => handleToggleProject(p.id)}
+                  >
+                    <div className="flex justify-between items-center">
+                      <p>{expandedProjectIds.includes(p.id) ? '▲' : '▼'}</p>{' '}
+                      <p className="font-semibold ml-2">{p.name}</p>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <Button
+                        onClick={e => {
+                          e.stopPropagation()
+                          handleDeleteProject(p.id)
+                        }}
+                        className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition"
+                      >
+                        <FontAwesomeIcon icon="trash-can" />
+                      </Button>
+                    </div>
+                  </div>
+                  {expandedProjectIds.includes(p.id) && (
+                    <div className="p-6 bg-white rounded-b-lg">
+                      <p className="text-sm text-gray-700 mb-4">{p.description}</p>
+
+                      <h3 className="text-lg font-bold mt-6">Teams:</h3>
+                      {teams[p.id] && teams[p.id].length > 0 ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full mt-4">
+                          {teams[p.id].map(team => (
+                            <div
+                              key={team.id}
+                              className="flex flex-col gap-3 bg-white border p-4 rounded-md hover:shadow-md transition duration-200"
+                            >
+                              <p className="text-md font-bold text-primary">{team.name}</p>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-gray-500 mt-4">No teams found.</p>
+                      )}
+                      {user.user.role === 'INSTRUCTOR' && (
+                        <div className="flex gap-4 mt-6">
+                          <Button
+                            onClick={() =>
+                              setShowTeamForm(prev => ({ ...prev, [p.id]: !prev[p.id] }))
+                            }
+                            className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition"
+                          >
+                            {showTeamForm[p.id] ? 'Cancel' : 'Add Team'}
+                          </Button>
+                          <Button
+                            onClick={() =>
+                              setShowTeamDeleteInput(prev => ({ ...prev, [p.id]: !prev[p.id] }))
+                            }
+                            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+                          >
+                            {showTeamDeleteInput[p.id] ? 'Cancel Delete' : 'Delete Team'}
+                          </Button>
+                        </div>
+                      )}
+                      {showTeamForm[p.id] && (
+                        <form
+                          onSubmit={e => handleAddTeam(e, p.id)}
+                          className="flex flex-col gap-4 mt-4"
+                        >
+                          <input
+                            type="text"
+                            placeholder="Team Name"
+                            value={newTeamName}
+                            onChange={e => setNewTeamName(e.target.value)}
+                            required
+                            className="p-3 border rounded-md"
+                          />
+                          <Button
+                            type="submit"
+                            disabled={isTeamSubmitting}
+                            className="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark transition"
+                          >
+                            Submit Team
+                          </Button>
+                        </form>
+                      )}
+                      {showTeamDeleteInput[p.id] && (
+                        <div className="flex flex-col gap-4 mt-4">
+                          <select
+                            value={selectedTeamId}
+                            onChange={e => setSelectedTeamId(e.target.value)}
+                            className="p-3 border rounded-md"
+                          >
+                            <option value="">Select Team to Delete</option>
+                            {teams[p.id].map(team => (
+                              <option key={team.id} value={team.id}>
+                                {team.name}
+                              </option>
+                            ))}
+                          </select>
+                          <Button
+                            onClick={() => handleDeleteTeam(p.id)}
+                            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+                          >
+                            Confirm Delete
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           )}
         </div>
       ) : (
-        <p>Class not found.</p>
+        <p className="text-gray-500">Class not found.</p>
       )}
     </div>
   )

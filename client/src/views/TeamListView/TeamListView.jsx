@@ -18,7 +18,6 @@ const ProjectView = () => {
   const [showTeamForm, setShowTeamForm] = useState(false)
   const [showDeleteInput, setShowDeleteInput] = useState(false)
   const [selectedTeamId, setSelectedTeamId] = useState('')
-
   useEffect(() => {
     const fetchProjectDetailsAndTeams = async () => {
       if (!user || !user.token) {
@@ -160,7 +159,7 @@ const ProjectView = () => {
           )}
           <h2>Teams:</h2>
           {teams.length > 0 && (
-            <Card className="flex flex-col items-center justify-center w-full p-6 h-full gap-4">
+            <Card className="flex flex-col items-center justify-center w-full p-6 h-full gap-4 bg-primary">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
                 {teams.map(team => (
                   <div
