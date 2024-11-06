@@ -1,4 +1,3 @@
-# reference: https://circleci.com/docs/language-javascript/
 version: 2.1
 
 orbs:
@@ -24,6 +23,7 @@ jobs:
       - run:
           command: cd api && yarn lint
           name: Lint API code
+
   build_and_test_client: # this can be any name you choose
     executor: node/default # use the default executor defined within the orb
     steps:
@@ -36,9 +36,9 @@ jobs:
       - run:
           command: cd client && yarn build
           name: Build frontend
-      
+
   build_and_test_api:
-    executor: node/default # use the default executor defined within the orb
+    executor: node/default
     steps:
       - checkout
       - node/install-packages:
@@ -47,46 +47,79 @@ jobs:
           command: cd api && yarn test
           name: Run backend tests
 
+  deploy:
+    docker:
+      - image: cimg/node:lts
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            sudo apt-get update && \
+            sudo apt-get install -y rsync openssh-client docker-compose
+      - run:
+          name: Install Yarn
+          command: |
+            curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - && \
+            echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list && \
+            sudo apt-get update && \
+            sudo apt-get install -y yarn
+      - add_ssh_keys:
+          fingerprints:
+            - $SSH_FINGERPRINT
+      - run:
+          name: Add to Known Hosts
+          command: |
+            ssh-keyscan -H $EC2_HOST >> ~/.ssh/known_hosts
+      - run:
+          name: Copy Source
+          command: |
+            rsync -avz --delete \
+              --exclude='.*' \
+              --exclude='*docs*' \
+              --exclude='*node_modules*' \
+              --exclude='*.md' \
+              --exclude='*eslint*' \
+              --exclude='*.test.*' \
+              --exclude='*spec*' \
+              --exclude='build/' \
+              --exclude='dist/' \
+              --exclude='*.log' \
+              --exclude='tmp/' \
+              --exclude='*.local' \
+              --exclude='*__tests__*' \
+              --exclude='coverage/' \
+              -e ssh \
+              ./ ${EC2_USER}@${EC2_HOST}:~/timeflow/
+      - run:
+          name: Deploy
+          command: |
+            ssh $EC2_USER@$EC2_HOST "\
+              set -e; \
+              cd ~/timeflow; \
+              docker-compose down; \
+              docker system prune -af; \
+              yarn install; \
+              docker-compose up -d --build; \
+            "
+
 workflows:
   build_test_deploy:
     jobs:
-      - lint_client:
-        filters:
-          branches:
-            only:
-              - main
-          pull_requests:
-            types:
-              - opened
-              - synchronize
-              - reopened
-      - lint_api:
-        filters:
-          branches:
-            only:
-              - main
-          pull_requests:
-            types:
-              - opened
-              - synchronize
-              - reopened
+      - lint_client # No filters means it runs on all branches and PRs
+      - lint_api # No filters means it runs on all branches and PRs
       - build_and_test_client:
-        filters:
-          branches:
-            only:
-              - main
-          pull_requests:
-            types:
-              - opened
-              - synchronize
-              - reopened
+          requires:
+            - lint_client
       - build_and_test_api:
-        filters:
-          branches:
-            only:
-              - main
-          pull_requests:
-            types:
-              - opened
-              - synchronize
-              - reopened
+          requires:
+            - lint_api
+      - deploy:
+          requires:
+            - build_and_test_client
+            - build_and_test_api
+          filters:
+            branches:
+              only:
+                - main
