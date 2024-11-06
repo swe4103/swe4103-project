@@ -30,7 +30,19 @@ const IndividualStudentJoyChart = () => {
     ],
     axes: [
       { type: 'number', position: 'bottom', title: { text: 'Rating' }, max: 5 },
-      { type: 'category', position: 'left' },
+      {
+        type: 'category',
+        position: 'left',
+        label: {
+          formatter: ({ value }) => {
+            const date = new Date(value)
+            return date.toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+            })
+          },
+        },
+      },
     ],
   }
 

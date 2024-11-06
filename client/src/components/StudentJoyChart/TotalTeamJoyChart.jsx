@@ -51,7 +51,7 @@ const TotalTeamJoyChart = () => {
   }, []) // Empty dependency array ensures this runs once after the component mounts
 
   return (
-    <div style={{ width: '100%', height: '400px', backgroundColor: '#f8f9fa' }}>
+    <div style={{ width: '100%', height: '500px', backgroundColor: '#f8f9fa' }}>
       <AgCharts options={chartOptions} />
     </div>
   )
