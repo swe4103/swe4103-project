@@ -120,7 +120,7 @@ const ClassView = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
                 {projects.map(p => (
                   <Link
-                    to={`/team-list/${p.id}`}
+                    to={`/project/${p.id}`}
                     key={p.id}
                     className="flex flex-col gap-3 border p-4 bg-primary rounded-md hover:shadow"
                   >

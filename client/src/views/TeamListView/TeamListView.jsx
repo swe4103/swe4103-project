@@ -45,6 +45,7 @@ const ProjectView = () => {
           ...config,
           params: { projectId },
         })
+        console.log('teamResponse', teamResponse)
         setTeams(teamResponse.data || [])
       } catch (error) {
         console.error('Error fetching data:', error)

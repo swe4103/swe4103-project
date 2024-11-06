@@ -1,9 +1,10 @@
-import { teamSchema, updateTeamSchema } from '#schemas/teams.js'
+import { teamSchema, updateTeamSchema, listTeamsQuerySchema } from '#schemas/teams.js'
 import {
   getTeamById,
   updateTeamById,
   deleteTeamById,
   createNewTeam,
+  listTeamsByProjectId,
 } from '#services/teamsService.js'
 
 export const createTeam = async (req, res) => {
@@ -32,6 +33,24 @@ export const getTeam = async (req, res) => {
     return res.status(200).json(team)
   } catch (error) {
     console.error('Error retrieving team: ', error)
+    return res.status(500).json({ message: 'Internal server error' })
+  }
+}
+
+export const listTeams = async (req, res) => {
+  const { error, value } = listTeamsQuerySchema.validate(req.query, { stripUnknown: true })
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message })
+  }
+
+  try {
+    const teams = await listTeamsByProjectId(value)
+    if (!teams) {
+      return res.status(200).json([])
+    }
+    return res.status(200).json(teams)
+  } catch (error) {
+    console.error('Error fetching projects:', error)
     return res.status(500).json({ message: 'Internal server error' })
   }
 }
