@@ -281,7 +281,84 @@ const ClassView = () => {
                   </div>
                   {expandedProjectIds.includes(p.id) && (
                     <div className="p-6 bg-white rounded-b-lg">
-                      <p className="text-sm text-gray-700 mb-4">{p.description}</p>
+                      {!p.isEditingDescription ? (
+                        <div className="flex justify-between items-center">
+                          <p className="text-sm text-gray-700 mb-4 hover:border-primary">
+                            {p.description}
+                          </p>
+                          <Button
+                            onClick={() => {
+                              const updatedProjects = projects.map(project =>
+                                project.id === p.id
+                                  ? { ...project, isEditingDescription: true }
+                                  : project,
+                              )
+                              setProjects(updatedProjects)
+                            }}
+                            className="bg-white text-primary px-2 py-1 hover:bg-white transition"
+                          >
+                            <FontAwesomeIcon
+                              className="text-primary hover:text-accent"
+                              icon="pen-to-square"
+                            />
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col gap-2 flex-grow">
+                          <textarea
+                            value={p.description}
+                            onChange={e => {
+                              const updatedProjects = projects.map(project =>
+                                project.id === p.id
+                                  ? { ...project, description: e.target.value }
+                                  : project,
+                              )
+                              setProjects(updatedProjects)
+                            }}
+                            className="p-3 border rounded-md w-full resize-none break-words flex-grow"
+                            style={{ height: '200px' }}
+                            rows="3"
+                          />
+                          <div className="flex gap-2">
+                            <Button
+                              onClick={async () => {
+                                try {
+                                  await axios.put(
+                                    `http://localhost:3000/api/projects/${p.id}`,
+                                    { description: p.description },
+                                    { headers: { Authorization: `Bearer ${user.token}` } },
+                                  )
+                                  const updatedProjects = projects.map(project =>
+                                    project.id === p.id
+                                      ? { ...project, isEditingDescription: false }
+                                      : project,
+                                  )
+                                  setProjects(updatedProjects)
+                                } catch (error) {
+                                  console.error('Error updating project description:', error)
+                                  setError('Failed to update project description')
+                                }
+                              }}
+                              className="bg-green-500 text-white rounded hover:bg-green-600 transition"
+                            >
+                              ✔
+                            </Button>
+                            <Button
+                              onClick={() => {
+                                const updatedProjects = projects.map(project =>
+                                  project.id === p.id
+                                    ? { ...project, isEditingDescription: false }
+                                    : project,
+                                )
+                                setProjects(updatedProjects)
+                              }}
+                              className="bg-red-500 text-white rounded hover:bg-red-600 transition"
+                            >
+                              X
+                            </Button>
+                          </div>
+                        </div>
+                      )}
 
                       <h3 className="text-lg font-bold mt-6">Teams:</h3>
                       {teams[p.id] && teams[p.id].length > 0 ? (
