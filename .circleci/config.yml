@@ -51,13 +51,16 @@ jobs:
     docker:
       - image: cimg/node:lts
     steps:
+      - setup_remote_docker:
+          version: 20.10.7
       - checkout
       - run:
           name: Install dependencies
           command: |
+            curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
+            echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
             apt-get update && \
-            apt-get install -y rsync openssh-client docker-compose && \
-            npm install -g yarn
+            apt-get install -y rsync openssh-client docker-compose yarn
       - add_ssh_keys:
           fingerprints:
             - $SSH_FINGERPRINT
