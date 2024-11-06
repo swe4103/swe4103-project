@@ -51,6 +51,7 @@ jobs:
     docker:
       - image: cimg/node:lts
     steps:
+      - setup_remote_docker
       - checkout
       - run:
           name: Install dependencies
