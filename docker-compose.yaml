@@ -1,0 +1,33 @@
+services:
+  timeflow-api:
+    container_name: timeflow-api
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    ports:
+      - '3000:3000'
+    env_file:
+      - /opt/timeflow/.env
+    restart: unless-stopped
+    networks:
+      - timeflow-network
+
+  timeflow-client:
+    container_name: timeflow-client
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - /etc/letsencrypt/archive/timeflow.swe4103.com:/etc/nginx/ssl:ro
+    depends_on:
+      - timeflow-api
+    restart: unless-stopped
+    networks:
+      - timeflow-network
+
+networks:
+  timeflow-network:
+    driver: bridge

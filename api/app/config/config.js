@@ -40,6 +40,10 @@ const configs = {
       cosmos_key: process.env.COSMOS_DB_KEY,
       cosmos_db_id: process.env.COSMOS_DB_ID,
     },
+    communicationService: {
+      connectionString: process.env.COMMUNICATION_SERVICE_CONNECTION_STRING,
+      emailDomainName: process.env.EMAIL_DOMAIN_NAME,
+    },
   },
 }
 
