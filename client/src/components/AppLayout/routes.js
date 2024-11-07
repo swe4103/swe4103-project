@@ -9,6 +9,7 @@ export const routes = {
 }
 
 export const getTitle = pathname => {
-  const key = pathname.replace('/', '')
-  return key === '' ? routes.classes.label : routes[key].label
+  const normalizedPath = pathname.replace(/^\/|\/$/g, '') // Remove leading and trailing slashes
+  const route = routes[normalizedPath] || routes['classes'] // Default to 'classes' if not found
+  return route.label
 }
