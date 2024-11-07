@@ -1,20 +1,16 @@
-# Use the official Node.js 16 LTS image as the base
-FROM node:16-alpine
+FROM node:20-slim
+ENV NODE_ENV=production
+ENV HUSKY=0
 
-# Set the working directory in the container
 WORKDIR /app
 
-# Copy package.json and yarn.lock to the container
 COPY package.json yarn.lock ./
+COPY api/package.json ./api/
 
-# Install dependencies
-RUN yarn install --production
+RUN yarn install --frozen-lockfile --production
 
-# Copy the rest of the application code to the container
-COPY . .
+COPY api ./api
 
-# Expose port Express api will run on
+WORKDIR /app/api
 EXPOSE 3000
-
-# Start the app
 CMD ["yarn", "start"]

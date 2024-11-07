@@ -40,7 +40,7 @@ const AdminView = () => {
     try {
       // Make an API call to invite students
       const response = await axios.post(
-        'http://localhost:3000/api/users/invite',
+        '/api/users/invite',
         {
           emails: emails, // Send email list to the backend
           role: 'INSTRUCTOR',

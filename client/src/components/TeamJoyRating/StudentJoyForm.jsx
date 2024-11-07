@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { v4 as uuidv4 } from 'uuid'
 
 import { useAuth } from '../../state/AuthProvider/AuthProvider'
 import Button from '../Button/Button'
@@ -11,7 +10,6 @@ import RatingReview from './RatingReview'
 
 const StudentJoyForm = () => {
   const { teamId } = useParams() // Access project and team IDs from the URL
-  const host = 'http://localhost:3000'
   const [rating, setRating] = useState(0)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null) // Store error message
@@ -24,9 +22,8 @@ const StudentJoyForm = () => {
     try {
       setLoading(true)
       await axios.post(
-        `${host}/joy`,
+        `api/joy`,
         {
-          id: uuidv4(),
           userId: user.user.id,
           teamId: teamId,
           date: new Date().toISOString(),
