@@ -8,10 +8,10 @@ import AdminView from './views/AdminView/AdminView'
 import ClassesView from './views/ClassesView/ClassesView'
 import ClassView from './views/ClassView/ClassView'
 import LoginForm from './views/LoginForm/LoginForm'
+import ProjectView from './views/ProjectView/ProjectsView'
 import RegisterForm from './views/RegistrationForm/RegisterForm'
 import SettingsView from './views/SettingsView/SettingsView'
 import TeamListView from './views/TeamListView/TeamListView'
-
 const App = () => {
   return (
     <Router>
@@ -24,7 +24,8 @@ const App = () => {
           {/* General protected routes for non-admin users */}
           <Route element={<ProtectedRoutes />}>
             <Route path="/" element={<AppLayout />}>
-              <Route path="project/:projectId" element={<TeamListView />} />
+              <Route path="project/:projectId" element={<ProjectView />} />
+              <Route path="teams/:projectId" element={<TeamListView />} />
               <Route path="settings" element={<SettingsView />} />
               <Route index element={<ClassesView />} />
               <Route path="classes/:classId" element={<ClassView />} />
