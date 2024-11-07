@@ -1,4 +1,4 @@
-import PieSort from './PieSort.js'
+import PieSort from './PieSort.jsx'
 
 test('Counts instances of each array value', () => {
   let ratings = [2, 3, -1, 5, 4, -1, 2, 3, 4, 5, -1]
