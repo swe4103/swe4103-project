@@ -1,7 +1,7 @@
 import { AgCharts } from 'ag-charts-react'
 import { useState, useEffect } from 'react'
 
-import getData from '../../utils/TempJoyData/TempJoyData'
+import getData from './Data'
 
 const formatData = data => {
   let totalRating = 0

@@ -1,3 +1,4 @@
+
 import ChangeName from '../../components/Settings/ChangeName'
 
 const SettingsView = () => {

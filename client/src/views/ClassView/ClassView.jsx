@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
-import { /*Link,*/ useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 import Button from '../../components/Button/Button'
 import { useAuth } from '../../state/AuthProvider/AuthProvider'
@@ -361,12 +361,13 @@ const ClassView = () => {
                       {teams[p.id] && teams[p.id].length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full mt-4">
                           {teams[p.id].map(team => (
-                            <div
+                            <Link
+                              to={`/team/${team.id}`}
                               key={team.id}
                               className="flex flex-col gap-3 bg-white border p-4 rounded-md hover:shadow-md transition duration-200"
                             >
                               <p className="text-md font-bold text-primary">{team.name}</p>
-                            </div>
+                            </Link>
                           ))}
                         </div>
                       ) : (

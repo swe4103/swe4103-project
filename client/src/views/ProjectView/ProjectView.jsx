@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import Button from '../../components/Button/Button'
 import Card from '../../components/Card/Card'
@@ -18,6 +19,7 @@ const ProjectView = () => {
   const [showTeamForm, setShowTeamForm] = useState(false)
   const [showDeleteInput, setShowDeleteInput] = useState(false)
   const [selectedTeamId, setSelectedTeamId] = useState('')
+
   useEffect(() => {
     const fetchProjectDetailsAndTeams = async () => {
       if (!user || !user.token) {
@@ -162,12 +164,15 @@ const ProjectView = () => {
             <Card className="flex flex-col items-center justify-center w-full p-6 h-full gap-4 bg-primary">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
                 {teams.map(team => (
-                  <div
+                  <Link
+                    to={`/team/${team.id}`}
                     key={team.id}
                     className="flex flex-col gap-3 bg-white border p-4 rounded-md hover:shadow"
                   >
-                    <p className="text-md font-bold">{team.name}</p>
-                  </div>
+                    {/* Corrected the placement of Link component */}
+
+                    <p>{team.name}</p>
+                  </Link>
                 ))}
               </div>
             </Card>
