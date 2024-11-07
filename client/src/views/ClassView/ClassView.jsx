@@ -41,13 +41,10 @@ const ClassView = () => {
 
       setIsLoading(true)
       try {
-        const classResponse = await axios.get(
-          `http://localhost:3000/api/classes/${classId}`,
-          config,
-        )
+        const classResponse = await axios.get(`/api/classes/${classId}`, config)
         setClassDetails(classResponse.data || null)
 
-        const projectResponse = await axios.get(`http://localhost:3000/api/projects`, {
+        const projectResponse = await axios.get(`/api/projects`, {
           ...config,
           params: { classId },
         })
@@ -71,7 +68,7 @@ const ClassView = () => {
     setIsSubmitting(true)
     try {
       const response = await axios.post(
-        'http://localhost:3000/api/projects',
+        '/api/projects',
         { name: newProjectName, classId, description: newProjectDescription },
         { headers: { Authorization: `Bearer ${user.token}` } },
       )
@@ -92,7 +89,7 @@ const ClassView = () => {
     if (!confirmDelete) return
 
     try {
-      await axios.delete(`http://localhost:3000/api/projects/${projectId}`, {
+      await axios.delete(`/api/projects/${projectId}`, {
         headers: { Authorization: `Bearer ${user.token}` },
       })
       setProjects(projects.filter(project => project.id !== projectId))
@@ -124,7 +121,7 @@ const ClassView = () => {
     }
 
     try {
-      const teamResponse = await axios.get(`http://localhost:3000/api/teams`, {
+      const teamResponse = await axios.get(`/api/teams`, {
         ...config,
         params: { projectId },
       })
@@ -145,7 +142,7 @@ const ClassView = () => {
     setIsTeamSubmitting(true)
     try {
       const response = await axios.post(
-        'http://localhost:3000/api/teams',
+        '/api/teams',
         { name: newTeamName, projectId },
         { headers: { Authorization: `Bearer ${user.token}` } },
       )
@@ -170,7 +167,7 @@ const ClassView = () => {
     if (!confirmDelete) return
 
     try {
-      await axios.delete(`http://localhost:3000/api/teams/${selectedTeamId}`, {
+      await axios.delete(`/api/teams/${selectedTeamId}`, {
         headers: { Authorization: `Bearer ${user.token}` },
       })
       setTeams(prev => ({
@@ -324,7 +321,7 @@ const ClassView = () => {
                               onClick={async () => {
                                 try {
                                   await axios.put(
-                                    `http://localhost:3000/api/projects/${p.id}`,
+                                    `/api/projects/${p.id}`,
                                     { description: p.description },
                                     { headers: { Authorization: `Bearer ${user.token}` } },
                                   )
