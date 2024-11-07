@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
 
     try {
       // Fetch user data from the server
-      const response = await axios.get(`http://localhost:3000/api/users/${user.user.id}`, {
+      const response = await axios.get(`/api/users/${user.user.id}`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
