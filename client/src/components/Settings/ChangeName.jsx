@@ -120,16 +120,16 @@ const ChangeName = () => {
             )}
             <div className="flex justify-around mt-6">
               <button
-                onClick={handleUpdateDisplayName}
-                className="bg-[var(--color-primary)] text-[var(--color-white)] px-4 py-2 rounded transition-ease hover:bg-[var(--color-accent)]"
-              >
-                Save
-              </button>
-              <button
                 onClick={handleCloseModal}
                 className="bg-[var(--color-danger)] text-[var(--color-white)] px-4 py-2 rounded transition-ease hover:bg-red-600"
               >
                 Cancel
+              </button>
+              <button
+                onClick={handleUpdateDisplayName}
+                className="bg-[var(--color-primary)] text-[var(--color-white)] px-4 py-2 rounded transition-ease hover:bg-[var(--color-accent)]"
+              >
+                Save
               </button>
             </div>
           </div>
