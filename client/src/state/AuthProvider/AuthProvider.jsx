@@ -23,7 +23,6 @@ export const AuthProvider = ({ children }) => {
   }
 
   const updateUser = async user => {
-    console.log('inside update user')
     const me = JSON.parse(localStorage.getItem('me') || '{}')
 
     try {

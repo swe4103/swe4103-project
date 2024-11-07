@@ -44,7 +44,7 @@ const ChangeName = () => {
       try {
         // Make an API call to update the display name on the server
         await axios.put(
-          `http://localhost:3000/api/users/${user.user.id}`,
+          `/api/users/${user.user.id}`,
           { displayName: newDisplayName },
           {
             headers: {
