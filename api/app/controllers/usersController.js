@@ -63,7 +63,8 @@ export const deleteUser = async (req, res) => {
   const { id } = req.params
   try {
     const deletedId = await deleteUserById(id) // Fix variable name to deletedId
-    if (!deletedId) { // Check for the correct variable name
+    if (!deletedId) {
+      // Check for the correct variable name
       return res.status(404).json({ message: 'User not found' })
     }
 

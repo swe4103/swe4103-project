@@ -2,9 +2,8 @@ import axios from 'axios'
 import { useState } from 'react'
 
 import { useAuth } from '../../state/AuthProvider/AuthProvider'
-//import './Settings.css'
 
-const Settings = () => {
+const ChangeName = () => {
   const { user, updateUser } = useAuth()
 
   // State to store the display name shown on the page
@@ -70,30 +69,69 @@ const Settings = () => {
   }
 
   return (
-    <div className="settings-page">
-      <h1>Settings</h1>
-      <div className="profile-info">
-        <h2>Profile Information</h2>
-        <p>
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center p-6">
+      <h1 className="text-3xl font-semibold text-[var(--color-primary)]">Settings</h1>
+      <div className="profile-info w-full max-w-md bg-white shadow-lg rounded-lg p-6 mt-6">
+        <h2 className="text-2xl font-semibold text-[var(--color-dark)]">Profile Information</h2>
+        <p className="mt-4">
           <strong>Display Name:</strong> {displayName}
         </p>
-        <button onClick={handleOpenModal}>Change Display Name</button>
-        {feedbackMessage && <p className="feedback">{feedbackMessage}</p>}
+        <button
+          onClick={handleOpenModal}
+          className="mt-4 bg-[var(--color-primary)] text-[var(--color-white)] px-4 py-2 rounded transition-ease hover:bg-[var(--color-accent)]"
+        >
+          Change Display Name
+        </button>
+        {feedbackMessage && (
+          <p
+            className={`mt-2 ${
+              feedbackMessage.includes('successfully')
+                ? 'text-[var(--color-success)]'
+                : 'text-[var(--color-danger)]'
+            }`}
+          >
+            {feedbackMessage}
+          </p>
+        )}
       </div>
 
       {/* Modal for changing the display name */}
       {isModalOpen && (
-        <div className="modal">
-          <div className="modal-content">
-            <h3>Change Display Name</h3>
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+          <div className="modal-content bg-white p-6 rounded-lg shadow-lg w-full max-w-sm text-center">
+            <h3 className="text-xl font-semibold text-[var(--color-dark)]">Change Display Name</h3>
             <input
               type="text"
               value={newDisplayName}
               onChange={handleDisplayNameChange}
               placeholder="Enter new display name"
+              className="mt-4 w-full p-3 border rounded transition-ease focus:border-[var(--color-primary)]"
             />
-            <button onClick={handleUpdateDisplayName}>Save</button>
-            <button onClick={handleCloseModal}>Cancel</button>
+            {feedbackMessage && (
+              <p
+                className={`mt-2 ${
+                  feedbackMessage.includes('successfully')
+                    ? 'text-[var(--color-success)]'
+                    : 'text-[var(--color-danger)]'
+                }`}
+              >
+                {feedbackMessage}
+              </p>
+            )}
+            <div className="flex justify-around mt-6">
+              <button
+                onClick={handleUpdateDisplayName}
+                className="bg-[var(--color-primary)] text-[var(--color-white)] px-4 py-2 rounded transition-ease hover:bg-[var(--color-accent)]"
+              >
+                Save
+              </button>
+              <button
+                onClick={handleCloseModal}
+                className="bg-[var(--color-danger)] text-[var(--color-white)] px-4 py-2 rounded transition-ease hover:bg-red-600"
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -101,4 +139,4 @@ const Settings = () => {
   )
 }
 
-export default Settings
+export default ChangeName
