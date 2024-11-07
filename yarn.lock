@@ -2109,6 +2109,29 @@ acorn@^8.1.0, acorn@^8.11.0, acorn@^8.11.3, acorn@^8.12.0, acorn@^8.6.0, acorn@^
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.13.0.tgz#2a30d670818ad16ddd6a35d3842dacec9e5d7ca3"
   integrity sha512-8zSiw54Oxrdym50NlZ9sUusyO1Z1ZchgRLWRaK6c86XJFClyCgFKetdowBg5bKxyp/u+CDBJG4Mpp0m3HLZl9w==
 
+ag-charts-community@^10.3.1:
+  version "10.3.1"
+  resolved "https://registry.yarnpkg.com/ag-charts-community/-/ag-charts-community-10.3.1.tgz#bbfe72e8dd15161e5c573ded84cdf93fc30f041e"
+  integrity sha512-/FyXVoSkErYvWZWyAahRNtkaT0A6RH6d16JsgVPEzyu/hUWRpknXAAplz9jQvuIKPg7tEUfjGcl33C7v64v8Ew==
+  dependencies:
+    ag-charts-locale "10.3.1"
+    ag-charts-types "10.3.1"
+
+ag-charts-locale@10.3.1:
+  version "10.3.1"
+  resolved "https://registry.yarnpkg.com/ag-charts-locale/-/ag-charts-locale-10.3.1.tgz#c6574fd8ed5ed6e6e3a52bed4c418a300ad18e4e"
+  integrity sha512-ZI2wNECqOXbr2C8RfSxu4LOEWktYZuSCuZIBYc0VoR3ETPE05/RaI9KdnXYPau36asoxzLHWfbeNNeyBg8sNMg==
+
+ag-charts-react@^10.3.1:
+  version "10.3.1"
+  resolved "https://registry.yarnpkg.com/ag-charts-react/-/ag-charts-react-10.3.1.tgz#c31290417dceda71801b746d9d87efd25649aaa9"
+  integrity sha512-Ye5dGzMEt44Ivzn0nnAnpBEJmxW48FTqmsDd/s4k0fpjs5bMbEio8wunJSXYA7fM/9txzNaq0647aZeENa5qmg==
+
+ag-charts-types@10.3.1:
+  version "10.3.1"
+  resolved "https://registry.yarnpkg.com/ag-charts-types/-/ag-charts-types-10.3.1.tgz#b60163a5da5f27222db71d4fcc20c0aed1854c9c"
+  integrity sha512-oZvu9vJLk6lmzaYi0TmVVmHFZJpVNFziU0bnllx4wR3muXCmnxz5LouKIZ8CYnNiC7VO5HmHNlFu+0DmEO5zxg==
+
 agent-base@6:
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/agent-base/-/agent-base-6.0.2.tgz#49fff58577cfee3f37176feab4c22e00f86d7f77"
