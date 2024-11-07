@@ -1,9 +1,11 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 import Button from '../../components/Button/Button'
 import Card from '../../components/Card/Card'
+import Dropdown from '../../components/Dropdown/Dropdown'
 import { useAuth } from '../../state/AuthProvider/AuthProvider'
 
 const ClassesView = () => {
@@ -19,6 +21,11 @@ const ClassesView = () => {
   const [selectedYear, setSelectedYear] = useState('all')
   const [titleFilter, setTitleFilter] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
+  /** const [isEditing, setIsEditing] = useState(false)
+  const [editClassName, setEditClassName] = useState('')
+  const [classToEdit, setClassToEdit] = useState(null)
+  **/
+
   const classesPerPage = 6
 
   useEffect(() => {
@@ -80,7 +87,28 @@ const ClassesView = () => {
       setIsSubmitting(false)
     }
   }
-
+  /** Fix
+  const handleEditSubmit = async e => {
+    e.preventDefault()
+    try {
+      const token = user.token
+      const config = { headers: { Authorization: `Bearer ${token}` } }
+      await axios.put(
+        `http://localhost:3000/api/classes/${classToEdit.id}`,
+        { name: editClassName },
+        config,
+      )
+      setClasses(prevClasses =>
+        prevClasses.map(c => (c.id === classToEdit.id ? { ...c, name: editClassName } : c)),
+      )
+      setIsEditing(false)
+      setEditClassName('')
+      setClassToEdit(null)
+    } catch (error) {
+      console.error('Error updating class name:', error)
+    }
+  }
+  **/
   const handleDelete = async () => {
     const classToDelete = classes.find(c => c.name === deleteTitle)
     if (!classToDelete) {
@@ -166,6 +194,33 @@ const ClassesView = () => {
         </form>
       )}
 
+      {/* {isEditing && (
+    <form onSubmit={handleEditSubmit} className="edit-form flex flex-col gap-4 mt-4">
+    <h3 className="text-lg font-bold">Edit Class</h3>
+    <input
+      type="text"
+      placeholder="Class Name"
+      value={editClassName}
+      onChange={e => setEditClassName(e.target.value)}
+      required
+      className="p-2 border rounded"
+    />
+    <div className="flex gap-4">
+      <Button type="submit">Save Changes</Button>
+      <Button
+        onClick={() => {
+          setIsEditing(false);
+          setEditClassName('');
+          setClassToEdit(null);
+        }}
+        className="bg-red-500 text-white"
+      >
+        Cancel
+      </Button>
+    </div>
+  </form> 
+  )} */}
+
       {showDeleteInput && (
         <div className="mt-4">
           <input
@@ -207,7 +262,7 @@ const ClassesView = () => {
         ))}
       </div>
 
-      <Card className="flex flex-col items-center justify-center w-full p-6 h-full gap-4">
+      <Card className="flex flex-col items-center justify-center w-full p-6 h-full gap-4 z-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
           {currentClasses.map(c => (
             <Link
@@ -222,6 +277,19 @@ const ClassesView = () => {
               />
               <h2 className="text-md font-bold">{c.name}</h2>
               <p className="text-sm text-gray-500">{c.year}</p>
+
+              <Dropdown
+                width="250px"
+                content={
+                  <div className="absolute top-8 right-2 bg-white border p-3 rounded-md shadow-md">
+                    <span className="text-sm text-gray-600">Edit Class</span>
+                  </div>
+                }
+              >
+                {/* <button onClick={() => toggleDropdown(c.id)}> */}
+                <FontAwesomeIcon className="text-2xl text-primary" icon="ellipsis" />
+                {/* </button> */}
+              </Dropdown>
             </Link>
           ))}
         </div>

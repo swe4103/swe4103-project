@@ -18,7 +18,7 @@ function Dropdown({ children, content, width }) {
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <button onClick={toggleDropdown} className="p-2">
+      <button onClick={toggleDropdown} className="p-2 z-50">
         {children}
       </button>
       <div
