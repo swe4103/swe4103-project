@@ -3,7 +3,7 @@ import axios from 'axios'
 
 import { useAuth } from '../../state/AuthProvider/AuthProvider'
 
-import Settings from './Settings'
+import ChangeName from './ChangeName'
 import '@testing-library/jest-dom' // Add this import for custom matchers
 
 // Mock useAuth to simulate user context
@@ -31,19 +31,19 @@ beforeEach(() => {
 })
 
 test('renders Settings component with user display name', () => {
-  render(<Settings />)
+  render(<ChangeName />)
   expect(screen.getByText(/Display Name:/)).toBeInTheDocument()
   expect(screen.getByText(/John Doe/)).toBeInTheDocument()
 })
 
 test('opens modal on clicking Change Display Name button', () => {
-  render(<Settings />)
+  render(<ChangeName />)
   fireEvent.click(screen.getByRole('button', { name: /Change Display Name/i }))
   expect(screen.getByPlaceholderText(/Enter new display name/)).toBeInTheDocument()
 })
 
 test('shows validation message for empty display name', () => {
-  render(<Settings />)
+  render(<ChangeName />)
   fireEvent.click(screen.getByRole('button', { name: /Change Display Name/i }))
   fireEvent.change(screen.getByPlaceholderText(/Enter new display name/i), {
     target: { value: '' },
@@ -54,7 +54,7 @@ test('shows validation message for empty display name', () => {
 
 test('updates display name on successful API call', async () => {
   axios.put.mockResolvedValueOnce({})
-  render(<Settings />)
+  render(<ChangeName />)
   fireEvent.click(screen.getByRole('button', { name: /Change Display Name/i }))
   fireEvent.change(screen.getByPlaceholderText(/Enter new display name/i), {
     target: { value: 'Jane Doe' },
@@ -73,7 +73,7 @@ test('updates display name on successful API call', async () => {
 
 test('shows error message on failed API call', async () => {
   axios.put.mockRejectedValueOnce(new Error('Network Error'))
-  render(<Settings />)
+  render(<ChangeName />)
   fireEvent.click(screen.getByRole('button', { name: /Change Display Name/i }))
   fireEvent.change(screen.getByPlaceholderText(/Enter new display name/i), {
     target: { value: 'Jane Doe' },
