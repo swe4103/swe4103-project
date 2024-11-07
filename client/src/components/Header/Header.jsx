@@ -13,7 +13,7 @@ const Header = () => {
   const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
 
   const handleLogout = async () => {
-    await axios.post('http://localhost:3000/api/auth/logout', null, {
+    await axios.post('/api/auth/logout', null, {
       headers: {
         Authorization: `Bearer ${user.token}`,
       },

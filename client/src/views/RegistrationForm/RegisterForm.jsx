@@ -9,7 +9,6 @@ import { useAuth } from '../../state/AuthProvider/AuthProvider'
 
 const RegisterForm = () => {
   // State hooks for email, password, confirm password, error, and navigation
-  const host = 'http://localhost:3000'
   const [isValidToken, setIsValidToken] = useState(null) // Track token validity
   const [searchParams] = useSearchParams() // Get query params
   const token = searchParams.get('token') // Extract the token
@@ -26,7 +25,7 @@ const RegisterForm = () => {
   useEffect(() => {
     const validateToken = async () => {
       try {
-        const url = `${host}/api/auth/validate-token?token=${token}&type=invite`
+        const url = `/api/auth/validate-token?token=${token}&type=invite`
         const response = await axios.get(url)
         if (response.data.valid) {
           setEmail(response.data.decoded.email)
@@ -72,7 +71,6 @@ const RegisterForm = () => {
   // Event handler for form submission
   const onSubmitRegister = async event => {
     // Prevent form from refreshing page
-    const url = `${host}/api/auth/register?token=${token}`
 
     event.preventDefault()
 
@@ -85,14 +83,14 @@ const RegisterForm = () => {
     try {
       setIsLoading(true)
 
-      const response = await axios.post(url, {
+      const response = await axios.post(`/api/auth/register?token=${token}`, {
         displayName: displayName,
         password: registerPassword,
       })
 
       // Handle successful registration (e.g., redirect, show message, etc.)
       console.log('Registration successful:', response.data)
-      const loginResponse = await axios.post('http://localhost:3000/api/auth/login', {
+      const loginResponse = await axios.post('/api/auth/login', {
         email: email,
         password: registerPassword,
       })
