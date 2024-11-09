@@ -31,7 +31,7 @@ export const listProjects = async (req, res) => {
   try {
     const projects = await listProjectsByClassId(value)
     if (!projects) {
-      return res.status(404).json({ message: 'No classes found' })
+      return res.status(200).json([])
     }
     return res.status(200).json(projects)
   } catch (error) {

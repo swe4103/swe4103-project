@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { createContext, useContext, useState, useEffect } from 'react'
 
 const AuthContext = createContext()
@@ -21,13 +22,34 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('me', JSON.stringify(user))
   }
 
+  const updateUser = async user => {
+    const me = JSON.parse(localStorage.getItem('me') || '{}')
+
+    try {
+      // Fetch user data from the server
+      const response = await axios.get(`/api/users/${user.user.id}`, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      })
+
+      const data = { ...response.data } // Make a copy of the data
+      delete data.password // Remove the password field if it exists
+      me.user = data // Only store non-password data
+      localStorage.setItem('me', JSON.stringify(me))
+      setUser(me)
+    } catch (error) {
+      console.log(`Error fetching user: ${error}`)
+    }
+  }
+
   const logout = async () => {
     setUser(null)
     localStorage.removeItem('me')
   }
 
   return (
-    <AuthContext.Provider value={{ login, logout, user, isLoading }}>
+    <AuthContext.Provider value={{ login, logout, user, isLoading, updateUser }}>
       {children}
     </AuthContext.Provider>
   )
