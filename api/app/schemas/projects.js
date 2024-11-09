@@ -1,8 +1,9 @@
-import Joi from 'Joi'
+import Joi from 'joi'
 
 export const projectSchema = Joi.object({
   name: Joi.string().required(),
   classId: Joi.string().guid().required().description('GUID (String)'),
+  description: Joi.string().default(''),
 })
 
 export const updateProjectSchema = projectSchema.fork(

@@ -29,5 +29,5 @@ export const listProjectsByClassId = async ({ classId }) => {
 
   const parameters = [{ name: '@classId', value: classId }]
 
-  return await filterRecords(PROJECT_COLLECTION, { query, parameters })
+  return await filterRecords('Project', { query, parameters })
 }

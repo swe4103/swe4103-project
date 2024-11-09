@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom'
 import Button from '../../components/Button/Button'
 import Card from '../../components/Card/Card'
 import { useAuth } from '../../state/AuthProvider/AuthProvider'
-
 const ClassesView = () => {
   const { user, isLoading } = useAuth()
   const [showForm, setShowForm] = useState(false)
@@ -27,23 +26,18 @@ const ClassesView = () => {
         const token = user.token
         const config = { headers: { Authorization: `Bearer ${token}` } }
         let fetchedClasses = []
-        const userResponse = await axios.get(
-          `http://localhost:3000/api/users/${user.user.id}`,
-          config,
-        )
+        const userResponse = await axios.get(`/api/users/${user.user.id}`, config)
         const newUser = userResponse.data
         user.user.groups = newUser.groups
 
         if (newUser.role.includes('STUDENT')) {
           const responses = await Promise.all(
-            newUser.groups.map(id =>
-              axios.get(`http://localhost:3000/api/classes?teamId=${id}`, config),
-            ),
+            newUser.groups.map(id => axios.get(`/api/classes?teamId=${id}`, config)),
           )
           fetchedClasses = responses.flatMap(response => response.data)
         } else if (newUser.role.includes('INSTRUCTOR')) {
           const responses = await Promise.all(
-            newUser.groups.map(id => axios.get(`http://localhost:3000/api/classes/${id}`, config)),
+            newUser.groups.map(id => axios.get(`/api/classes/${id}`, config)),
           )
           fetchedClasses = responses.map(response => response.data)
         }
@@ -59,7 +53,7 @@ const ClassesView = () => {
 
   const handleSubmit = async e => {
     e.preventDefault()
-    if (isSubmitting) return // Prevent duplicate submissions
+    if (isSubmitting) return
 
     setIsSubmitting(true)
 
@@ -68,9 +62,9 @@ const ClassesView = () => {
       const token = user.token
       const config = { headers: { Authorization: `Bearer ${token}` } }
 
-      const response = await axios.post('http://localhost:3000/api/classes', newClass, config)
+      const response = await axios.post('/api/classes', newClass, config)
       await axios.put(
-        `http://localhost:3000/api/users/${user.user.id}`,
+        `/api/users/${user.user.id}`,
         { groups: [...user.user.groups, response.data.id] },
         config,
       )
@@ -100,7 +94,7 @@ const ClassesView = () => {
       const token = user.token
       const config = { headers: { Authorization: `Bearer ${token}` } }
 
-      await axios.delete(`http://localhost:3000/api/classes/${classToDelete.id}`, config)
+      await axios.delete(`/api/classes/${classToDelete.id}`, config)
       setClasses(classes.filter(c => c.id !== classToDelete.id))
       setDeleteTitle('')
       setShowDeleteInput(false)

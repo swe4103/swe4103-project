@@ -6,6 +6,11 @@
 - [ ] Optimization
 - [ ] Documentation Update
 
+## Does this PR include .env changes if so message Eric or Matt (THIS IS IMPORTANT)
+
+- [ ] Yes
+- [ ] No
+
 ## 📄 Description
 
 _Describe the changes you made and why you made them. (What issue or feature does the change address)._

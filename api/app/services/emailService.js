@@ -5,7 +5,9 @@ import config from '#config'
 const emailClient = new EmailClient(config.communicationService.connectionString)
 
 export const sendRegistrationEmail = async (userEmail, token, message) => {
-  const registrationLink = `http://localhost:5173/register?token=${token}`
+  const frontPart =
+    config.env === 'production' ? 'https://timeflow.swe4103.com' : 'http://localhost:5173'
+  const registrationLink = `${frontPart}/register?token=${token}`
   const emailMessage = {
     senderAddress: config.communicationService.emailDomainName, // approved domain
     content: {
