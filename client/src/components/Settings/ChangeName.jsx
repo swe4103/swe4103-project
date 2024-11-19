@@ -40,6 +40,8 @@ const ChangeName = () => {
     // Check if the input is empty
     if (newDisplayName.trim() === '') {
       setFeedbackMessage('Display name cannot be empty.')
+    } else if (newDisplayName.trim() === displayName.trim()) {
+      setFeedbackMessage('Cannot be the same as the current name.')
     } else {
       try {
         // Make an API call to update the display name on the server
@@ -82,7 +84,7 @@ const ChangeName = () => {
         >
           Change Display Name
         </button>
-        {feedbackMessage && (
+        {!isModalOpen && feedbackMessage && (
           <p
             className={`mt-2 ${
               feedbackMessage.includes('successfully')
