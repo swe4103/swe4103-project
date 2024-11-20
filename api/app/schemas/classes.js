@@ -5,6 +5,7 @@ import Roles from '#constants/roles.js'
 export const classSchema = Joi.object({
   name: Joi.string().required(),
   year: Joi.number().required(),
+  students: Joi.array().items(Joi.string().guid()).default([]),
 })
 
 export const updateClassSchema = classSchema.fork(Object.keys(classSchema.describe().keys), field =>

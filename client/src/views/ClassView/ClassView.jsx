@@ -24,6 +24,7 @@ const ClassView = () => {
   const [showTeamForm, setShowTeamForm] = useState({})
   const [showTeamDeleteInput, setShowTeamDeleteInput] = useState({})
   const [selectedTeamId, setSelectedTeamId] = useState('')
+  const [studentDetails, setStudentDetails] = useState([])
 
   useEffect(() => {
     const fetchClassDetailsAndProjects = async () => {
@@ -43,7 +44,6 @@ const ClassView = () => {
       try {
         const classResponse = await axios.get(`/api/classes/${classId}`, config)
         setClassDetails(classResponse.data || null)
-
         const projectResponse = await axios.get(`/api/projects`, {
           ...config,
           params: { classId },
@@ -57,6 +57,36 @@ const ClassView = () => {
     }
     fetchClassDetailsAndProjects()
   }, [classId, user])
+  useEffect(() => {
+    const fetchStudents = async () => {
+      if (!classDetails || !classDetails.students || classDetails.students.length === 0) {
+        return
+      }
+      try {
+        const studentRequests = classDetails.students.map(id =>
+          axios.get(`/api/users/${id}`, {
+            headers: { Authorization: `Bearer ${user.token}` },
+          }),
+        )
+        const responses = await Promise.all(studentRequests)
+        let studentData = responses.map(response => response.data)
+
+        // Add test students
+        const testStudents = [
+          { id: 'test1', displayName: 'Test Student 1', email: 'test1@example.com' },
+          { id: 'test2', displayName: 'Test Student 2', email: 'test2@example.com' },
+        ]
+        studentData = [...studentData, ...testStudents]
+
+        setStudentDetails(studentData)
+      } catch (error) {
+        console.error('Error fetching students:', error)
+        setError('Failed to fetch students')
+      }
+    }
+
+    fetchStudents()
+  }, [classDetails, user])
 
   const handleAddProject = async e => {
     e.preventDefault()
@@ -441,6 +471,36 @@ const ClassView = () => {
                   )}
                 </div>
               ))}
+            </div>
+          )}
+          {/* Students section */}
+          {user.user.role == 'INSTRUCTOR' && (
+            <div>
+              <h3 className="text-lg font-bold text-primary">Students</h3>
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Name
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Email
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {studentDetails.map((student, index) => (
+                    <tr key={student.id} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {student.displayName}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {student.email}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
         </div>
