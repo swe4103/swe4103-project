@@ -22,8 +22,8 @@ const ClassView = () => {
   const [newTeamName, setNewTeamName] = useState('')
   const [isTeamSubmitting, setIsTeamSubmitting] = useState(false)
   const [showTeamForm, setShowTeamForm] = useState({})
-  const [showTeamDeleteInput, setShowTeamDeleteInput] = useState({})
-  const [selectedTeamId, setSelectedTeamId] = useState('')
+  //const [showTeamDeleteInput, setShowTeamDeleteInput] = useState({})
+  //const [selectedTeamId, setSelectedTeamId] = useState('')
   const [studentDetails, setStudentDetails] = useState([])
 
   useEffect(() => {
@@ -69,14 +69,7 @@ const ClassView = () => {
           }),
         )
         const responses = await Promise.all(studentRequests)
-        let studentData = responses.map(response => response.data)
-
-        // Add test students
-        const testStudents = [
-          { id: 'test1', displayName: 'Test Student 1', email: 'test1@example.com' },
-          { id: 'test2', displayName: 'Test Student 2', email: 'test2@example.com' },
-        ]
-        studentData = [...studentData, ...testStudents]
+        const studentData = responses.map(response => response.data)
 
         setStudentDetails(studentData)
       } catch (error) {
@@ -114,7 +107,7 @@ const ClassView = () => {
     }
   }
 
-  const handleDeleteProject = async projectId => {
+  /*const handleDeleteProject = async projectId => {
     const confirmDelete = window.confirm('Are you sure you want to delete this project?')
     if (!confirmDelete) return
 
@@ -127,7 +120,7 @@ const ClassView = () => {
       console.error('Error deleting project:', error)
       setError('Failed to delete project')
     }
-  }
+  }*/
 
   const handleToggleProject = async projectId => {
     setExpandedProjectIds(prev =>
@@ -189,7 +182,7 @@ const ClassView = () => {
       setIsTeamSubmitting(false)
     }
   }
-
+  /*
   const handleDeleteTeam = async projectId => {
     if (!selectedTeamId) return
 
@@ -210,7 +203,7 @@ const ClassView = () => {
       console.error('Error deleting team:', error)
       setError('Failed to delete team')
     }
-  }
+  }*/
 
   if (isLoading) return <div>Loading...</div>
   if (error) return <div>Error: {error}</div>
@@ -293,17 +286,6 @@ const ClassView = () => {
                     <div className="flex justify-between items-center">
                       <p>{expandedProjectIds.includes(p.id) ? '▲' : '▼'}</p>{' '}
                       <p className="font-semibold ml-2">{p.name}</p>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <Button
-                        onClick={e => {
-                          e.stopPropagation()
-                          handleDeleteProject(p.id)
-                        }}
-                        className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition"
-                      >
-                        <FontAwesomeIcon icon="trash-can" />
-                      </Button>
                     </div>
                   </div>
                   {expandedProjectIds.includes(p.id) && (
@@ -413,14 +395,6 @@ const ClassView = () => {
                           >
                             {showTeamForm[p.id] ? 'Cancel' : 'Add Team'}
                           </Button>
-                          <Button
-                            onClick={() =>
-                              setShowTeamDeleteInput(prev => ({ ...prev, [p.id]: !prev[p.id] }))
-                            }
-                            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
-                          >
-                            {showTeamDeleteInput[p.id] ? 'Cancel Delete' : 'Delete Team'}
-                          </Button>
                         </div>
                       )}
                       {showTeamForm[p.id] && (
@@ -445,28 +419,6 @@ const ClassView = () => {
                           </Button>
                         </form>
                       )}
-                      {showTeamDeleteInput[p.id] && (
-                        <div className="flex flex-col gap-4 mt-4">
-                          <select
-                            value={selectedTeamId}
-                            onChange={e => setSelectedTeamId(e.target.value)}
-                            className="p-3 border rounded-md"
-                          >
-                            <option value="">Select Team to Delete</option>
-                            {teams[p.id].map(team => (
-                              <option key={team.id} value={team.id}>
-                                {team.name}
-                              </option>
-                            ))}
-                          </select>
-                          <Button
-                            onClick={() => handleDeleteTeam(p.id)}
-                            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
-                          >
-                            Confirm Delete
-                          </Button>
-                        </div>
-                      )}
                     </div>
                   )}
                 </div>
@@ -474,8 +426,10 @@ const ClassView = () => {
             </div>
           )}
           {/* Students section */}
+
           {user.user.role == 'INSTRUCTOR' && (
             <div>
+              <hr className="mb-4"></hr>
               <h3 className="text-lg font-bold text-primary">Students</h3>
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
