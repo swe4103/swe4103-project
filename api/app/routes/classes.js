@@ -7,6 +7,7 @@ import {
   deleteClass,
   createClass,
   listClasses,
+  listStudentClasses,
 } from '#controllers/classesController.js'
 import { authJWT } from '#middleware/authMiddleware.js'
 import { authorizeRoles } from '#middleware/roleMiddleware.js'
@@ -18,6 +19,14 @@ router.post('/', authJWT, authorizeRoles(Roles.INSTRUCTOR), createClass)
 
 // GET /api/classes
 router.get('/', authJWT, authorizeRoles(Roles.STUDENT, Roles.INSTRUCTOR), listClasses)
+
+// GET /api/classes/student/:studentId
+router.get(
+  '/student/:id',
+  authJWT,
+  authorizeRoles(Roles.STUDENT, Roles.INSTRUCTOR),
+  listStudentClasses,
+)
 
 // POST /api/classes/:id
 router.get('/:id', authJWT, authorizeRoles(Roles.STUDENT, Roles.INSTRUCTOR), getClass)
