@@ -13,7 +13,7 @@ import ProjectView from './views/ProjectView/ProjectView'
 import RegisterForm from './views/RegistrationForm/RegisterForm'
 import SettingsView from './views/SettingsView/SettingsView'
 //import TeamListView from './views/TeamListView/TeamListView'
-import TeamJoyView from './views/TeamJoyView/TeamJoyView'
+import TeamView from './views/TeamView/TeamView'
 const App = () => {
   return (
     <Router>
@@ -27,7 +27,7 @@ const App = () => {
           <Route element={<ProtectedRoutes />}>
             <Route path="/" element={<AppLayout />}>
               <Route path="project/:projectId" element={<ProjectView />} />
-              <Route path="team/:teamId" element={<TeamJoyView />} />
+              <Route path="team/:teamId" element={<TeamView />} />
               <Route path="settings" element={<SettingsView />} />
               <Route index element={<ClassesView />} />
               <Route path="studentclass/:classId/" element={<ProjectList />} />

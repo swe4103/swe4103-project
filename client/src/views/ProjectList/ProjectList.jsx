@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import { useAuth } from '../../state/AuthProvider/AuthProvider'
 
@@ -61,11 +62,17 @@ const ProjectList = () => {
       <h1 className="text-2xl font-bold mb-4 text-primary">Projects</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {projectTeams.map(({ project, team }) => (
-          <div key={project.id} className="bg-white shadow-md rounded-lg p-4">
-            <h2 className="text-xl font-semibold mb-2">{project.name}</h2>
-            <p className="text-gray-700">{team ? `Team: ${team.name}` : 'No team found'}</p>
-            <p className="text-gray-700 mb-4">{`Description: ${project.description}`}</p>
-          </div>
+          <Link
+            to={`/team/${team.id}`}
+            key={team.id}
+            className="flex flex-col gap-3 bg-white border p-4 rounded-md hover:shadow-md transition duration-200"
+          >
+            <div key={project.id} className="bg-white shadow-md rounded-lg p-4">
+              <h2 className="text-xl font-semibold mb-2">{project.name}</h2>
+              <p className="text-gray-700">{team ? `Team: ${team.name}` : 'No team found'}</p>
+              <p className="text-gray-700 mb-4">{`Description: ${project.description}`}</p>
+            </div>
+          </Link>
         ))}
       </div>
     </div>
