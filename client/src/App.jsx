@@ -8,6 +8,7 @@ import AdminView from './views/AdminView/AdminView'
 import ClassesView from './views/ClassesView/ClassesView'
 import ClassView from './views/ClassView/ClassView'
 import LoginForm from './views/LoginForm/LoginForm'
+import ProjectList from './views/ProjectList/ProjectList'
 import ProjectView from './views/ProjectView/ProjectView'
 import RegisterForm from './views/RegistrationForm/RegisterForm'
 import SettingsView from './views/SettingsView/SettingsView'
@@ -29,6 +30,7 @@ const App = () => {
               <Route path="team/:teamId" element={<TeamJoyView />} />
               <Route path="settings" element={<SettingsView />} />
               <Route index element={<ClassesView />} />
+              <Route path="studentclass/:classId/" element={<ProjectList />} />
               <Route path="classes/:classId" element={<ClassView />} />
             </Route>
           </Route>

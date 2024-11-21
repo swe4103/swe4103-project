@@ -11,6 +11,8 @@ const ClassesView = () => {
   const [className, setClassName] = useState('')
   const [classYear, setClassYear] = useState('')
   const [classes, setClasses] = useState([])
+  const [deleteTitle, setDeleteTitle] = useState('')
+  const [showDeleteInput, setShowDeleteInput] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const [selectedYear, setSelectedYear] = useState('all')
@@ -29,9 +31,10 @@ const ClassesView = () => {
         user.user.groups = newUser.groups
 
         if (newUser.role.includes('STUDENT')) {
-          console.log('User ID:', user.user.id)
-          const response = await axios.get(`/api/classes/`, config)
-          fetchedClasses = response.data
+          const responses = await Promise.all(
+            newUser.groups.map(id => axios.get(`/api/classes?teamId=${id}`, config)),
+          )
+          fetchedClasses = responses.flatMap(response => response.data)
         } else if (newUser.role.includes('INSTRUCTOR')) {
           const responses = await Promise.all(
             newUser.groups.map(id => axios.get(`/api/classes/${id}`, config)),
@@ -77,6 +80,29 @@ const ClassesView = () => {
     }
   }
 
+  const handleDelete = async () => {
+    const classToDelete = classes.find(c => c.name === deleteTitle)
+    if (!classToDelete) {
+      alert('No class found with that name.')
+      return
+    }
+
+    const confirmDelete = window.confirm(`Are you sure you want to delete "${deleteTitle}"?`)
+    if (!confirmDelete) return
+
+    try {
+      const token = user.token
+      const config = { headers: { Authorization: `Bearer ${token}` } }
+
+      await axios.delete(`/api/classes/${classToDelete.id}`, config)
+      setClasses(classes.filter(c => c.id !== classToDelete.id))
+      setDeleteTitle('')
+      setShowDeleteInput(false)
+    } catch (error) {
+      console.error('Error deleting class:', error)
+    }
+  }
+
   const filteredClasses = classes.filter(c => {
     const matchesYear = selectedYear === 'all' || c.year.toString() === selectedYear
     const matchesTitle = titleFilter
@@ -106,6 +132,12 @@ const ClassesView = () => {
       {user.user.role === 'INSTRUCTOR' && (
         <div className="flex gap-4 mb-4">
           <Button onClick={() => setShowForm(true)}>Create Class</Button>
+          <Button
+            onClick={() => setShowDeleteInput(prev => !prev)}
+            className="bg-red-500 text-white"
+          >
+            {showDeleteInput ? 'Cancel Delete' : 'Delete Class'}
+          </Button>
         </div>
       )}
 
@@ -131,6 +163,21 @@ const ClassesView = () => {
             Submit Class
           </Button>
         </form>
+      )}
+
+      {showDeleteInput && (
+        <div className="mt-4">
+          <input
+            type="text"
+            placeholder="Enter Class Name to Delete"
+            value={deleteTitle}
+            onChange={e => setDeleteTitle(e.target.value)}
+            className="p-2 border rounded mb-2"
+          />
+          <Button onClick={handleDelete} disabled={!deleteTitle}>
+            Confirm Delete
+          </Button>
+        </div>
       )}
 
       <div className="mb-4">
@@ -163,7 +210,7 @@ const ClassesView = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
           {currentClasses.map(c => (
             <Link
-              to={`/classes/${c.id}`}
+              to={user.user.role === 'INSTRUCTOR' ? `/classes/${c.id}` : `/studentclass/:classId`}
               key={c.id}
               className="flex flex-col gap-3 bg-white border p-4 rounded-md hover:shadow"
             >
