@@ -35,7 +35,6 @@ const ProjectList = () => {
 
         // Filter projects to only include those with the specified classId
         const filteredProjects = fetchedProjects.filter(project => project.classId === classId)
-        console.log(projectTeams)
         // Combine projects and teams into an array of JSON objects
         const combinedProjectTeams = filteredProjects.map(project => {
           const team = fetchedTeams.find(team => team.projectId === project.id)

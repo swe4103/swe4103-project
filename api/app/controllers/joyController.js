@@ -41,7 +41,6 @@ export const getJoyRating = async (req, res) => {
 
 export const createJoyRating = async (req, res) => {
   const { error, value } = joyRatingSchema.validate(req.body)
-  console.log('hi')
   if (error) {
     return res.status(400).json({ message: error.details[0].message })
   }
