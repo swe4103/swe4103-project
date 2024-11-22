@@ -40,7 +40,9 @@ const ChangeName = () => {
     // Check if the input is empty
     if (newDisplayName.trim() === '') {
       setFeedbackMessage('Display name cannot be empty.')
-    } else if (newDisplayName.trim() === displayName.trim()) {
+    }
+    // Check if the input name is the same as the current name
+    else if (newDisplayName.trim() === displayName.trim()) {
       setFeedbackMessage('Cannot be the same as the current name.')
     } else {
       try {

@@ -1,11 +1,12 @@
-import axios from 'axios'
+// import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 
+import { sendRegistrationEmail } from '../../../../api/app/services/emailService'
 import Button from '../../components/Button/Button'
 import Card from '../../components/Card/Card'
 import Logo from '../../components/Logo/Logo'
-import { useAuth } from '../../state/AuthProvider/AuthProvider'
+// import { useAuth } from '../../state/AuthProvider/AuthProvider'
 
 // Main component for inviting students
 const InstructorInviteStudents = () => {
@@ -14,7 +15,7 @@ const InstructorInviteStudents = () => {
   const [errorMessage, setErrorMessage] = useState('') // Error message displayed to the user
   const [isLoading, setIsLoading] = useState(false) // Tracks whether an API request is in progress
 
-  const { user, logout } = useAuth() // Access authenticated user and logout function
+  // const { user, logout } = useAuth() // Access authenticated user and logout function
   const navigate = useNavigate() // Navigation hook for redirecting users
   const location = useLocation() // Location hook for accessing route state
 
@@ -38,35 +39,28 @@ const InstructorInviteStudents = () => {
     const emails = emailList.split(',').map(email => email.trim())
 
     try {
-      // API call to send invitation emails to students
-      const response = await axios.post(
-        '/api/users/invite', // API endpoint for sending invites
-        {
-          emails: emails, // Pass the list of emails
-          role: 'STUDENT', // Specify the role as 'STUDENT'
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        },
+      // Send registration email for each email in the list
+      await Promise.all(
+        emails.map(async email => {
+          const token = generateInviteToken()
+          const message =
+            'You have been invited to join Time Flow. Click the link below to register:'
+          await sendRegistrationEmail(email, token, message)
+        }),
       )
 
-      if (response.status === 200) {
-        navigate('/success')
-      }
+      navigate('/success')
     } catch (error) {
-      console.error(error)
+      console.error('Error sending invites:', error)
       setErrorMessage('Failed to send invites. Please check the emails and try again.') // Set error message for the user
     } finally {
       setIsLoading(false)
     }
   }
 
-  // Logout handler to log out the user and redirect to the login page
-  const handleLogout = () => {
-    logout() // Call logout function from the AuthProvider
-    navigate('/login') // Redirect to the login page
+  // Utility function to generate an invite token
+  const generateInviteToken = () => {
+    return Math.random().toString(36).substring(2, 10)
   }
 
   // JSX for rendering the component
@@ -77,7 +71,7 @@ const InstructorInviteStudents = () => {
         <div className="flex flex-col items-center p-7 gap-5 w-full">
           <Logo withText={true} coloured={true} className="p-3" /> {/* Display the logo */}
           <h2 className="text-2xl">Invite Students</h2> {/* Page title */}
-          <p>Enter a list of student emails, comma-separated</p> {/* Instructions for the user */}
+          <p>Enter a list of student emails</p> {/* Instructions for the user */}
           <form className="flex flex-col gap-6 w-full" onSubmit={onSubmitInvite}>
             {/* Textarea for entering comma-separated emails */}
             <textarea
@@ -96,10 +90,6 @@ const InstructorInviteStudents = () => {
               Send Invites
             </Button>
           </form>
-          {/* Logout button */}
-          <Button onClick={handleLogout} style={{ marginTop: '20px' }}>
-            Logout
-          </Button>
         </div>
       </Card>
     </div>
