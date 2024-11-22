@@ -7,7 +7,6 @@ import Button from '../../components/Button/Button'
 import Card from '../../components/Card/Card'
 import Dropdown from '../../components/Dropdown/Dropdown'
 import { useAuth } from '../../state/AuthProvider/AuthProvider'
-
 const ClassesView = () => {
   const { user, isLoading } = useAuth()
   const [showForm, setShowForm] = useState(false)
@@ -61,7 +60,7 @@ const ClassesView = () => {
 
   const handleSubmit = async e => {
     e.preventDefault()
-    if (isSubmitting) return // Prevent duplicate submissions
+    if (isSubmitting) return
 
     setIsSubmitting(true)
 
@@ -266,7 +265,7 @@ const ClassesView = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
           {currentClasses.map(c => (
             <Link
-              to={`/classes/${c.id}`}
+              to={user.user.role === 'INSTRUCTOR' ? `/classes/${c.id}` : `/studentclass/${c.id}`}
               key={c.id}
               className="flex flex-col gap-3 bg-white border p-4 rounded-md hover:shadow"
             >

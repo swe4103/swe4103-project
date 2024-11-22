@@ -22,10 +22,13 @@ const Header = () => {
     logout()
     navigate('/login')
   }
+  // Safeguarding getTitle usage by checking location and pathname existence
+  const pageTitle =
+    location && location.pathname ? getTitle(location.pathname) : 'Default Page Title'
 
   return (
     <header className="h-header w-full bg-white drop-shadow-md flex justify-between items-center px-7 sticky z-40">
-      <h2 className="text-xl">{getTitle(location.pathname)}</h2>
+      <h2 className="text-xl">{pageTitle}</h2>
       <div className="flex w-full justify-end gap-6">
         <Dropdown
           width="250px"
