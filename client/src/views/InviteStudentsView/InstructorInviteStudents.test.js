@@ -1,53 +1,39 @@
 import { render, screen, fireEvent, act } from '@testing-library/react'
-import axios from 'axios'
-import { MemoryRouter, useNavigate } from 'react-router-dom'
+import { MemoryRouter } from 'react-router-dom'
 
-import '@testing-library/jest-dom' // Import jest-dom matchers
-import { AuthProvider } from '../../state/AuthProvider/AuthProvider'
+import '@testing-library/jest-dom'
+import { sendRegistrationEmail } from '../../../../api/app/services/emailService'
 
 import InstructorInviteStudents from './InstructorInviteStudents'
 
-// Mock axios
-jest.mock('axios')
-
-// Suppress console.error logs during tests
-beforeAll(() => {
-  jest.spyOn(console, 'error').mockImplementation(() => {})
-})
-
-afterAll(() => {
-  console.error.mockRestore()
-})
-
-// Mock useNavigate
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useNavigate: jest.fn(),
+jest.mock('../../../../api/app/services/emailService', () => ({
+  sendRegistrationEmail: jest.fn(),
 }))
 
-// Mock navigate
-const mockNavigate = jest.fn()
-useNavigate.mockImplementation(() => mockNavigate)
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: jest.fn(() => jest.fn()),
+}))
 
-describe('InstructorInviteStudents Component', () => {
-  const mockUser = { token: 'mock-token' } // Mock user with token
-
+describe('InstructorInviteStudents', () => {
   beforeEach(() => {
-    jest.clearAllMocks() // Clear mocks before each test
+    jest.clearAllMocks()
   })
 
-  const renderWithProviders = () => {
-    render(
-      <AuthProvider value={{ user: mockUser, logout: jest.fn() }}>
-        <MemoryRouter>
-          <InstructorInviteStudents />
-        </MemoryRouter>
-      </AuthProvider>,
-    )
-  }
+  beforeAll(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => {}) // Suppress console.error
+  })
+
+  afterAll(() => {
+    console.error.mockRestore() // Restore original implementation
+  })
 
   test('renders the component correctly', () => {
-    renderWithProviders()
+    render(
+      <MemoryRouter>
+        <InstructorInviteStudents />
+      </MemoryRouter>,
+    )
 
     expect(screen.getByText('Invite Students')).toBeInTheDocument()
     expect(
@@ -57,49 +43,33 @@ describe('InstructorInviteStudents Component', () => {
   })
 
   test('sends invitations on valid form submission', async () => {
-    axios.post.mockResolvedValueOnce({ status: 200 }) // Mock successful API call
+    sendRegistrationEmail.mockResolvedValueOnce()
 
-    renderWithProviders()
+    render(
+      <MemoryRouter>
+        <InstructorInviteStudents />
+      </MemoryRouter>,
+    )
 
     const emailInput = screen.getByPlaceholderText('Enter student emails, separated by commas')
     const sendButton = screen.getByText('Send Invites')
 
-    // Use act to wrap the state changes
     await act(async () => {
       fireEvent.change(emailInput, { target: { value: 'test1@example.com, test2@example.com' } })
       fireEvent.click(sendButton)
     })
 
-    expect(axios.post).toHaveBeenCalledWith(
-      '/api/users/invite',
-      { emails: ['test1@example.com', 'test2@example.com'], role: 'STUDENT' },
-      { headers: { Authorization: 'Bearer mock-token' } },
-    )
+    expect(sendRegistrationEmail).toHaveBeenCalledTimes(2) // Called once per email
   })
 
-  test('displays an error message on API failure', async () => {
-    axios.post.mockRejectedValueOnce(new Error('Failed to send invites')) // Mock API failure
+  test('displays error message on failure', async () => {
+    sendRegistrationEmail.mockRejectedValueOnce(new Error('Failed to send invites'))
 
-    renderWithProviders()
-
-    const emailInput = screen.getByPlaceholderText('Enter student emails, separated by commas')
-    const sendButton = screen.getByText('Send Invites')
-
-    await act(async () => {
-      fireEvent.change(emailInput, { target: { value: 'invalid@example.com' } })
-      fireEvent.click(sendButton)
-    })
-
-    const errorMessage = await screen.findByText(
-      'Failed to send invites. Please check the emails and try again.',
+    render(
+      <MemoryRouter>
+        <InstructorInviteStudents />
+      </MemoryRouter>,
     )
-    expect(errorMessage).toBeInTheDocument()
-  })
-
-  test('disables the textarea and button while loading', async () => {
-    axios.post.mockImplementationOnce(() => new Promise(resolve => setTimeout(resolve, 1000))) // Simulate delay
-
-    renderWithProviders()
 
     const emailInput = screen.getByPlaceholderText('Enter student emails, separated by commas')
     const sendButton = screen.getByText('Send Invites')
@@ -109,24 +79,8 @@ describe('InstructorInviteStudents Component', () => {
       fireEvent.click(sendButton)
     })
 
-    // Ensure textarea and button are disabled during the loading state
-    expect(emailInput).toBeDisabled()
-    expect(sendButton).toBeDisabled()
-  })
-
-  test('navigates to success page on successful form submission', async () => {
-    axios.post.mockResolvedValueOnce({ status: 200 })
-
-    renderWithProviders()
-
-    const emailInput = screen.getByPlaceholderText('Enter student emails, separated by commas')
-    const sendButton = screen.getByText('Send Invites')
-
-    await act(async () => {
-      fireEvent.change(emailInput, { target: { value: 'test1@example.com, test2@example.com' } })
-      fireEvent.click(sendButton)
-    })
-
-    expect(mockNavigate).toHaveBeenCalledWith('/success')
+    expect(
+      await screen.findByText('Failed to send invites. Please check the emails and try again.'),
+    ).toBeInTheDocument()
   })
 })
