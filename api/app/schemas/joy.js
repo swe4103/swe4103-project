@@ -19,10 +19,12 @@ export const joyRatingsQuerySchema = Joi.object({
   teamId: Joi.string().messages({
     'string.empty': 'teamId cannot be empty',
   }),
-  fromDate: Joi.number().integer().optional().messages({
-    'number.base': 'fromDate must be a UNIX timestamp',
+  fromDate: Joi.date().iso().optional().messages({
+    'date.base': 'fromDate must be a valid date',
+    'date.format': 'fromDate must be in ISO format',
   }),
-  toDate: Joi.number().integer().optional().messages({
-    'number.base': 'toDate must be a UNIX timestamp',
+  toDate: Joi.date().iso().optional().messages({
+    'date.base': 'toDate must be a valid date',
+    'date.format': 'toDate must be in ISO format',
   }),
 })
