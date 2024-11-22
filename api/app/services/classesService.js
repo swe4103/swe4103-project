@@ -34,5 +34,20 @@ export const listClassesByIds = async ({ teamId, projectId }) => {
     projectId && { name: '@projectId', value: projectId },
   ].filter(Boolean)
 
-  return await filterRecords(CLASS_COLLECTION, { query, parameters })
+  return await filterRecords('Class', { query, parameters })
+}
+
+export const listClassesByStudentId = async studentId => {
+  if (!studentId) {
+    throw new Error('studentId must be provided.')
+  }
+
+  const query = `
+    SELECT * FROM c 
+    WHERE ARRAY_CONTAINS(c.students, @studentId)
+  `.trim()
+
+  const parameters = [{ name: '@studentId', value: studentId }]
+
+  return await filterRecords('Class', { query, parameters })
 }
