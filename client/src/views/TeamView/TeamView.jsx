@@ -12,19 +12,19 @@ const TeamView = () => {
   const [teamData, setTeamData] = useState(null)
   const { teamId } = useParams()
   const { user } = useAuth()
-
-  const fetchTeam = async () => {
-    try {
-      const response = await axios.get(`/api/teams/${teamId}`, {
-        headers: { Authorization: `Bearer ${user.token}` },
-      })
-      setTeamData(response.data)
-    } catch (error) {
-      console.error('Error fetching team data:', error)
-    }
-  }
-
+  const [isLoading, setIsLoading] = useState(true)
   useEffect(() => {
+    const fetchTeam = async () => {
+      try {
+        const response = await axios.get(`/api/teams/${teamId}`, {
+          headers: { Authorization: `Bearer ${user.token}` },
+        })
+        setTeamData(response.data)
+      } catch (error) {
+        console.error('Error fetching team data:', error)
+      }
+      setIsLoading(false)
+    }
     fetchTeam()
   }, [teamId, user.token])
 
@@ -61,7 +61,7 @@ const TeamView = () => {
     backgroundColor: '#f8f9fa',
     borderRadius: '8px',
   }
-
+  if (isLoading) return <div>Loading...</div>
   return (
     <div style={containerStyle}>
       <h1 className="text-2xl font-bold mb-4 text-primary">{teamData.name}</h1>
