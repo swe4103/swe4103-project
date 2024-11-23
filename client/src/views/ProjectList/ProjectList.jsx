@@ -3,8 +3,8 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 
+import TeamJoyTrend from '../../components/StudentJoyChart/TeamJoyTrend'
 import { useAuth } from '../../state/AuthProvider/AuthProvider'
-
 const ProjectList = () => {
   const { classId } = useParams()
   const { user } = useAuth()
@@ -59,19 +59,34 @@ const ProjectList = () => {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4 text-primary">Projects</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4">
         {projectTeams.map(({ project, team }) => (
-          <Link
-            to={`/team/${team.id}`}
-            key={team.id}
-            className="flex flex-col gap-3 bg-white border p-4 rounded-md hover:shadow-md transition duration-200"
-          >
-            <div key={project.id} className="bg-white shadow-md rounded-lg p-4">
-              <h2 className="text-xl font-semibold mb-2">{project.name}</h2>
-              <p className="text-gray-700">{team ? `Team: ${team.name}` : 'No team found'}</p>
-              <p className="text-gray-700 mb-4">{`Description: ${project.description}`}</p>
+          <div key={project.id} className="bg-white shadow-md rounded-lg p-4">
+            <div className="flex flex-row items-start">
+              {/* Left Side: Name and Description */}
+              <Link
+                to={`/team/${team.id}`}
+                key={team.id}
+                className="w-auto h-auto bg-white border p-4 rounded-md hover:shadow-md transition duration-200"
+              >
+                <div className="flex flex-col">
+                  <h2 className="font-semibold mb-2">
+                    <label className="text-xl font-bold text-primary">{project.name}</label>
+                    <label className="bg-accent px-4 py-1 border rounded-full m-1 text-white">
+                      {team.name}
+                    </label>
+                  </h2>
+
+                  {/* Right Side: Chart */}
+                  <div className=" flex items-center justify-center">
+                    <div className="w-full">
+                      <TeamJoyTrend />
+                    </div>
+                  </div>
+                </div>
+              </Link>
             </div>
-          </Link>
+          </div>
         ))}
       </div>
     </div>
