@@ -36,13 +36,13 @@ const AggregateStudentJoyRatingsChart = () => {
         type: 'line',
         xKey: 'date',
         yKey: 'average',
-        stroke: '#ff6347', // Tomato color for the line
+        stroke: '#f07b0a', // Accent
         strokeWidth: 3,
         marker: {
           enabled: true,
           shape: 'circle',
           size: 8,
-          fill: '#ff6347', // Tomato color for the marker fill
+          fill: '#f07b0a', // Accent
           stroke: '#ffffff', // White color for the marker stroke
           strokeWidth: 2,
         },

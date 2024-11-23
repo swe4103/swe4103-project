@@ -67,21 +67,23 @@ const ProjectList = () => {
               <Link
                 to={`/team/${team.id}`}
                 key={team.id}
-                className="w-auto h-auto bg-white border p-4 rounded-md hover:shadow-md transition duration-200"
+                className="w-full h-auto bg-white border p-4 rounded-md hover:shadow-md transition duration-200 flex"
               >
-                <div className="flex flex-col">
+                {/* Left Side: Project and Team Info */}
+                <div className="w-1/2 flex flex-col">
                   <h2 className="font-semibold mb-2">
                     <label className="text-xl font-bold text-primary">{project.name}</label>
-                    <label className="bg-accent px-4 py-1 border rounded-full m-1 text-white">
-                      {team.name}
-                    </label>
                   </h2>
+                  <p>
+                    <label className="text-md font-semibold">Team:</label> {team.name}
+                  </p>
+                  <label className="text-gray-500 p-2">{project.description}</label>
+                </div>
 
-                  {/* Right Side: Chart */}
-                  <div className=" flex items-center justify-center">
-                    <div className="w-full">
-                      <TeamJoyTrend />
-                    </div>
+                {/* Right Side: Chart */}
+                <div className="w-1/2 flex items-center justify-center">
+                  <div className="w-full">
+                    <TeamJoyTrend />
                   </div>
                 </div>
               </Link>
