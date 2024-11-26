@@ -3,22 +3,23 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 
+
 import TeamJoyTrend from '../../components/StudentJoyChart/TeamJoyTrend'
 import { useAuth } from '../../state/AuthProvider/AuthProvider'
+
 const ProjectList = () => {
   const { classId } = useParams()
   const { user } = useAuth()
   const [projectTeams, setProjectTeams] = useState([])
   const [error, setError] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
-  const hasGroups = user.user.groups.length > 0
-
+  const [hasGroups, setHasGroups] = useState(true)
   useEffect(() => {
     const fetchTeamsAndProjects = async () => {
       try {
         const token = user.token
         const config = { headers: { Authorization: `Bearer ${token}` } }
-
+        
         // Fetch teams based on student's groups (team IDs)
         const teamResponses = await Promise.all(
           user.user.groups.map(teamId => axios.get(`/api/teams/${teamId}`, config)),
@@ -50,12 +51,16 @@ const ProjectList = () => {
         setIsLoading(false)
       }
     }
+    if (user.user.groups.length > 0) {
+      setHasGroups(false);
+    }
     if (hasGroups) {
       fetchTeamsAndProjects()
     } else {
       setIsLoading(false)
     }
-  }, [classId, user.token, user.user.groups])
+
+  }, [classId, user.token, user.user.groups, hasGroups])
 
   if (isLoading) return <div>Loading...</div>
   if (error) return <div>Error: {error}</div>

@@ -39,6 +39,8 @@ export const getContainer = containerName => {
 }
 
 export const saveRecord = async (containerName, record) => {
+  console.log('COntainer Name', containerName)
+  console.log('record', record)
   const container = getContainer(containerName)
   try {
     const { resource } = await container.items.create(record)
