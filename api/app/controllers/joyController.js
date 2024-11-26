@@ -18,7 +18,7 @@ export const listJoyRatings = async (req, res) => {
     if (!joyRatings) {
       return res.status(404).json({ message: 'No joy ratings found' })
     }
-    return res.status(200).json(ratings)
+    return res.status(200).json(joyRatings)
   } catch (error) {
     console.error('Error fetching joy ratings:', error)
     return res.status(500).json({ message: 'Internal server error' })
@@ -47,7 +47,7 @@ export const createJoyRating = async (req, res) => {
 
   try {
     const joyRating = createJoy(value)
-    return res.status(201).json(joyRating)
+    return res.status(200).json(joyRating)
   } catch (error) {
     console.error('Error creating joy rating: ', error)
     return res.status(500).json({ message: 'Internal server error' })

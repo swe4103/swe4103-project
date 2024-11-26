@@ -4,6 +4,8 @@ import {
   updateClassById,
   deleteClassById,
   createNewClass,
+  listClassesByIds,
+  listClassesByStudentId,
 } from '#services/classesService.js'
 import { updateUserById } from '#services/usersService.js'
 
@@ -21,14 +23,42 @@ export const createClass = async (req, res) => {
     return res.status(500).json({ message: 'Internal server error' })
   }
 }
-
-export const listClasses = async (req, res) => {
+export const listStudentClasses = async (req, res) => {
+  console.log('req', req.user)
   const { error, value } = listClassesQuerySchema.validate(req.query, { stripUnknown: true })
   if (error) {
     return res.status(400).json({ message: error.details[0].message })
   }
 
   try {
+    const classes = await listClassesByStudentId(value)
+    if (!classes) {
+      return res.status(404).json({ message: 'No classes found' })
+    }
+    return res.status(200).json(classes)
+  } catch (error) {
+    console.error('Error fetching classes:', error)
+    return res.status(500).json({ message: 'Internal server error' })
+  }
+}
+export const listClasses = async (req, res) => {
+  if (req.user.role == 'STUDENT') {
+    try {
+      const classes = await listClassesByStudentId(req.user.id)
+      if (!classes) {
+        return res.status(404).json({ message: 'No classes found' })
+      }
+      return res.status(200).json(classes)
+    } catch (error) {
+      console.error('Error fetching classes:', error)
+      return res.status(500).json({ message: 'Internal server error' })
+    }
+  }
+  try {
+    const { error, value } = listClassesQuerySchema.validate(req.query, { stripUnknown: true })
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message })
+    }
     const classes = await listClassesByIds(value)
     if (!classes) {
       return res.status(404).json({ message: 'No classes found' })

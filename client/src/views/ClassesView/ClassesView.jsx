@@ -210,7 +210,7 @@ const ClassesView = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
           {currentClasses.map(c => (
             <Link
-              to={`/classes/${c.id}`}
+              to={user.user.role === 'INSTRUCTOR' ? `/classes/${c.id}` : `/studentclass/${c.id}`}
               key={c.id}
               className="flex flex-col gap-3 bg-white border p-4 rounded-md hover:shadow"
             >

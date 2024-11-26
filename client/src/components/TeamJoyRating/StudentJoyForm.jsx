@@ -21,15 +21,16 @@ const StudentJoyForm = () => {
 
     try {
       setLoading(true)
+
       await axios.post(
-        `api/joy`,
+        `/api/joy`,
         {
           userId: user.user.id,
           teamId: teamId,
           date: new Date().toISOString(),
           rating: rating,
         },
-        { headers: { Authorization: user.token } },
+        { headers: { Authorization: `Bearer ${user.token}` } },
       )
       setSuccess(true)
     } catch (error) {
