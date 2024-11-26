@@ -12,6 +12,7 @@ import { updateUserById } from '#services/usersService.js'
 export const createClass = async (req, res) => {
   const { error, value } = classSchema.validate(req.body)
   if (error) {
+    console.log(`${error}`)
     return res.status(400).json({ message: error.details[0].message })
   }
 
@@ -90,14 +91,15 @@ export const getClass = async (req, res) => {
 
 export const updateClass = async (req, res) => {
   const { id } = req.params
-  console.log(`${JSON.stringify(req.body)}`)
-  // const { error, value } = updateUserSchema.validate(req.body)
-  // if (error) {
-  //   return res.status(400).json({ message: error.details[0].message })
-  // }
+  // console.log(`${JSON.stringify(req.body)}`)
+  const { error, value } = updateClassSchema.validate(req.body)
+  if (error) {
+    console.log(`${error}`)
+    return res.status(400).json({ message: error.details[0].message })
+  }
 
   try {
-    const updatedClass = await updateClassById(id, req.body)
+    const updatedClass = await updateClassById(id, value)
     if (!updatedClass) {
       return res.status(404).json({ message: 'Class not found' })
     }

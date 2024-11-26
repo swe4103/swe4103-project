@@ -19,9 +19,9 @@ const ClassesView = () => {
   const [selectedYear, setSelectedYear] = useState('all')
   const [titleFilter, setTitleFilter] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
-  const [editClassId, setEditClassId] = useState(null) // Tracks the ID of the class being edited
-  const [editClassName, setEditClassName] = useState('') // Tracks the updated name
-  const [editClassYear, setEditClassYear] = useState('') // Tracks the updated year
+  const [editClassId, setEditClassId] = useState(null)
+  const [editClassName, setEditClassName] = useState('')
+  const [editClassYear, setEditClassYear] = useState('')
 
   const classesPerPage = 6
 
@@ -93,50 +93,20 @@ const ClassesView = () => {
 
     // Check for empty values
     if (!editClassName.trim() || !editClassYear.trim()) {
-      console.error('Class name and year are required.')
+      alert('Class name and year are required.')
       return
     }
 
     // Validate year input
     const year = parseInt(editClassYear, 10)
-    if (isNaN(year)) {
-      console.error('Class year must be a valid number.')
+    if (isNaN(year) || year < 2000) {
+      alert('Class year must be a valid number.')
       return
     }
-
     setIsSubmitting(true)
-
-    /*
-    //needs to be in trycatch block
-    console.log('sendin update request')
-      const token = user.token
-      console.log('hi')
-      const config = { headers: { Authorization: `Bearer ${token}` } }
-      console.log('config good')
-
-      const updatedClass = { name: editClassName.trim(), year }
-      console.log('Data prepared:', updatedClass)
-
-    try {
-      console.log('Before making PUT request');
-      const response = await axios.put(
-        `/api/classes/${editClassId}`,
-        updatedClass,
-        { ...config, timeout: 5000 } // 5-second timeout
-      );
-      console.log('API Response:', response);
-    } catch (error) {
-      console.error('Error occurred:', error); // Log the raw error object
-      console.error('Error details:', error.response?.data || error.message || error);
-    } finally {
-      console.log('Exiting try-catch block');
-    }
-    */
-
     try {
       console.log('sendin update request')
       const token = user.token
-      console.log('hi')
       const config = { headers: { Authorization: `Bearer ${token}` } }
 
       const updatedClass = { name: editClassName.trim(), year }
@@ -149,13 +119,9 @@ const ClassesView = () => {
       console.log('API Endpoint:', `/api/classes/${editClassId}`)
       console.log(`CLASS ID:${editClassId}`)
 
-      // console.log('Request Body:', req.body);
-      // console.log('Class ID:', req.params.id);
-
       const response = await axios.put(
         `/api/classes/${editClassId}`,
         {
-          id: editClassId,
           name: editClassName.trim(),
           year: year,
         },
@@ -167,13 +133,11 @@ const ClassesView = () => {
       setClasses(prev => prev.map(c => (c.id === editClassId ? { ...c, ...updatedClass } : c)))
       console.log('Updated Classes:', classes)
 
-      // Reset fields only after success
       setEditClassId(null)
       setEditClassName('')
       setEditClassYear('')
     } catch (error) {
-      console.log(`Error in PUT request: ${error}`) // Log the entire error object
-      //console.log('Error updating class:', error.response?.data || error.message)
+      console.log(`Error in PUT request: ${error}`)
       alert('Failed to update the class. Please try again.')
     } finally {
       setIsSubmitting(false)
@@ -282,7 +246,8 @@ const ClassesView = () => {
                 <p className="text-sm text-gray-500">{c.year}</p>
               </Link>
 
-              <div className="absolute bottom-0 right-0 opacity-0 group-hover:opacity-100">
+              {/* <div className="absolute bottom-0 right-0 opacity-0 group-hover:opacity-100"> */}
+              <div className="absolute bottom-0 right-0 opacity-100">
                 <Dropdown
                   width="250px"
                   content={
@@ -310,7 +275,7 @@ const ClassesView = () => {
                         <Button
                           type="button"
                           onClick={e => {
-                            e.preventDefault() // Prevent navigation on Cancel
+                            e.preventDefault()
                             setEditClassId(null)
                           }}
                         >
@@ -335,10 +300,10 @@ const ClassesView = () => {
                   }
                 >
                   <FontAwesomeIcon
-                    className="z-50 text-2xl text-primary bg-gray-400 p-2 rounded bg-opacity-70 flex items-center justify-center opacity-0 group-hover:opacity-100"
+                    className="z-50 text-2xl text-primary bg-gray-400 p-2 rounded bg-opacity-0 flex items-center justify-center transition-all duration-300 hover:bg-opacity-80 hover:bg-gray-400"
                     icon="ellipsis"
                     onClick={e => {
-                      e.preventDefault() // Prevent default navigation when clicking the ellipsis
+                      e.preventDefault() //don't remove, causes navigation issues.
                     }}
                   />
                 </Dropdown>
@@ -347,99 +312,6 @@ const ClassesView = () => {
           ))}
         </div>
       </Card>
-
-      {/* this block has the dropdown inside the link div and causes navigation issues.
-       <Card className="flex flex-col items-center justify-center w-full p-6 h-full gap-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
-          {currentClasses.map(c => (
-            <Link
-              to={user.user.role === 'INSTRUCTOR' ? `/classes/${c.id}` : `/studentclass/${c.id}`}
-              key={c.id}
-              className="flex flex-col gap-3 bg-white border p-4 rounded-md hover:shadow relative group"
-            >
-              <img
-                src={`https://picsum.photos/seed/${c.id}/300/200`}
-                alt={c.name}
-                className="w-full h-40 object-cover rounded-md"
-              />
-              <h2 className="text-md font-bold">{c.name}</h2>
-              <p className="text-sm text-gray-500">{c.year}</p>
-              <div
-                className="absolute bottom-0 right-0"
-            >
-                <Dropdown
-                    width="250px"
-                    content={
-                    editClassId === c.id ? (
-                        <form onSubmit={handleEditSubmit} className="p-3 flex flex-col gap-2" 
-                        onClick={e => e.stopPropagation()} // Prevent event bubbling on form
-                        >
-                        <input
-                            type="text"
-                            value={editClassName}
-                            onChange={e => setEditClassName(e.target.value)}
-                            placeholder="Edit Name"
-                            className="p-2 border rounded"
-                            //onFocus={e => e.stopPropagation()} // Prevent bubbling when input is focused
-                            required
-                        />
-                        <input
-                            type="number"
-                            value={editClassYear}
-                            onChange={e => setEditClassYear(e.target.value)}
-                            placeholder="Edit Year"
-                            className="p-2 border rounded"
-                            //onFocus={e => e.stopPropagation()} // Prevent bubbling when input is focused
-                            required
-                        />
-                        <Button type="submit"  disabled={isSubmitting}>
-                            Submit
-                        </Button>
-                        <Button
-                            type="button"
-                            onClick={e => {
-                            e.preventDefault(); // Prevent navigation on Cancel
-                            setEditClassId(null);
-                            }}
-                        >
-                            Cancel
-                        </Button>
-                        </form>
-                    ) : (
-                        <div className="p-2">
-                        <button
-                            onClick={e => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            console.log('here');
-                            console.log('Function triggered!');
-                            setEditClassId(c.id);
-                            setEditClassName(c.name);
-                            setEditClassYear(c.year.toString());
-                            }}
-                            className="w-full text-left p-2 hover:bg-gray-100 rounded"
-                        >
-                            Edit Class
-                        </button>
-                        </div>
-                    )
-                    }
-                >
-                    <FontAwesomeIcon
-                    className="z-50 text-2xl text-primary bg-gray-400 p-2 rounded bg-opacity-70 flex items-center justify-center opacity-0 group-hover:opacity-100"
-                    icon="ellipsis"
-                    onClick={e => {
-                        e.preventDefault(); // Prevent default navigation when clicking the ellipsis
-                        console.log('Ellipsis clicked!');
-                    }}
-                    />
-                </Dropdown>
-                </div>
-            </Link>
-          ))}
-        </div>
-      </Card> */}
-
       <div className="flex justify-between mt-4">
         <Button onClick={() => handlePageChange('prev')} disabled={currentPage === 1}>
           Previous
