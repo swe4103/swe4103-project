@@ -60,7 +60,7 @@ const ProjectList = () => {
       setIsLoading(false)
     }
 
-  }, [classId, user.token, user.user.groups])
+  }, [classId, user.token, user.user.groups, hasGroups])
 
   if (isLoading) return <div>Loading...</div>
   if (error) return <div>Error: {error}</div>
