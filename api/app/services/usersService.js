@@ -14,8 +14,10 @@ import {
 } from '#services/DatabaseService.js'
 import { sendRegistrationEmail, sendConfirmationEmail } from '#services/emailService.js'
 
-export const createUser = async user => await saveRecord('User', { id: uuidv4(), ...user })
-
+export const createUser = async user => {
+  const newUser = await saveRecord('User', { id: uuidv4(), ...user })
+  return newUser
+}
 export const getUserById = async id => await getRecord('User', id)
 
 export const deleteUserById = async id => await deleteRecord('User', id)

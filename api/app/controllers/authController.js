@@ -72,18 +72,28 @@ export const register = async (req, res) => {
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10)
-    await createUser({
+    const newUser = await createUser({
       email: invitee.email,
       displayName,
       password: hashedPassword,
       role: invitee.role,
+      groups: [],
       ...(invitee.role === Roles.STUDENT),
     })
     blacklist(req.query.token)
     try {
       const clazz = await getRecord('Class', invitee.classId)
-      clazz.students = [...new Set([...(clazz.students || []), invitee.id])]
-      await upsertRecord('Class', clazz)
+      console.log('invitee:', invitee)
+      console.log('clazz 1:', clazz)
+      if (newUser.id != null) {
+        // if class.students does not contain the user id then add it
+        if (!clazz.students.includes(newUser.id)) {
+          console.log('clazz 2:', clazz)
+          clazz.students.push(newUser.id)
+          console.log('clazz 3:', clazz)
+          await upsertRecord('Class', clazz)
+        }
+      }
     } catch (error) {
       console.error('Error updating class:', error)
       return res.status(500).json({ message: 'Internal server error' })
