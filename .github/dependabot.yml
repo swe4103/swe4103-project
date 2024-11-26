@@ -1,0 +1,39 @@
+version: 2
+updates:
+  # Root workspace configuration
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      dependencies:
+        patterns:
+          - "*"
+
+  # API package configuration
+  - package-ecosystem: "npm"
+    directory: "/api"
+    schedule:
+      interval: "weekly"
+    groups:
+      express-dependencies:
+        patterns:
+          - "express*"
+          - "@types/express*"
+      dependencies:
+        patterns:
+          - "*"
+
+  # Client package configuration
+  - package-ecosystem: "npm"
+    directory: "/client"
+    schedule:
+      interval: "weekly"
+    groups:
+      react-dependencies:
+        patterns:
+          - "react*"
+          - "@types/react*"
+      dependencies:
+        patterns:
+          - "*"
