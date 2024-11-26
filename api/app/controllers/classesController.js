@@ -90,14 +90,14 @@ export const getClass = async (req, res) => {
 
 export const updateClass = async (req, res) => {
   const { id } = req.params
-
-  const { error, value } = updateUserSchema.validate(req.body)
-  if (error) {
-    return res.status(400).json({ message: error.details[0].message })
-  }
+  console.log(`${JSON.stringify(req.body)}`)
+  // const { error, value } = updateUserSchema.validate(req.body)
+  // if (error) {
+  //   return res.status(400).json({ message: error.details[0].message })
+  // }
 
   try {
-    const updatedClass = await updateClassById(id, value)
+    const updatedClass = await updateClassById(id, req.body)
     if (!updatedClass) {
       return res.status(404).json({ message: 'Class not found' })
     }

@@ -106,15 +106,63 @@ const ClassesView = () => {
 
     setIsSubmitting(true)
 
+    /*
+    //needs to be in trycatch block
+    console.log('sendin update request')
+      const token = user.token
+      console.log('hi')
+      const config = { headers: { Authorization: `Bearer ${token}` } }
+      console.log('config good')
+
+      const updatedClass = { name: editClassName.trim(), year }
+      console.log('Data prepared:', updatedClass)
+
+    try {
+      console.log('Before making PUT request');
+      const response = await axios.put(
+        `/api/classes/${editClassId}`,
+        updatedClass,
+        { ...config, timeout: 5000 } // 5-second timeout
+      );
+      console.log('API Response:', response);
+    } catch (error) {
+      console.error('Error occurred:', error); // Log the raw error object
+      console.error('Error details:', error.response?.data || error.message || error);
+    } finally {
+      console.log('Exiting try-catch block');
+    }
+    */
+
     try {
       console.log('sendin update request')
       const token = user.token
+      console.log('hi')
       const config = { headers: { Authorization: `Bearer ${token}` } }
 
       const updatedClass = { name: editClassName.trim(), year }
-      await axios.put(`/api/classes/${editClassId}`, updatedClass, config)
+      console.log('Data prepared:', updatedClass)
 
-      console.log('update response')
+      console.log('about to execute put request')
+
+      console.log('Token:', user.token)
+
+      console.log('API Endpoint:', `/api/classes/${editClassId}`)
+      console.log(`CLASS ID:${editClassId}`)
+
+      // console.log('Request Body:', req.body);
+      // console.log('Class ID:', req.params.id);
+
+      const response = await axios.put(
+        `/api/classes/${editClassId}`,
+        {
+          id: editClassId,
+          name: editClassName.trim(),
+          year: year,
+        },
+        { ...config }, // 5-second timeout
+      )
+      console.log('Update response:', response)
+
       // Update local state
       setClasses(prev => prev.map(c => (c.id === editClassId ? { ...c, ...updatedClass } : c)))
       console.log('Updated Classes:', classes)
@@ -124,7 +172,8 @@ const ClassesView = () => {
       setEditClassName('')
       setEditClassYear('')
     } catch (error) {
-      console.error('Error updating class:', error.response?.data || error.message)
+      console.log(`Error in PUT request: ${error}`) // Log the entire error object
+      //console.log('Error updating class:', error.response?.data || error.message)
       alert('Failed to update the class. Please try again.')
     } finally {
       setIsSubmitting(false)

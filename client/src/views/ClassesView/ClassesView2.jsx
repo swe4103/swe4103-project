@@ -110,6 +110,7 @@ const ClassesView = () => {
       console.log('sendin update request')
       const token = user.token
       const config = { headers: { Authorization: `Bearer ${token}` } }
+      console.log('wrong file hellooo')
 
       const updatedClass = { name: editClassName.trim(), year }
       await axios.put(`/api/classes/${editClassId}`, updatedClass, config)
