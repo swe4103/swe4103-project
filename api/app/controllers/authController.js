@@ -81,22 +81,20 @@ export const register = async (req, res) => {
       ...(invitee.role === Roles.STUDENT),
     })
     blacklist(req.query.token)
-    try {
-      const clazz = await getRecord('Class', invitee.classId)
-      console.log('invitee:', invitee)
-      console.log('clazz 1:', clazz)
-      if (newUser.id != null) {
-        // if class.students does not contain the user id then add it
-        if (!clazz.students.includes(newUser.id)) {
-          console.log('clazz 2:', clazz)
-          clazz.students.push(newUser.id)
-          console.log('clazz 3:', clazz)
-          await upsertRecord('Class', clazz)
+    if (invitee.role === Roles.STUDENT) {
+      try {
+        const clazz = await getRecord('Class', invitee.classId)
+        if (newUser.id != null) {
+          // if class.students does not contain the user id then add it
+          if (!clazz.students.includes(newUser.id)) {
+            clazz.students.push(newUser.id)
+            await upsertRecord('Class', clazz)
+          }
         }
+      } catch (error) {
+        console.error('Error updating class:', error)
+        return res.status(500).json({ message: 'Internal server error' })
       }
-    } catch (error) {
-      console.error('Error updating class:', error)
-      return res.status(500).json({ message: 'Internal server error' })
     }
 
     return res.status(201).json({ message: 'User registered successfully' })
