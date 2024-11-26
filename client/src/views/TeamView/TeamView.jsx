@@ -66,7 +66,8 @@ const TeamView = () => {
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4 text-primary">{teamData.name}</h1>
-      <div style={formContainerStyle}>
+      <div style={containerStyle}>
+        <div style={formContainerStyle}>
         <StudentJoyForm />
       </div>
       <div style={chartsContainerStyle}>
@@ -82,6 +83,7 @@ const TeamView = () => {
         <div style={chartStyle}>
           <TotalTeamJoyChart />
         </div>
+      </div>
       </div>
     </div>
   )
