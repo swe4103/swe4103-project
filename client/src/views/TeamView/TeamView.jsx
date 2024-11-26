@@ -1,3 +1,4 @@
+
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
@@ -27,7 +28,6 @@ const TeamView = () => {
     }
     fetchTeam()
   }, [teamId, user.token])
-
   const containerStyle = {
     display: 'flex',
     flexDirection: 'column',
@@ -62,9 +62,9 @@ const TeamView = () => {
     borderRadius: '8px',
   }
   if (isLoading) return <div>Loading...</div>
+
   return (
-    <div style={containerStyle}>
-      <h1 className="text-2xl font-bold mb-4 text-primary">{teamData.name}</h1>
+    <h1 className="text-2xl font-bold mb-4 text-primary">{teamData.name}</h1>
       <div style={formContainerStyle}>
         <StudentJoyForm />
       </div>
@@ -74,6 +74,9 @@ const TeamView = () => {
         </div>
         <div style={chartStyle}>
           <AggregateJoyRatingsChart />
+        </div>
+        <div style={chartStyle}>
+          <IndividualStudentJoyChart />
         </div>
         <div style={chartStyle}>
           <TotalTeamJoyChart />

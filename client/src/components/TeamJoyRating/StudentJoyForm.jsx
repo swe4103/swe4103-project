@@ -21,7 +21,6 @@ const StudentJoyForm = () => {
 
     try {
       setLoading(true)
-
       await axios.post(
         `/api/joy`,
         {
