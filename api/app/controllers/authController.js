@@ -5,6 +5,7 @@ import config from '#config'
 import Roles from '#constants/roles.js'
 import { registerSchema } from '#schemas/users.js'
 import { blacklist, isBlacklisted } from '#services/blacklistCache.js'
+import { getRecord, upsertRecord } from '#services/DatabaseService.js'
 import { getUserByEmail, createUser } from '#services/usersService.js'
 
 export const login = async (req, res) => {
@@ -65,8 +66,8 @@ export const register = async (req, res) => {
 
   const { displayName, password } = value
 
-  if (invitee.role === Roles.STUDENT && !invitee.teamId) {
-    return res.status(400).json({ message: 'Team ID is required for student registration' })
+  if (invitee.role === Roles.STUDENT && !invitee.classId) {
+    return res.status(400).json({ message: 'Class ID is required for student registration' })
   }
 
   try {
@@ -76,9 +77,18 @@ export const register = async (req, res) => {
       displayName,
       password: hashedPassword,
       role: invitee.role,
-      ...(invitee.role === Roles.STUDENT && { groups: [invitee.teamId] }),
+      ...(invitee.role === Roles.STUDENT),
     })
     blacklist(req.query.token)
+    try {
+      const clazz = await getRecord('Class', invitee.classId)
+      clazz.students = [...new Set([...(clazz.students || []), invitee.id])]
+      await upsertRecord('Class', clazz)
+    } catch (error) {
+      console.error('Error updating class:', error)
+      return res.status(500).json({ message: 'Internal server error' })
+    }
+
     return res.status(201).json({ message: 'User registered successfully' })
   } catch (error) {
     console.error('Error registering user:', error)

@@ -35,35 +35,38 @@ export const getUsersByEmails = async emails => {
   return await filterRecords('User', query)
 }
 
-export const inviteUsersByEmail = async ({ emails, role, teamId }) => {
+export const inviteUsersByEmail = async ({ emails, role, classId }) => {
   const users = (await getUsersByEmails(emails)) || []
-
+  console.log('emails:', emails)
   const existingUsers = users.filter(user => emails.includes(user.email))
   const newUsers = emails.filter(email => !users.some(user => user.email === email))
 
   let message
-  if (teamId) {
-    const team = await getRecord('Team', teamId)
-    message = `You have been invited to join ${team.name} on Time Flow! Register using the following link:`
+  let className
+  if (classId) {
+    const clazz = await getRecord('Class', classId)
+    const existingUserIds = [existingUsers.map(user => user.id)]
+    clazz.students = [...new Set([...(clazz.students || []), ...existingUserIds])]
+    await upsertRecord('Class', clazz)
+    message = `You have been invited to join ${clazz.name} on Time Flow! Register using the following link:`
   } else {
     message = 'You have been invited to join Time Flow! Register using the following link:'
   }
 
   const existingPromises = existingUsers.map(async user => {
     if (role !== Roles.INSTRUCTOR) {
-      user.groups = [...new Set([...(user.groups || []), teamId])]
-      await upsertRecord('User', user)
-      await sendConfirmationEmail(email, team.name)
+      await sendConfirmationEmail(user.email, message)
     }
   })
 
   const newPromises = newUsers.map(async email => {
     const token = jwt.sign(
-      { email, role, ...(role === Roles.STUDENT && { teamId }) },
+      { email, role, ...(role === Roles.STUDENT && { classId }) },
       config.jwtInviteSecret,
       { expiresIn: '1d' },
     )
     await sendRegistrationEmail(email, token, message)
   })
+
   return Promise.all([...existingPromises, ...newPromises])
 }
