@@ -29,7 +29,7 @@ const ClassesView = () => {
         const userResponse = await axios.get(`/api/users/${user.user.id}`, config)
         const newUser = userResponse.data
         user.user.groups = newUser.groups
-
+        console.log('newUser:', newUser)
         if (newUser.role.includes('STUDENT')) {
           const responses = await Promise.all(
             newUser.groups.map(id => axios.get(`/api/classes?teamId=${id}`, config)),
