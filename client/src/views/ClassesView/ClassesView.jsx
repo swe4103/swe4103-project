@@ -91,13 +91,11 @@ const ClassesView = () => {
     console.log('Submit triggered')
     if (isSubmitting) return
 
-    // Check for empty values
     if (!editClassName.trim() || !editClassYear.trim()) {
       alert('Class name and year are required.')
       return
     }
 
-    // Validate year input
     const year = parseInt(editClassYear, 10)
     if (isNaN(year) || year < 2000) {
       alert('Class year must be a valid number.')
@@ -110,14 +108,6 @@ const ClassesView = () => {
       const config = { headers: { Authorization: `Bearer ${token}` } }
 
       const updatedClass = { name: editClassName.trim(), year }
-      console.log('Data prepared:', updatedClass)
-
-      console.log('about to execute put request')
-
-      console.log('Token:', user.token)
-
-      console.log('API Endpoint:', `/api/classes/${editClassId}`)
-      console.log(`CLASS ID:${editClassId}`)
 
       const response = await axios.put(
         `/api/classes/${editClassId}`,
@@ -129,7 +119,6 @@ const ClassesView = () => {
       )
       console.log('Update response:', response)
 
-      // Update local state
       setClasses(prev => prev.map(c => (c.id === editClassId ? { ...c, ...updatedClass } : c)))
       console.log('Updated Classes:', classes)
 
@@ -250,6 +239,7 @@ const ClassesView = () => {
               <div className="absolute bottom-0 right-0 opacity-100">
                 <Dropdown
                   width="250px"
+                  zIndex="z-50"
                   content={
                     editClassId === c.id ? (
                       <form onSubmit={handleEditSubmit} className="p-3 flex flex-col gap-2">

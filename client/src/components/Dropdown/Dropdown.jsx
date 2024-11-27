@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 
-function Dropdown({ children, content, width }) {
+function Dropdown({ children, content, width, zIndex = null }) {
   const [isOpen, setIsOpen] = useState(false)
   const dropdownRef = useRef(null)
 
@@ -17,7 +17,7 @@ function Dropdown({ children, content, width }) {
   }, [])
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className={`relative ${zIndex ? zIndex : ''}`} ref={dropdownRef}>
       <button onClick={toggleDropdown} className="p-2 z-50">
         {children}
       </button>
