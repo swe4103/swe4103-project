@@ -5,69 +5,79 @@ import { useParams } from 'react-router-dom'
 
 import { useAuth } from '../../state/AuthProvider/AuthProvider'
 
-const formatData = data => {
-  let totalRating = 0
-  const users = new Set()
-
-  data.forEach(item => {
-    users.add(item.userId)
-    totalRating += item.rating
-  })
-
-  const diffFromPerfect = data.length * 5 - totalRating
-
-  const retVal = [
-    { Title: 'Rating to Perfect', Value: diffFromPerfect },
-    { Title: 'Earned Rating', Value: totalRating },
-  ]
-
-  return retVal
-}
-
 const TotalTeamJoyChart = () => {
   const [chartOptions, setChartOptions] = useState({})
-
-  const [formattedData, setFormattedData] = useState({})
-
+  const [formattedData, setFormattedData] = useState([])
+  const [hasData, setHasData] = useState(false)
   const { user } = useAuth()
-
   const { teamId } = useParams()
 
   useEffect(() => {
-    // Replace with API Calls or some async data fetching
     const fetchJoyData = async () => {
       const today = new Date()
       const sevenDaysAgo = new Date()
-
       sevenDaysAgo.setDate(today.getDate() - 7)
 
-      try {
-        const params = {
-          teamId: teamId,
-          fromDate: sevenDaysAgo.toISOString(),
-          toDate: today.toISOString(),
-        }
+      const params = {
+        teamId: teamId,
+        fromDate: sevenDaysAgo.toISOString(),
+        toDate: today.toISOString(),
+        listMembers: true,
+      }
 
-        const headers = { Authorization: `Bearer ${user.token}` }
-        const response = await axios.get('api/joy', {
+      const headers = { Authorization: `Bearer ${user.token}` }
+
+      try {
+        const response = await axios.get('/api/joy', {
           params: params,
           headers: headers,
         })
-        if (!response.data) {
-          console.error('No data to display')
+
+        console.log('Response:', response)
+
+        if (response.headers['content-type'].includes('text/html')) {
+          console.error('Received HTML response, expected JSON.')
+          setHasData(false)
+          return
         }
-        console.log('Fetched data: ', response.data)
+
+        if (!response.data || response.data.length === 0) {
+          console.error('No data to display')
+          setHasData(false)
+          return
+        }
+
+        const formatData = data => {
+          let totalRating = 0
+          const users = new Set()
+
+          data.forEach(item => {
+            users.add(item.userId)
+            totalRating += item.rating
+          })
+
+          const diffFromPerfect = data.length * 5 - totalRating
+
+          const retVal = [
+            { Title: 'Rating to Perfect', Value: diffFromPerfect },
+            { Title: 'Earned Rating', Value: totalRating },
+          ]
+
+          return retVal
+        }
 
         const formatted = formatData(response.data)
         setFormattedData(formatted)
-        console.log(formattedData)
+        setHasData(true)
+        console.log('Formatted Data:', formatted)
       } catch (error) {
-        console.error('Error fetching team joy: ', error)
+        console.error('Error fetching team joy data:', error)
+        setHasData(false)
       }
     }
 
     fetchJoyData()
-  }, [user.user.id, user.token, teamId])
+  }, [user.token, teamId])
 
   useEffect(() => {
     const options = {
@@ -88,13 +98,21 @@ const TotalTeamJoyChart = () => {
     }
 
     setChartOptions(options)
-  }, [formattedData]) // Empty dependency array ensures this runs once after the component mounts
+  }, [formattedData])
 
-  return (
-    <div style={{ width: '100%', height: '500px', backgroundColor: '#f8f9fa' }}>
-      <AgCharts options={chartOptions} />
-    </div>
-  )
+  if (hasData) {
+    return (
+      <div style={{ width: '100%', height: '500px', backgroundColor: '#f8f9fa' }}>
+        <AgCharts options={chartOptions} />
+      </div>
+    )
+  } else {
+    return (
+      <div style={{ width: '100%', height: '500px', backgroundColor: '#f8f9fa' }}>
+        <h1>No Data Available</h1>
+      </div>
+    )
+  }
 }
 
 export default TotalTeamJoyChart

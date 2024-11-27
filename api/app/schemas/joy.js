@@ -27,4 +27,7 @@ export const joyRatingsQuerySchema = Joi.object({
     'date.base': 'toDate must be a valid date',
     'date.format': 'toDate must be in ISO format',
   }),
+  listMembers: Joi.boolean().optional().messages({
+    'boolean.base': 'listMembers must be a boolean',
+  }),
 })

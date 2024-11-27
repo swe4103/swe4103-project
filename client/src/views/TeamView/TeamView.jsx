@@ -1,4 +1,3 @@
-
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
@@ -68,22 +67,19 @@ const TeamView = () => {
       <h1 className="text-2xl font-bold mb-4 text-primary">{teamData.name}</h1>
       <div style={containerStyle}>
         <div style={formContainerStyle}>
-        <StudentJoyForm />
-      </div>
-      <div style={chartsContainerStyle}>
-        <div style={chartStyle}>
-          <IndividualStudentJoyChart />
+          <StudentJoyForm />
         </div>
-        <div style={chartStyle}>
-          <AggregateJoyRatingsChart />
+        <div style={chartsContainerStyle}>
+          <div style={chartStyle}>
+            <IndividualStudentJoyChart />
+          </div>
+          <div style={chartStyle}>
+            <AggregateJoyRatingsChart />
+          </div>
+          <div style={chartStyle}>
+            <TotalTeamJoyChart />
+          </div>
         </div>
-        <div style={chartStyle}>
-          <IndividualStudentJoyChart />
-        </div>
-        <div style={chartStyle}>
-          <TotalTeamJoyChart />
-        </div>
-      </div>
       </div>
     </div>
   )
