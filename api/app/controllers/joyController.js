@@ -16,7 +16,7 @@ export const listJoyRatings = async (req, res) => {
   try {
     const joyRatings = await listJoys(value)
     if (!joyRatings) {
-      return res.status(404).json({ message: 'No joy ratings found' })
+      return []
     }
     return res.status(200).json(joyRatings)
   } catch (error) {

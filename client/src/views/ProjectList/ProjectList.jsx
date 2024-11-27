@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 
-
 import TeamJoyTrend from '../../components/StudentJoyChart/TeamJoyTrend'
 import { useAuth } from '../../state/AuthProvider/AuthProvider'
 
@@ -19,7 +18,7 @@ const ProjectList = () => {
       try {
         const token = user.token
         const config = { headers: { Authorization: `Bearer ${token}` } }
-        
+
         // Fetch teams based on student's groups (team IDs)
         const teamResponses = await Promise.all(
           user.user.groups.map(teamId => axios.get(`/api/teams/${teamId}`, config)),
@@ -51,15 +50,14 @@ const ProjectList = () => {
         setIsLoading(false)
       }
     }
-    if (user.user.groups.length > 0) {
-      setHasGroups(false);
+    if (user.user.groups.length <= 0) {
+      setHasGroups(false)
     }
     if (hasGroups) {
       fetchTeamsAndProjects()
     } else {
       setIsLoading(false)
     }
-
   }, [classId, user.token, user.user.groups, hasGroups])
 
   if (isLoading) return <div>Loading...</div>
