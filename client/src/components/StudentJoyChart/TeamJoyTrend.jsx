@@ -9,26 +9,6 @@ const AggregateStudentJoyRatingsChart = ({ teamId }) => {
   const [hasData, setHasData] = useState(false)
 
   const { user } = useAuth()
-  /*
-  useEffect(() => {
-    // Original data
-    const data = [
-      { date: 'Nov. 19', ratings: [3, 4, 4, 5, 2] },
-      { date: 'Nov. 20', ratings: [0, 3, 2, 4, 1] },
-      { date: 'Nov. 21', ratings: [5, 2, 3, 4, 5] },
-      { date: 'Nov. 22', ratings: [2, 3, 4, 5, 4] },
-      { date: 'Nov. 23', ratings: [4, 5, 3, 4, 5] },
-    ]
-
-    // Calculate average ratings for each day
-    const chartData = data.map(item => ({
-      date: item.date,
-      average: item.ratings.reduce((a, b) => a + b, 0) / item.ratings.length,
-    }))
-
-    setChartData(chartData)
-  }, [])
-  */
 
   useEffect(() => {
     const fetchJoyData = async () => {
@@ -50,8 +30,6 @@ const AggregateStudentJoyRatingsChart = ({ teamId }) => {
           params: params,
           headers: headers,
         })
-
-        console.log('Response:', response)
 
         if (response.headers['content-type'].includes('text/html')) {
           console.error('Received HTML response, expected JSON.')
@@ -77,26 +55,16 @@ const AggregateStudentJoyRatingsChart = ({ teamId }) => {
           return acc
         }, {})
 
-        // Step 2: Calculate average for each group
+        // Calculate average for each group
         const averages = Object.entries(groupedByDate).map(([date, ratings]) => {
           const average = ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length
           return { date, average }
         })
 
-        console.log('averages: ', averages)
-
-        const formattedData = response.data.reduce((acc, curr) => {
-          const dateOnly = new Date(curr.date).toISOString().split('T')[0]
-          if (!acc[dateOnly]) {
-            acc[dateOnly] = []
-          }
-          acc[dateOnly].push(curr.rating)
-          return acc
-        }, {})
-
-        const chartData = Object.entries(formattedData).map(([date, ratings]) => ({
-          date: new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-          average: ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length,
+        // Set chart data using averages
+        const chartData = averages.map(item => ({
+          date: new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+          average: item.average,
         }))
 
         setHasData(true)
@@ -157,6 +125,7 @@ const AggregateStudentJoyRatingsChart = ({ teamId }) => {
       },
     ],
   }
+
   if (hasData) {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -166,9 +135,11 @@ const AggregateStudentJoyRatingsChart = ({ teamId }) => {
       </div>
     )
   } else {
-    ;<div style={{ width: '100%', height: '500px', backgroundColor: '#f8f9fa' }}>
-      <h1>No Data Available</h1>
-    </div>
+    return (
+      <div style={{ width: '100%', height: '500px', backgroundColor: '#f8f9fa' }}>
+        <h1>No Data Available</h1>
+      </div>
+    )
   }
 }
 

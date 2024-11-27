@@ -33,8 +33,6 @@ const TotalTeamJoyChart = () => {
           headers: headers,
         })
 
-        console.log('Response:', response)
-
         if (response.headers['content-type'].includes('text/html')) {
           console.error('Received HTML response, expected JSON.')
           setHasData(false)
@@ -69,7 +67,6 @@ const TotalTeamJoyChart = () => {
         const formatted = formatData(response.data)
         setFormattedData(formatted)
         setHasData(true)
-        console.log('Formatted Data:', formatted)
       } catch (error) {
         console.error('Error fetching team joy data:', error)
         setHasData(false)
