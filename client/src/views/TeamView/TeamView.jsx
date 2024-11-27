@@ -77,9 +77,6 @@ const TeamView = () => {
             <AggregateJoyRatingsChart />
           </div>
           <div style={chartStyle}>
-            <IndividualStudentJoyChart />
-          </div>
-          <div style={chartStyle}>
             <TotalTeamJoyChart />
           </div>
         </div>
