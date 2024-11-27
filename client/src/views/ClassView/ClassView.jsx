@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
 import Button from '../../components/Button/Button'
+import Dropdown from '../../components/Dropdown/Dropdown'
 import { useAuth } from '../../state/AuthProvider/AuthProvider'
-
 const ClassView = () => {
   const { classId } = useParams()
   const { user } = useAuth()
@@ -23,9 +23,9 @@ const ClassView = () => {
   const [newTeamName, setNewTeamName] = useState('')
   const [isTeamSubmitting, setIsTeamSubmitting] = useState(false)
   const [showTeamForm, setShowTeamForm] = useState({})
-  //const [showTeamDeleteInput, setShowTeamDeleteInput] = useState({})
-  //const [selectedTeamId, setSelectedTeamId] = useState('')
   const [studentDetails, setStudentDetails] = useState([])
+  const [selectedStudent, setSelectedStudent] = useState('')
+  const [selectedTeam, setSelectedTeam] = useState('')
 
   useEffect(() => {
     const fetchClassDetailsAndProjects = async () => {
@@ -109,20 +109,21 @@ const ClassView = () => {
     }
   }
 
-  /*const handleDeleteProject = async projectId => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this project?')
-    if (!confirmDelete) return
+  const handleStudentChange = event => {
+    setSelectedStudent(event.target.value)
+  }
 
-    try {
-      await axios.delete(`/api/projects/${projectId}`, {
-        headers: { Authorization: `Bearer ${user.token}` },
-      })
-      setProjects(projects.filter(project => project.id !== projectId))
-    } catch (error) {
-      console.error('Error deleting project:', error)
-      setError('Failed to delete project')
+  const handleTeamChange = event => {
+    setSelectedTeam(event.target.value)
+  }
+
+  const handleAddStudentToTeam = () => {
+    if (selectedStudent && selectedTeam) {
+      // Implement the logic to add the student to the team
+      setSelectedStudent('')
+      setSelectedTeam('')
     }
-  }*/
+  }
 
   const handleToggleProject = async projectId => {
     setExpandedProjectIds(prev =>
@@ -375,6 +376,59 @@ const ClassView = () => {
                           >
                             {showTeamForm[p.id] ? 'Cancel' : 'Add Team'}
                           </Button>
+                          <Dropdown
+                            width="250px"
+                            content={
+                              <div className="p-4">
+                                <div className="mb-4">
+                                  <label className="block text-sm font-medium text-gray-700">
+                                    Select Student
+                                  </label>
+                                  <select
+                                    value={selectedStudent}
+                                    onChange={handleStudentChange}
+                                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                                  >
+                                    <option value="" disabled>
+                                      Select a student
+                                    </option>
+                                    {studentDetails.map(student => (
+                                      <option key={student.id} value={student.id}>
+                                        {student.displayName}
+                                      </option>
+                                    ))}
+                                  </select>
+                                </div>
+                                <div className="mb-4">
+                                  <label className="block text-sm font-medium text-gray-700">
+                                    Select Team
+                                  </label>
+                                  <select
+                                    value={selectedTeam}
+                                    onChange={handleTeamChange}
+                                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                                  >
+                                    <option value="" disabled>
+                                      Select a team
+                                    </option>
+                                    {teams.map(team => (
+                                      <option key={team.id} value={team.id}>
+                                        {team.name}
+                                      </option>
+                                    ))}
+                                  </select>
+                                </div>
+                                <button
+                                  onClick={handleAddStudentToTeam}
+                                  className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                >
+                                  Add Student to Team
+                                </button>
+                              </div>
+                            }
+                          >
+                            <FontAwesomeIcon className="text-2xl text-primary" icon="user" />
+                          </Dropdown>
                         </div>
                       )}
                       {showTeamForm[p.id] && (

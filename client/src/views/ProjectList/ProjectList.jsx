@@ -50,7 +50,8 @@ const ProjectList = () => {
         setIsLoading(false)
       }
     }
-    if (user.user.groups.length > 0) {
+    console.log(user.user.groups)
+    if (user.user.groups.length <= 0) {
       setHasGroups(false)
     }
     if (hasGroups) {
