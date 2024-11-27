@@ -1,9 +1,15 @@
 import { AgCharts } from 'ag-charts-react'
+import axios from 'axios'
 import { useState, useEffect } from 'react'
 
-const AggregateStudentJoyRatingsChart = () => {
-  const [chartData, setChartData] = useState([])
+import { useAuth } from '../../state/AuthProvider/AuthProvider'
 
+const AggregateStudentJoyRatingsChart = ({ teamId }) => {
+  const [chartData, setChartData] = useState([])
+  const [hasData, setHasData] = useState(false)
+
+  const { user } = useAuth()
+  /*
   useEffect(() => {
     // Original data
     const data = [
@@ -22,6 +28,87 @@ const AggregateStudentJoyRatingsChart = () => {
 
     setChartData(chartData)
   }, [])
+  */
+
+  useEffect(() => {
+    const fetchJoyData = async () => {
+      const today = new Date()
+      const sevenDaysAgo = new Date()
+      sevenDaysAgo.setDate(today.getDate() - 7)
+
+      const params = {
+        teamId: teamId,
+        fromDate: sevenDaysAgo.toISOString(),
+        toDate: today.toISOString(),
+        listMembers: true,
+      }
+
+      const headers = { Authorization: `Bearer ${user.token}` }
+
+      try {
+        const response = await axios.get('/api/joy', {
+          params: params,
+          headers: headers,
+        })
+
+        console.log('Response:', response)
+
+        if (response.headers['content-type'].includes('text/html')) {
+          console.error('Received HTML response, expected JSON.')
+          setHasData(false)
+          return
+        }
+
+        if (!response.data || response.data.length === 0) {
+          console.error('No data to display')
+          setHasData(false)
+          return
+        }
+
+        const data = response.data
+
+        const groupedByDate = data.reduce((acc, curr) => {
+          // Extract the date (ignoring time)
+          const dateOnly = new Date(curr.date).toISOString().split('T')[0]
+          if (!acc[dateOnly]) {
+            acc[dateOnly] = []
+          }
+          acc[dateOnly].push(curr.rating)
+          return acc
+        }, {})
+
+        // Step 2: Calculate average for each group
+        const averages = Object.entries(groupedByDate).map(([date, ratings]) => {
+          const average = ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length
+          return { date, average }
+        })
+
+        console.log('averages: ', averages)
+
+        const formattedData = response.data.reduce((acc, curr) => {
+          const dateOnly = new Date(curr.date).toISOString().split('T')[0]
+          if (!acc[dateOnly]) {
+            acc[dateOnly] = []
+          }
+          acc[dateOnly].push(curr.rating)
+          return acc
+        }, {})
+
+        const chartData = Object.entries(formattedData).map(([date, ratings]) => ({
+          date: new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+          average: ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length,
+        }))
+
+        setHasData(true)
+        setChartData(chartData)
+      } catch (error) {
+        console.error('Error fetching joy data: ', error)
+        setHasData(false)
+      }
+    }
+
+    fetchJoyData()
+  }, [user.token, teamId])
 
   const chartOptions = {
     data: chartData,
@@ -49,7 +136,7 @@ const AggregateStudentJoyRatingsChart = () => {
         tooltip: {
           renderer: params => {
             return {
-              content: `${params.xValue} ${params.yValue.toFixed(2)}`,
+              content: `${params.xValue} ${params.yValue}`,
             }
           },
         },
@@ -70,14 +157,19 @@ const AggregateStudentJoyRatingsChart = () => {
       },
     ],
   }
-
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <div style={{ width: '100%', height: '400px' }}>
-        <AgCharts options={chartOptions} />
+  if (hasData) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div style={{ width: '100%', height: '400px' }}>
+          <AgCharts options={chartOptions} />
+        </div>
       </div>
+    )
+  } else {
+    ;<div style={{ width: '100%', height: '500px', backgroundColor: '#f8f9fa' }}>
+      <h1>No Data Available</h1>
     </div>
-  )
+  }
 }
 
 export default AggregateStudentJoyRatingsChart
