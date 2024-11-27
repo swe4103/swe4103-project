@@ -5,6 +5,7 @@ import {
   updateJoyById,
   deleteJoyById,
   listJoys,
+  listTeamMemberJoys,
 } from '#services/joyService.js'
 
 export const listJoyRatings = async (req, res) => {
@@ -12,11 +13,15 @@ export const listJoyRatings = async (req, res) => {
   if (error) {
     return res.status(400).json({ message: error.details[0].message })
   }
-
   try {
-    const joyRatings = await listJoys(value)
+    let joyRatings
+    if (req.params.listMembers && req.params.listMembers === 'true') {
+      joyRatings = await listTeamMemberJoys(value)
+    } else {
+      joyRatings = await listJoys(value)
+    }
     if (!joyRatings) {
-      return res.status(404).json({ message: 'No joy ratings found' })
+      return []
     }
     return res.status(200).json(joyRatings)
   } catch (error) {

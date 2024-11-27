@@ -50,7 +50,7 @@ const ProjectList = () => {
         setIsLoading(false)
       }
     }
-    if (user.user.groups.length > 0) {
+    if (user.user.groups.length <= 0) {
       setHasGroups(false)
     }
     if (hasGroups) {
@@ -91,7 +91,7 @@ const ProjectList = () => {
                   {/* Right Side: Chart */}
                   <div className="w-1/2 flex items-center justify-center">
                     <div className="w-full">
-                      <TeamJoyTrend />
+                      <TeamJoyTrend teamId={team.id} />
                     </div>
                   </div>
                 </Link>
