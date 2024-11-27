@@ -49,13 +49,15 @@ const Header = () => {
               </Link>
               {/* Invite Students link directly below Settings */}
               {/* {user.user.role === 'instructor' && ( */}
-              <Link
-                className="p-3 hover:bg-slate-50 transition-ease overflow-hidden flex items-center gap-1"
-                to="/invite-students"
-              >
-                <FontAwesomeIcon icon="plus" />
-                <span>Invite Students</span>
-              </Link>
+              {user.user.role === 'INSTRUCTOR' && (
+                <Link
+                  className="p-3 hover:bg-slate-50 transition-ease overflow-hidden flex items-center gap-1"
+                  to="/invite-students"
+                >
+                  <FontAwesomeIcon icon="plus" />
+                  <span>Invite Students</span>
+                </Link>
+              )}
               {/* )} */}
               <Link
                 className="p-3 hover:bg-slate-50 transition-ease overflow-hidden flex items-center gap-1 rounded-b"
