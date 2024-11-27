@@ -30,6 +30,7 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.30.0",
     "eslint-plugin-prettier": "^5.2.1",
+    "esmock": "^2.6.9",
     "nodemon": "^3.1.7",
     "prettier": "^3.3.3",
     "sinon": "^19.0.2",
@@ -37,6 +38,7 @@
   },
   "imports": {
     "#app": "./app/index.js",
+    "#__tests__/*": "./__tests__/*",
     "#config": "./app/config/config.js",
     "#controllers/*": "./app/controllers/*",
     "#middleware/*": "./app/middleware/*",
@@ -48,6 +50,9 @@
   },
   "ava": {
     "require": [],
+    "files": [
+      "__tests__/**/*.test.js"
+    ],
     "nodeArguments": []
   }
 }

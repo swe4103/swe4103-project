@@ -30,6 +30,11 @@ const configs = {
       cosmos_key: 'test_cosmos_key',
       cosmos_db_id: 'test_cosmos_id',
     },
+    communicationService: {
+      connectionString:
+        'endpoint=https://test.communication.azure.com/;accesskey=mock-key-0000000000000000000000000000000000000000000000000000000000000000',
+      emailDomainName: 'test.domain.com',
+    },
   },
   production: {
     port: process.env.PORT || 3000,
