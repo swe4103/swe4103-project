@@ -101,13 +101,6 @@ const AggregateStudentJoyRatingsChart = ({ teamId }) => {
           stroke: '#ffffff', // White color for the marker stroke
           strokeWidth: 2,
         },
-        tooltip: {
-          renderer: params => {
-            return {
-              content: `${params.xValue} ${params.yValue}`,
-            }
-          },
-        },
       },
     ],
     axes: [
