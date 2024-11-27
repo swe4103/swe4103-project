@@ -20,6 +20,7 @@ const IndividualStudentJoyChart = () => {
           teamId: teamId,
           fromDate: sevenDaysAgo.toISOString(),
           toDate: today.toISOString(),
+          listMembers: false,
         }
         const headers = { Authorization: `Bearer ${user.token}` }
         const response = await axios.get('/api/joy/', {
