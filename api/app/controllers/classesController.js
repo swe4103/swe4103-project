@@ -12,6 +12,7 @@ import { updateUserById } from '#services/usersService.js'
 export const createClass = async (req, res) => {
   const { error, value } = classSchema.validate(req.body)
   if (error) {
+    console.log(`${error}`)
     return res.status(400).json({ message: error.details[0].message })
   }
 
@@ -87,9 +88,10 @@ export const getClass = async (req, res) => {
 
 export const updateClass = async (req, res) => {
   const { id } = req.params
-
-  const { error, value } = updateUserSchema.validate(req.body)
+  // console.log(`${JSON.stringify(req.body)}`)
+  const { error, value } = updateClassSchema.validate(req.body)
   if (error) {
+    console.log(`${error}`)
     return res.status(400).json({ message: error.details[0].message })
   }
 

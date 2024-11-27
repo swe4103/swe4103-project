@@ -1,23 +1,28 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 import Button from '../../components/Button/Button'
 import Card from '../../components/Card/Card'
+import Dropdown from '../../components/Dropdown/Dropdown'
 import { useAuth } from '../../state/AuthProvider/AuthProvider'
+
 const ClassesView = () => {
   const { user, isLoading } = useAuth()
   const [showForm, setShowForm] = useState(false)
   const [className, setClassName] = useState('')
   const [classYear, setClassYear] = useState('')
   const [classes, setClasses] = useState([])
-  const [deleteTitle, setDeleteTitle] = useState('')
-  const [showDeleteInput, setShowDeleteInput] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const [selectedYear, setSelectedYear] = useState('all')
   const [titleFilter, setTitleFilter] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
+  const [editClassId, setEditClassId] = useState(null)
+  const [editClassName, setEditClassName] = useState('')
+  const [editClassYear, setEditClassYear] = useState('')
+
   const classesPerPage = 6
 
   useEffect(() => {
@@ -77,26 +82,51 @@ const ClassesView = () => {
     }
   }
 
-  const handleDelete = async () => {
-    const classToDelete = classes.find(c => c.name === deleteTitle)
-    if (!classToDelete) {
-      alert('No class found with that name.')
+  //edit class
+  const handleEditSubmit = async e => {
+    e.preventDefault()
+    console.log('Submit triggered')
+    if (isSubmitting) return
+
+    if (!editClassName.trim() || !editClassYear.trim()) {
+      alert('Class name and year are required.')
       return
     }
 
-    const confirmDelete = window.confirm(`Are you sure you want to delete "${deleteTitle}"?`)
-    if (!confirmDelete) return
-
+    const year = parseInt(editClassYear, 10)
+    if (isNaN(year) || year < 2000) {
+      alert('Class year must be a valid number.')
+      return
+    }
+    setIsSubmitting(true)
     try {
+      console.log('sendin update request')
       const token = user.token
       const config = { headers: { Authorization: `Bearer ${token}` } }
 
-      await axios.delete(`/api/classes/${classToDelete.id}`, config)
-      setClasses(classes.filter(c => c.id !== classToDelete.id))
-      setDeleteTitle('')
-      setShowDeleteInput(false)
+      const updatedClass = { name: editClassName.trim(), year }
+
+      const response = await axios.put(
+        `/api/classes/${editClassId}`,
+        {
+          name: editClassName.trim(),
+          year: year,
+        },
+        { ...config }, // 5-second timeout
+      )
+      console.log('Update response:', response)
+
+      setClasses(prev => prev.map(c => (c.id === editClassId ? { ...c, ...updatedClass } : c)))
+      console.log('Updated Classes:', classes)
+
+      setEditClassId(null)
+      setEditClassName('')
+      setEditClassYear('')
     } catch (error) {
-      console.error('Error deleting class:', error)
+      console.log(`Error in PUT request: ${error}`)
+      alert('Failed to update the class. Please try again.')
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -129,12 +159,6 @@ const ClassesView = () => {
       {user.user.role === 'INSTRUCTOR' && (
         <div className="flex gap-4 mb-4">
           <Button onClick={() => setShowForm(true)}>Create Class</Button>
-          <Button
-            onClick={() => setShowDeleteInput(prev => !prev)}
-            className="bg-red-500 text-white"
-          >
-            {showDeleteInput ? 'Cancel Delete' : 'Delete Class'}
-          </Button>
         </div>
       )}
 
@@ -160,21 +184,6 @@ const ClassesView = () => {
             Submit Class
           </Button>
         </form>
-      )}
-
-      {showDeleteInput && (
-        <div className="mt-4">
-          <input
-            type="text"
-            placeholder="Enter Class Name to Delete"
-            value={deleteTitle}
-            onChange={e => setDeleteTitle(e.target.value)}
-            className="p-2 border rounded mb-2"
-          />
-          <Button onClick={handleDelete} disabled={!deleteTitle}>
-            Confirm Delete
-          </Button>
-        </div>
       )}
 
       <div className="mb-4">
@@ -206,23 +215,90 @@ const ClassesView = () => {
       <Card className="flex flex-col items-center justify-center w-full p-6 h-full gap-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
           {currentClasses.map(c => (
-            <Link
-              to={user.user.role === 'INSTRUCTOR' ? `/classes/${c.id}` : `/studentclass/${c.id}`}
+            <div
               key={c.id}
-              className="flex flex-col gap-3 bg-white border p-4 rounded-md hover:shadow"
+              className="flex flex-col gap-3 bg-white border p-4 rounded-md hover:shadow relative group"
             >
-              <img
-                src={`https://picsum.photos/seed/${c.id}/300/200`}
-                alt={c.name}
-                className="w-full h-40 object-cover rounded-md"
-              />
-              <h2 className="text-md font-bold">{c.name}</h2>
-              <p className="text-sm text-gray-500">{c.year}</p>
-            </Link>
+              <Link
+                to={user.user.role === 'INSTRUCTOR' ? `/classes/${c.id}` : `/studentclass/${c.id}`}
+                className="w-full"
+              >
+                <img
+                  src={`https://picsum.photos/seed/${c.id}/300/200`}
+                  alt={c.name}
+                  className="w-full h-40 object-cover rounded-md"
+                />
+                <h2 className="text-md font-bold">{c.name}</h2>
+                <p className="text-sm text-gray-500">{c.year}</p>
+              </Link>
+
+              {/* <div className="absolute bottom-0 right-0 opacity-0 group-hover:opacity-100"> */}
+              <div className="absolute bottom-0 right-0 opacity-100">
+                <Dropdown
+                  width="250px"
+                  zIndex="z-50"
+                  content={
+                    editClassId === c.id ? (
+                      <form onSubmit={handleEditSubmit} className="p-3 flex flex-col gap-2">
+                        <input
+                          type="text"
+                          value={editClassName}
+                          onChange={e => setEditClassName(e.target.value)}
+                          placeholder="Edit Name"
+                          className="p-2 border rounded"
+                          required
+                        />
+                        <input
+                          type="number"
+                          value={editClassYear}
+                          onChange={e => setEditClassYear(e.target.value)}
+                          placeholder="Edit Year"
+                          className="p-2 border rounded"
+                          required
+                        />
+                        <Button type="submit" disabled={isSubmitting}>
+                          Submit
+                        </Button>
+                        <Button
+                          type="button"
+                          onClick={e => {
+                            e.preventDefault()
+                            setEditClassId(null)
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </form>
+                    ) : (
+                      <div className="p-2">
+                        <button
+                          onClick={e => {
+                            e.preventDefault()
+                            setEditClassId(c.id)
+                            setEditClassName(c.name)
+                            setEditClassYear(c.year.toString())
+                          }}
+                          className="w-full text-left p-2 hover:bg-gray-100 rounded"
+                        >
+                          Edit Class
+                        </button>
+                      </div>
+                    )
+                  }
+                >
+                  <FontAwesomeIcon
+                    className="z-50 text-2xl text-primary bg-gray-400 p-2 rounded bg-opacity-0 flex items-center justify-center transition-all duration-300 hover:bg-opacity-80 hover:bg-gray-400"
+                    icon="ellipsis"
+                    onClick={e => {
+                      e.preventDefault() //don't remove, causes navigation issues.
+                    }}
+                  />
+                </Dropdown>
+              </div>
+            </div>
           ))}
         </div>
       </Card>
-
       <div className="flex justify-between mt-4">
         <Button onClick={() => handlePageChange('prev')} disabled={currentPage === 1}>
           Previous
