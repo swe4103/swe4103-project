@@ -91,7 +91,7 @@ const AggregateStudentJoyRatingsChart = ({ teamId }) => {
         type: 'line',
         xKey: 'date',
         yKey: 'average',
-        stroke: '#f07b0a', // Accent
+        stroke: '#f07b0b', // Accent
         strokeWidth: 3,
         marker: {
           enabled: true,
