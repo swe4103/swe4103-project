@@ -16,6 +16,7 @@ const ClassView = () => {
   const [newProjectDescription, setNewProjectDescription] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
+  const [studentError, setStudentError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showProjectForm, setShowProjectForm] = useState(false)
   const [teams, setTeams] = useState({})
@@ -63,6 +64,7 @@ const ClassView = () => {
         return
       }
       try {
+        console.log('classDetails.students:', classDetails.students)
         const studentRequests = classDetails.students.map(id =>
           axios.get(`/api/users/${id}`, {
             headers: { Authorization: `Bearer ${user.token}` },
@@ -74,7 +76,7 @@ const ClassView = () => {
         setStudentDetails(studentData)
       } catch (error) {
         console.error('Error fetching students:', error)
-        setError('Failed to fetch students')
+        setStudentError('No students found.')
       }
     }
 
@@ -182,28 +184,6 @@ const ClassView = () => {
       setIsTeamSubmitting(false)
     }
   }
-  /*
-  const handleDeleteTeam = async projectId => {
-    if (!selectedTeamId) return
-
-    const confirmDelete = window.confirm('Are you sure you want to delete this team?')
-    if (!confirmDelete) return
-
-    try {
-      await axios.delete(`/api/teams/${selectedTeamId}`, {
-        headers: { Authorization: `Bearer ${user.token}` },
-      })
-      setTeams(prev => ({
-        ...prev,
-        [projectId]: prev[projectId].filter(team => team.id !== selectedTeamId),
-      }))
-      setSelectedTeamId('') // Reset selection
-      setShowTeamDeleteInput(prev => ({ ...prev, [projectId]: false })) // Hide dropdown
-    } catch (error) {
-      console.error('Error deleting team:', error)
-      setError('Failed to delete team')
-    }
-  }*/
 
   if (isLoading) return <div>Loading...</div>
   if (error) return <div>Error: {error}</div>
@@ -427,34 +407,38 @@ const ClassView = () => {
           )}
           {/* Students section */}
 
-          {user.user.role == 'INSTRUCTOR' && (
+          {user.user.role === 'INSTRUCTOR' && (
             <div>
               <hr className="mb-4"></hr>
               <h3 className="text-lg font-bold text-primary">Students</h3>
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Name
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Email
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {studentDetails.map((student, index) => (
-                    <tr key={student.id} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {student.displayName}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {student.email}
-                      </td>
+              {studentError ? (
+                <p className="text-red-500">{studentError}</p>
+              ) : (
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Name
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Email
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {studentDetails.map((student, index) => (
+                      <tr key={student.id} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          {student.displayName}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {student.email}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
             </div>
           )}
         </div>
