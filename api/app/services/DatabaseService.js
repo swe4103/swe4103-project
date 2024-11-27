@@ -34,7 +34,7 @@ export const getContainer = containerName => {
     case 'JoyRating':
       return database.container(JOY_COLLECTION)
     default:
-      throw new Error('Unknown record type')
+      throw new Error(`Unknown record type: ${containerName}`)
   }
 }
 

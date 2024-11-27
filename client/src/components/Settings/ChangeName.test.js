@@ -42,17 +42,16 @@ test('opens modal on clicking Change Display Name button', () => {
   expect(screen.getByPlaceholderText(/Enter new display name/)).toBeInTheDocument()
 })
 
-// TODO fix this test
-// test('shows validation message for empty display name', () => {
-//   render(<ChangeName />)
-//   fireEvent.click(screen.getByRole('button', { name: /Change Display Name/i }))
-//   fireEvent.change(screen.getByPlaceholderText(/Enter new display name/i), {
-//     target: { value: '' },
-//   })
-//   fireEvent.click(screen.getByText(/Save/i))
-//   screen.id
-//   expect(screen.getByText('Display name cannot be empty.')).toBeInTheDocument()
-// })
+test('shows validation message for empty display name', () => {
+  render(<ChangeName />)
+  fireEvent.click(screen.getByRole('button', { name: /Change Display Name/i }))
+  fireEvent.change(screen.getByPlaceholderText(/Enter new display name/i), {
+    target: { value: '' },
+  })
+  fireEvent.click(screen.getByText(/Save/i))
+  screen.id
+  expect(screen.getByText('Display name cannot be empty.')).toBeInTheDocument()
+})
 
 test('updates display name on successful API call', async () => {
   axios.put.mockResolvedValueOnce({})
@@ -73,18 +72,32 @@ test('updates display name on successful API call', async () => {
   expect(screen.queryByPlaceholderText(/Enter new display name/)).toBeNull() // Modal should be closed
 })
 
-// test('shows error message on failed API call', async () => {
-//   axios.put.mockRejectedValueOnce(new Error('Network Error'))
-//   render(<ChangeName />)
-//   fireEvent.click(screen.getByRole('button', { name: /Change Display Name/i }))
-//   fireEvent.change(screen.getByPlaceholderText(/Enter new display name/i), {
-//     target: { value: 'Jane Doe' },
-//   })
-//   fireEvent.click(screen.getByText(/Save/i))
+test('shows error message on failed API call', async () => {
+  axios.put.mockRejectedValueOnce(new Error('Network Error'))
+  render(<ChangeName />)
+  fireEvent.click(screen.getByRole('button', { name: /Change Display Name/i }))
+  fireEvent.change(screen.getByPlaceholderText(/Enter new display name/i), {
+    target: { value: 'Jane Doe' },
+  })
+  fireEvent.click(screen.getByText(/Save/i))
 
-//   await waitFor(() =>
-//     expect(
-//       screen.getByText('Failed to update display name. Please try again.'),
-//     ).toBeInTheDocument(),
-//   )
-// })
+  await waitFor(() =>
+    expect(
+      screen.getByText('Failed to update display name. Please try again.'),
+    ).toBeInTheDocument(),
+  )
+})
+
+test('shows validation message for same display name', () => {
+  render(<ChangeName />)
+
+  fireEvent.click(screen.getByRole('button', { name: /Change Display Name/i }))
+
+  fireEvent.change(screen.getByPlaceholderText(/Enter new display name/i), {
+    target: { value: 'John Doe' },
+  })
+
+  fireEvent.click(screen.getByText(/Save/i))
+
+  expect(screen.getByText('Cannot be the same as the current name.')).toBeInTheDocument()
+})

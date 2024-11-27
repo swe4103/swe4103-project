@@ -39,5 +39,5 @@ export const listJoys = async ({ userId, teamId, fromDate, toDate }) => {
     toDate && { name: '@toDate', value: toDate },
   ].filter(Boolean)
 
-  return await filterRecords('JoyRatings', { query, parameters })
+  return await filterRecords('JoyRating', { query, parameters })
 }

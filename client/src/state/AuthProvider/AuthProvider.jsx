@@ -3,19 +3,22 @@ import { createContext, useContext, useState, useEffect } from 'react'
 
 const AuthContext = createContext()
 
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null)
-  const [isLoading, setIsLoading] = useState(true) // Track the loading state
+export const AuthProvider = ({ children, value = {} }) => {
+  const [user, setUser] = useState(value.user || null)
+  const [isLoading, setIsLoading] = useState(value.isLoading || true) // Allow overriding loading state
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('me')
+    if (!value.user) {
+      // Only fetch from localStorage if not overridden in tests
+      const storedUser = localStorage.getItem('me')
 
-    if (storedUser) {
-      setUser(JSON.parse(storedUser))
+      if (storedUser) {
+        setUser(JSON.parse(storedUser))
+      }
     }
 
     setIsLoading(false)
-  }, [])
+  }, [value.user])
 
   const login = async user => {
     setUser(user)
@@ -49,7 +52,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ login, logout, user, isLoading, updateUser }}>
+    <AuthContext.Provider value={{ login, logout, user, isLoading, updateUser, ...value }}>
       {children}
     </AuthContext.Provider>
   )
