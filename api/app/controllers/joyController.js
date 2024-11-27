@@ -15,7 +15,6 @@ export const listJoyRatings = async (req, res) => {
   }
   try {
     let joyRatings
-    console.log(req.params)
     if (req.params.listMembers && req.params.listMembers === 'true') {
       joyRatings = await listTeamMemberJoys(value)
     } else {
