@@ -41,3 +41,26 @@ export const listJoys = async ({ userId, teamId, fromDate, toDate }) => {
 
   return await filterRecords('JoyRating', { query, parameters })
 }
+
+export const listTeamMemberJoys = async ({ teamId, fromDate, toDate }) => {
+  if (!teamId) {
+    throw new Error('teamId must be provided.')
+  }
+  console.log('\n\n\n MEMBER JOYS \n\n\n')
+
+  const query = `
+    SELECT * FROM c 
+    WHERE 
+      ${teamId ? 'c.teamId = @teamId' : ''}
+      ${fromDate ? 'AND c.date >= @fromDate' : ''}
+      ${toDate ? 'AND c.date <= @toDate' : ''}
+  `.trim()
+
+  const parameters = [
+    teamId && { name: '@teamId', value: teamId },
+    fromDate && { name: '@fromDate', value: fromDate },
+    toDate && { name: '@toDate', value: toDate },
+  ].filter(Boolean)
+
+  return await filterRecords('JoyRating', { query, parameters })
+}
