@@ -5,7 +5,7 @@ import { createDatabaseStubs } from './setupDatabase.js'
 import { createEmailStubs } from './setupEmail.js'
 
 import config from '#config'
-import Roles from '#constants/roles.js'
+import roles from '#constants/roles.js'
 
 const normalizeQuery = query => query.replace(/\s+/g, ' ').trim()
 
@@ -22,12 +22,6 @@ export const setupTest = async (servicePath, additionalMocks = {}) => {
     }),
   }
 
-  const testConfig = {
-    ...config,
-    ...config.test,
-    env: 'test',
-  }
-
   const defaultMocks = {
     '#services/DatabaseService.js': databaseStubs,
     '@azure/communication-email': {
@@ -40,8 +34,8 @@ export const setupTest = async (servicePath, additionalMocks = {}) => {
     'jsonwebtoken': {
       sign: sinon.stub().returns('mock.jwt.token'),
     },
-    '#config': testConfig,
-    '#constants/roles.js': Roles,
+    '#config': config,
+    '#constants/roles.js': roles,
   }
 
   const service = await esmock(servicePath, {
@@ -56,8 +50,8 @@ export const setupTest = async (servicePath, additionalMocks = {}) => {
       email: emailStubs,
     },
     mockUuid,
-    config: testConfig,
-    roles: Roles,
+    config,
+    roles,
     normalizeQuery,
   }
 }
