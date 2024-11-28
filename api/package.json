@@ -10,7 +10,8 @@
     "dev": "nodemon app.js",
     "lint": "eslint . --fix",
     "test": "NODE_ENV=test ava",
-    "test:coverage": "c8 yarn test"
+    "test:coverage": "c8 yarn test",
+    "test:report": "c8 report --reporter=json"
   },
   "dependencies": {
     "@azure/communication-email": "^1.0.0",
