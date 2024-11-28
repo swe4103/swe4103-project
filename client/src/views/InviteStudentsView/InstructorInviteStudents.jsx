@@ -11,9 +11,11 @@ const InstructorInviteStudents = () => {
   // State hooks
   const [emailList, setEmailList] = useState('') // Single input for email list
   const [errorMessage, setErrorMessage] = useState('')
+  const [successMessage, setSuccessMessage] = useState('') // State to store success message
   const [isLoading, setIsLoading] = useState(false) // Loading state for invite request
   const [classes, setClasses] = useState([])
   const [selectedClass, setSelectedClass] = useState('')
+  // const [selectedStudents, setSelectedStudents] = useState([]) // Track selected students
   const { user, logout } = useAuth() // Get logout function from AuthProvider
   const navigate = useNavigate() // React Router hook for navigation
   const location = useLocation()
@@ -23,6 +25,7 @@ const InstructorInviteStudents = () => {
     setEmailList(event.target.value)
   }
 
+  // Fetch classes for the instructor
   useEffect(() => {
     if (location.state?.invalidToken) {
       setErrorMessage(
@@ -58,6 +61,8 @@ const InstructorInviteStudents = () => {
   const onSubmitInvite = async event => {
     event.preventDefault() // Prevent form from refreshing page
     setIsLoading(true) // Set loading state to true
+    setErrorMessage('') // Clear any previous error messages
+    setSuccessMessage('') // Clear any previous success messages
     if (!selectedClass) {
       setErrorMessage('Please select a class.')
       setIsLoading(false)
@@ -83,21 +88,77 @@ const InstructorInviteStudents = () => {
       )
 
       if (response.status === 200) {
-        navigate('/success') // Navigate to success page on successful invite
+        // navigate('/success') // Navigate to success page on successful invite
+        setSuccessMessage('Sent successfully!')
+        setEmailList('')
+        // setSelectedStudents(emails) // Track invited students
+      } else {
+        throw new Error('Unexpected response status') // Handle unexpected statuses
       }
     } catch (error) {
-      console.error(error)
+      console.error('Error sending invites:', error)
       setErrorMessage('Failed to send invites. Please check the emails and try again.')
     } finally {
       setIsLoading(false) // Set loading state back to false
     }
   }
 
+  // Add Students to Team
+  // const onAddToTeam = async () => {
+  //   setIsLoading(true)
+  //   setErrorMessage('')
+  //   setSuccessMessage('')
+
+  //   if (selectedStudents.length === 0) {
+  //     setErrorMessage('No students to add. Please invite students first.')
+  //     setIsLoading(false)
+  //     return
+  //   }
+
+  //   console.log('Selected Students:', selectedStudents); // Debugging
+  //   console.log('Selected Class:', selectedClass); // Debugging
+
+  //   try {
+  //     const response = await axios.post(
+  //       'api/teams/invite/add-students',
+  //       {
+  //         students: selectedStudents, // List of student emails
+  //         classId: selectedClass,
+  //       },
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${user.token}`,
+  //         },
+  //       }
+  //     )
+
+  //     if (response.status === 200) {
+  //       setSuccessMessage('Students were successfully added to the team!')
+  //       setSelectedStudents([]) // Clear selected students
+  //     } else {
+  //       throw new Error('Unexpected response status')
+  //     }
+  //   } catch (error) {
+  //     console.error('Error adding students to team:',{
+  //       message: error.message,
+  //       response: error.response?.data,
+  //       status: error.response?.status,
+  //     })
+  //     setErrorMessage(
+  //       error.response?.data?.error || 'Failed to add students to the team. Please try again.'
+  //     )
+  //   } finally {
+  //     setIsLoading(false)
+  //   }
+  // }
+
   // Handle logout
   const handleLogout = () => {
     logout() // Call the logout function
     navigate('/login') // Redirect to the login page after logout
   }
+
+  // Handle class selection change
   const handleClassChange = event => {
     setSelectedClass(event.target.value)
   }
@@ -141,11 +202,22 @@ const InstructorInviteStudents = () => {
               disabled={isLoading} // Disable input when loading
             />
 
-            {errorMessage && <p className="text-danger text-center">{errorMessage}</p>}
+            {/* NEW: Error Message */}
+            {errorMessage && <p className="text-red-500 text-center">{errorMessage}</p>}
+            {/* NEW: Success Message */}
+            {successMessage && <p className="text-green-500 text-center">{successMessage}</p>}
+
+            {/* {errorMessage && <p className="text-danger text-center">{errorMessage}</p>} */}
             <Button type="submit" style={{ height: '50px' }} isLoading={isLoading}>
               Send Invites
             </Button>
           </form>
+          {/* NEW: Submit Button to Add Students to Team */}
+          {/* {selectedStudents.length > 0 && (
+            // <Button onClick={onAddToTeam} style={{ marginTop: '20px' }} isLoading={isLoading}>
+            //   Add Students to Team
+            // </Button>
+          )} */}
           {/* Logout Button placed within the Card */}
           <Button onClick={handleLogout} style={{ marginTop: '20px' }}>
             Logout
