@@ -35,10 +35,10 @@ export const inviteSchema = Joi.object({
   role: Joi.string().valid(Roles.INSTRUCTOR, Roles.STUDENT).required().messages({
     'any.only': 'Invalid invite type. Must be either STUDENT or INSTRUCTOR.',
   }),
-  teamId: Joi.when('role', {
+  classId: Joi.when('role', {
     is: Roles.STUDENT,
     then: Joi.string().required().messages({
-      'any.required': 'Team ID is required for student invitations.',
+      'any.required': 'Class ID is required for student invitations.',
     }),
     otherwise: Joi.optional(),
   }),

@@ -1,23 +1,51 @@
 import { AgCharts } from 'ag-charts-react'
+import axios from 'axios'
 import { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 
-import getData from './Data'
-
+import { useAuth } from '../../state/AuthProvider/AuthProvider'
 const IndividualStudentJoyChart = () => {
   const [chartData, setChartData] = useState([])
-
+  const { user } = useAuth()
+  const { teamId } = useParams() // Access project and team IDs from the URL
   useEffect(() => {
-    // Sample data replace with api call
-    const data = getData()
-    const formattedData = data.map(item => ({
-      date: new Date(item.date),
-      rating: item.rating,
-    }))
-    setChartData(formattedData)
-  }, [])
+    const fetchJoyData = async () => {
+      const today = new Date()
+      const sevenDaysAgo = new Date()
+      sevenDaysAgo.setDate(today.getDate() - 7)
 
+      try {
+        const params = {
+          userId: user.user.id,
+          teamId: teamId,
+          fromDate: sevenDaysAgo.toISOString(),
+          toDate: today.toISOString(),
+          listMembers: false,
+        }
+        const headers = { Authorization: `Bearer ${user.token}` }
+        const response = await axios.get('/api/joy/', {
+          params: params,
+          headers: headers,
+        })
+        const data = response.data
+        const formattedData = data.map(item => ({
+          date: new Date(item.date),
+          rating: item.rating,
+        }))
+        setChartData(formattedData)
+      } catch (error) {
+        console.error('Error fetching joy data:', error)
+      }
+    }
+
+    fetchJoyData()
+  }, [user.user.id, user.token, teamId])
+  const formatDate = date => {
+    const options = { month: 'short', day: 'numeric' }
+    return new Date(date).toLocaleDateString('en-US', options)
+  }
   const options = {
-    title: { text: 'Your Current Joy Rating' },
+    title: { text: 'Recent Joy Ratings' },
     data: chartData,
     series: [
       {
@@ -34,23 +62,13 @@ const IndividualStudentJoyChart = () => {
         type: 'category',
         position: 'left',
         label: {
-          formatter: ({ value }) => {
-            const date = new Date(value)
-            return date.toLocaleDateString('en-US', {
-              month: 'short',
-              day: 'numeric',
-            })
-          },
+          formatter: ({ value }) => formatDate(value),
         },
       },
     ],
   }
 
-  return (
-    <div style={{ width: '100%', height: '400px', backgroundColor: '#f8f9fa' }}>
-      <AgCharts options={options} />
-    </div>
-  )
+  return <AgCharts options={options} />
 }
 
 export default IndividualStudentJoyChart

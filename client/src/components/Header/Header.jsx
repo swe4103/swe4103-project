@@ -47,6 +47,18 @@ const Header = () => {
                 <FontAwesomeIcon icon="gear" />
                 <span>Settings</span>
               </Link>
+              {/* Invite Students link directly below Settings */}
+              {/* {user.user.role === 'instructor' && ( */}
+              {user.user.role === 'INSTRUCTOR' && (
+                <Link
+                  className="p-3 hover:bg-slate-50 transition-ease overflow-hidden flex items-center gap-1"
+                  to="/invite-students"
+                >
+                  <FontAwesomeIcon icon="plus" />
+                  <span>Invite Students</span>
+                </Link>
+              )}
+              {/* )} */}
               <Link
                 className="p-3 hover:bg-slate-50 transition-ease overflow-hidden flex items-center gap-1 rounded-b"
                 onClick={handleLogout}

@@ -7,6 +7,7 @@ import AuthProvider from './state/AuthProvider/AuthProvider'
 import AdminView from './views/AdminView/AdminView'
 import ClassesView from './views/ClassesView/ClassesView'
 import ClassView from './views/ClassView/ClassView'
+import InstructorInviteStudents from './views/InviteStudentsView/InstructorInviteStudents'
 import LoginForm from './views/LoginForm/LoginForm'
 import ProjectList from './views/ProjectList/ProjectList'
 import ProjectView from './views/ProjectView/ProjectView'
@@ -29,6 +30,7 @@ const App = () => {
               <Route path="project/:projectId" element={<ProjectView />} />
               <Route path="team/:teamId" element={<TeamView />} />
               <Route path="settings" element={<SettingsView />} />
+              <Route path="invite-students" element={<InstructorInviteStudents />} />
               <Route index element={<ClassesView />} />
               <Route path="studentclass/:classId/" element={<ProjectList />} />
               <Route path="classes/:classId" element={<ClassView />} />

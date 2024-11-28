@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   node: circleci/node@5.0.2
+  codecov: codecov/codecov@5
 
 jobs:
   lint_client:
@@ -44,8 +45,9 @@ jobs:
       - node/install-packages:
           pkg-manager: yarn
       - run:
-          command: cd api && yarn test
-          name: Run backend tests
+          command: cd api && yarn test:coverage && yarn test:report
+          name: Run backend tests with coverage
+      - codecov/upload
 
   deploy:
     docker:

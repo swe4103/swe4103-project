@@ -34,13 +34,11 @@ export const getContainer = containerName => {
     case 'JoyRating':
       return database.container(JOY_COLLECTION)
     default:
-      throw new Error('Unknown record type')
+      throw new Error(`Unknown record type: ${containerName}`)
   }
 }
 
 export const saveRecord = async (containerName, record) => {
-  console.log('COntainer Name', containerName)
-  console.log('record', record)
   const container = getContainer(containerName)
   try {
     const { resource } = await container.items.create(record)

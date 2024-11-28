@@ -42,14 +42,11 @@ export const listStudentClasses = async (req, res) => {
   }
 }
 export const listClasses = async (req, res) => {
-  console.log('hi 1')
-
   if (req.user.role == 'STUDENT') {
     try {
-      console.log('hi 2')
       const classes = await listClassesByStudentId(req.user.id)
       if (!classes) {
-        return res.status(404).json({ message: 'No classes found' })
+        return []
       }
       return res.status(200).json(classes)
     } catch (error) {
@@ -91,7 +88,7 @@ export const getClass = async (req, res) => {
 export const updateClass = async (req, res) => {
   const { id } = req.params
 
-  const { error, value } = updateUserSchema.validate(req.body)
+  const { error, value } = updateClassSchema.validate(req.body)
   if (error) {
     return res.status(400).json({ message: error.details[0].message })
   }
@@ -111,7 +108,7 @@ export const updateClass = async (req, res) => {
 export const deleteClass = async (req, res) => {
   const { id } = req.params
   try {
-    const deletedID = await deleteClassById(id)
+    const deletedId = await deleteClassById(id)
     if (!deletedId) {
       return res.status(404).json({ message: 'Class not found' })
     }

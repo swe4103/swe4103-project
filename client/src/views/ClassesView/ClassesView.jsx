@@ -5,10 +5,12 @@ import { Link } from 'react-router-dom'
 import Button from '../../components/Button/Button'
 import Card from '../../components/Card/Card'
 import { useAuth } from '../../state/AuthProvider/AuthProvider'
+
 const ClassesView = () => {
   const { user, isLoading } = useAuth()
   const [showForm, setShowForm] = useState(false)
   const [className, setClassName] = useState('')
+
   const [classYear, setClassYear] = useState('')
   const [classes, setClasses] = useState([])
   const [deleteTitle, setDeleteTitle] = useState('')
@@ -29,12 +31,9 @@ const ClassesView = () => {
         const userResponse = await axios.get(`/api/users/${user.user.id}`, config)
         const newUser = userResponse.data
         user.user.groups = newUser.groups
-
         if (newUser.role.includes('STUDENT')) {
-          const responses = await Promise.all(
-            newUser.groups.map(id => axios.get(`/api/classes?teamId=${id}`, config)),
-          )
-          fetchedClasses = responses.flatMap(response => response.data)
+          const response = await axios.get(`/api/classes/`, config)
+          fetchedClasses = response.data
         } else if (newUser.role.includes('INSTRUCTOR')) {
           const responses = await Promise.all(
             newUser.groups.map(id => axios.get(`/api/classes/${id}`, config)),

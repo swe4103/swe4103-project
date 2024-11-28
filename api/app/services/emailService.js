@@ -28,13 +28,13 @@ export const sendRegistrationEmail = async (userEmail, token, message) => {
   console.log(`Email sent! Operation ID: ${response.messageId}`)
 }
 
-export const sendConfirmationEmail = async (userEmail, groupName) => {
+export const sendConfirmationEmail = async (userEmail, message) => {
   const emailMessage = {
     senderAddress: config.communicationService.emailDomainName, // approved domain
     content: {
       subject: 'Registration Success',
-      plainText: `You have successfully registered for ${groupName} on Time Flow!`,
-      html: `<p>You have successfully registered for ${groupName} on Time Flow!</p>`,
+      plainText: `${message}`,
+      html: `<p>${message}</p>`,
     },
     recipients: {
       to: [
