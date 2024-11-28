@@ -46,14 +46,13 @@ export const getJoyRating = async (req, res) => {
 
 export const createJoyRating = async (req, res) => {
   const { error, value } = joyRatingSchema.validate(req.body)
-  console.log('hi')
   if (error) {
     return res.status(400).json({ message: error.details[0].message })
   }
 
   try {
-    const joyRating = createJoy(value)
-    return res.status(200).json(joyRating)
+    const joyRating = await createJoy(value)
+    return res.status(201).json(joyRating)
   } catch (error) {
     console.error('Error creating joy rating: ', error)
     return res.status(500).json({ message: 'Internal server error' })
@@ -83,7 +82,7 @@ export const updateJoyRating = async (req, res) => {
 export const deleteJoyRating = async (req, res) => {
   const { id } = req.params
   try {
-    const deletedID = await deleteJoyById(id)
+    const deletedId = await deleteJoyById(id)
     if (!deletedId) {
       return res.status(404).json({ message: 'Joy rating not found' })
     }

@@ -78,7 +78,7 @@ export const updateTeam = async (req, res) => {
 export const deleteTeam = async (req, res) => {
   const { id } = req.params
   try {
-    const deletedID = await deleteTeamById(id)
+    const deletedId = await deleteTeamById(id)
     if (!deletedId) {
       return res.status(404).json({ message: 'Team not found' })
     }

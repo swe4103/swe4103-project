@@ -5,10 +5,12 @@ import { Link } from 'react-router-dom'
 import Button from '../../components/Button/Button'
 import Card from '../../components/Card/Card'
 import { useAuth } from '../../state/AuthProvider/AuthProvider'
+
 const ClassesView = () => {
   const { user, isLoading } = useAuth()
   const [showForm, setShowForm] = useState(false)
   const [className, setClassName] = useState('')
+
   const [classYear, setClassYear] = useState('')
   const [classes, setClasses] = useState([])
   const [deleteTitle, setDeleteTitle] = useState('')
