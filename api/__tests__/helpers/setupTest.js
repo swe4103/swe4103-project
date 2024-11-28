@@ -9,26 +9,26 @@ import roles from '#constants/roles.js'
 
 const normalizeQuery = query => query.replace(/\s+/g, ' ').trim()
 
+const createMockResponse = () => {
+  const jsonStub = sinon.stub()
+  const statusStub = sinon.stub()
+  const sendStub = sinon.stub()
+  const mockRes = {
+    status: statusStub,
+    json: jsonStub,
+    send: sendStub,
+  }
+  statusStub.returns(mockRes)
+  return mockRes
+}
+
 export const setupTest = async (servicePath, additionalMocks = {}) => {
   const databaseStubs = createDatabaseStubs()
   const emailStubs = createEmailStubs()
   const mockUuid = '12345678-1234-1234-1234-123456789012'
 
-  const mockEmailClient = {
-    beginSend: sinon.stub().resolves({
-      pollUntilDone: sinon.stub().resolves({
-        messageId: 'mock-message-id',
-      }),
-    }),
-  }
-
   const defaultMocks = {
     '#services/DatabaseService.js': databaseStubs,
-    '@azure/communication-email': {
-      EmailClient: function () {
-        return mockEmailClient
-      },
-    },
     '#services/emailService.js': emailStubs,
     'uuid': { v4: () => mockUuid },
     'jsonwebtoken': {
@@ -53,5 +53,6 @@ export const setupTest = async (servicePath, additionalMocks = {}) => {
     config,
     roles,
     normalizeQuery,
+    createResponse: createMockResponse,
   }
 }

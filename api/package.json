@@ -39,6 +39,7 @@
     "supertest": "^7.0.0"
   },
   "imports": {
+    "#app.js": "./app.js",
     "#app": "./app/index.js",
     "#__tests__/*": "./__tests__/*",
     "#config": "./app/config/config.js",
