@@ -13,7 +13,7 @@ This document outlines the technolgies used in this project, and the underlying 
   - Frontend JavaScript library
 - [**Tailwind**](https://tailwindcss.com/)
   - CSS framework
-- [**Mocha**](https://mochajs.org/)
+- [**Jest**]([https://mochajs.org/](https://jestjs.io/))
   - JavaScript testing framework
 
 ### Backend
