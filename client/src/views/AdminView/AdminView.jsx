@@ -11,6 +11,7 @@ const AdminView = () => {
   // State hooks
   const [emailList, setEmailList] = useState('') // Single input for email list
   const [errorMessage, setErrorMessage] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false) // Loading state for invite request
 
   const { user, logout } = useAuth() // Get logout function from AuthProvider
@@ -53,7 +54,8 @@ const AdminView = () => {
       )
 
       if (response.status === 200) {
-        navigate('/success') // Navigate to success page on successful invite
+        // navigate('/success') // Navigate to success page on successful invite
+        setSuccessMessage('Invited user succesfully!')
       }
     } catch (error) {
       console.error(error)
@@ -88,6 +90,7 @@ const AdminView = () => {
             />
 
             {errorMessage && <p className="text-danger text-center">{errorMessage}</p>}
+            {successMessage && <p className="text-success text-center">{successMessage}</p>}
             <Button type="submit" style={{ height: '50px' }} isLoading={isLoading}>
               Send Invites
             </Button>
