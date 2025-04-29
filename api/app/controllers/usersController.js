@@ -1,11 +1,13 @@
 import config from '#config'
 import Roles from '#constants/roles.js'
+import bcrypt from 'bcryptjs'; // For password hashing
 import { inviteSchema, updateUserSchema } from '#schemas/users.js'
 import {
   inviteUsersByEmail,
   getUserById,
   updateUserById,
   deleteUserById,
+  updateUserPasswordById, // Import the service function for updating password
 } from '#services/usersService.js'
 
 export const inviteUsers = async (req, res) => {
@@ -74,3 +76,38 @@ export const deleteUser = async (req, res) => {
     return res.status(500).json({ message: 'Internal server error' })
   }
 }
+
+export const changePassword = async (req, res) => {
+  const { id } = req.params
+  const { oldPassword, newPassword } = req.body
+  // Validate the passwords
+  if (!oldPassword || !newPassword) {
+    return res.status(400).json({ message: 'Old and new passwords are required.' });
+  }
+
+  try {
+    // Fetch the current user from the database
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    // Check if the old password matches
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Old password is incorrect.' });
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update the password in the database
+    user.password = hashedPassword;
+    await user.save();
+
+    return res.status(200).json({ message: 'Password updated successfully.' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Internal server error.' });
+  }
+};
+  
